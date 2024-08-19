@@ -17,17 +17,9 @@ permissions: write-all
 jobs:
 
   code-quality:
-    if: |
-      ! cancelled() && always() &&
-      (needs.check-auto-tagging-will-work.result == 'skipped' || needs.check-auto-tagging-will-work.result == 'success') &&
-      ! startsWith(github.ref, 'refs/tags')
     uses: climatepolicyradar/reusable-workflows/.github/workflows/python-precommit-validator.yml@v11
 
   test:
-    if: |
-      ! cancelled() && always() &&
-      (needs.check-auto-tagging-will-work.result == 'skipped' || needs.check-auto-tagging-will-work.result == 'success') &&
-      ! startsWith(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
     steps:
       - name: Install latest Docker Compose
@@ -58,9 +50,3 @@ jobs:
       - name: Run Tests
         run: pytest -vvv tests/unit_tests
 
-  git-tag-release:
-    if: ${{ ! cancelled() && always() && (needs.test.result == 'success' && needs.code-quality.result == 'success')}}
-    needs:
-      - test
-      - code-quality
-    uses: climatepolicyradar/reusable-workflows/.github/workflows/git.yml@v11
