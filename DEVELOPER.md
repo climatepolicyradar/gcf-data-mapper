@@ -3,7 +3,6 @@
 ## Install pyenv
 
 ```bash
-
 # Install pyenv
 curl https://pyenv.run | bash
 
@@ -23,7 +22,6 @@ pyenv local 3.10.14
 ## Install poetry
 
 ```bash
-
 # Install poetry
 curl -sSL https://install.python-poetry.org | python3 -
 
@@ -33,4 +31,16 @@ export PATH="$HOME/.local/bin:$PATH"
 # Navigate to the project directory and install dependencies
 cd say_hello
 poetry install
+```
+
+## Building
+
+```bash
+make build
+```
+
+## Testing
+
+```bash
+make test
 ```
