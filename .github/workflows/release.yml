@@ -48,6 +48,8 @@ jobs:
 
       - name: Upload Wheel Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/gcf_data_mapper-${{ env.VERSION }}-py3-none-any.whl
@@ -56,6 +58,8 @@ jobs:
 
       - name: Upload Source Distribution Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/gcf_data_mapper-${{ env.VERSION }}.tar.gz
