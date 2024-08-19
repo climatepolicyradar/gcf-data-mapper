@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "gcf-data-mapper"
+version = "0.1.0"
+description = "A simple CLI tool to greet by name."
+authors = ["Your Name <your.email@example.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "gcf_data_mapper"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+click = "^8.1.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.3.2"
+
+[tool.poetry.scripts]
+gcf_data_mapper = "gcf_data_mapper.cli:greet"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

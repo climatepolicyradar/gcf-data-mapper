@@ -1,0 +1,94 @@
+# This file controls the behavior of Trunk: https://docs.trunk.io/cli
+#
+# To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
+version: 0.1
+cli:
+  version: 1.22.3
+
+# Trunk provides extensibility via plugins.
+# (https://docs.trunk.io/plugins)
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.6.1
+      uri: https://github.com/trunk-io/plugins
+
+# Many linters and tools depend on runtimes - configure them here.
+# (https://docs.trunk.io/runtimes)
+runtimes:
+  enabled:
+    - go@1.21.0
+    - node@18.12.1
+    - python@3.10.8
+
+# This is the section where you manage your linters.
+# (https://docs.trunk.io/check/configuration)
+lint:
+  disabled:
+    # Hadolint seems to have excessive memory use on Mac.
+    # Disable until we can investigate further.
+    - hadolint
+  definitions:
+    - name: bandit
+      direct_configs: [bandit.yaml]
+      commands:
+        - name: lint
+          run: bandit --exit-zero -c bandit.yaml --format json --output ${tmpfile} ${target}
+
+  ignore:
+    - linters: [cspell]
+      paths:
+        - .trunk/configs/cspell.json
+
+  enabled:
+    - cspell@8.14.1
+    - actionlint@1.7.1
+    - bandit@1.7.9
+    - black@24.8.0
+    - checkov@3.2.231
+    - git-diff-check
+    - isort@5.13.2
+    - markdownlint@0.41.0
+    - osv-scanner@1.8.3
+    - pre-commit-hooks@4.6.0:
+        commands:
+          - check-ast
+          - check-case-conflict
+          - check-docstring-first
+          - check-json
+          - check-merge-conflict
+          - check-toml
+          - check-yaml
+          - debug-statements
+          - detect-aws-credentials --allow-missing-credentials
+          - end-of-file-fixer
+          - trailing-whitespace
+    - prettier@3.3.3
+    - pyright@1.1.376
+    - ruff@0.6.1
+    - shellcheck@0.10.0
+    - shfmt@3.6.0
+    - taplo@0.9.3
+    - terrascan@1.19.1
+    - trivy@0.54.1
+    - trufflehog@3.81.9
+    - yamllint@1.35.1
+
+actions:
+  disabled:
+    - trunk-check-pre-push
+    - trunk-announce
+  enabled:
+    - trunk-check-pre-commit
+    - configure-pyright
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
+  definitions:
+    - id: configure-pyright
+      run: source .trunk/configure-pyright.sh
+      triggers:
+        - git_hooks: [pre-commit]
+    - id: poetry-check
+      run: poetry check
+      triggers:
+        - git_hooks: [pre-commit]

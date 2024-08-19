@@ -1,0 +1,32 @@
+{
+  "version": "0.2",
+  "language": "en-gb",
+  "words": [
+    "pyenv",
+    "pyright",
+    "virtualenv",
+    "hadolint",
+    "linters",
+    "venv",
+    "pyrightconfig",
+    "runtime",
+    "runtimes",
+    "pyproject",
+    "climatepolicyradar",
+    "elif",
+    "refs",
+    "precommit",
+    "linters",
+    "hadolint",
+    "pycache",
+    "retag",
+    "ndeloof",
+    "pydantic",
+    "pytest",
+    "dotenv",
+    "virtualenvs",
+    "PYTHONPATH"
+  ],
+  "flagWords": ["hte"],
+  "suggestionsTimeout": 5000
+}
