@@ -28,8 +28,6 @@ jobs:
       ! cancelled() && always() &&
       (needs.check-auto-tagging-will-work.result == 'skipped' || needs.check-auto-tagging-will-work.result == 'success') &&
       ! startsWith(github.ref, 'refs/tags')
-    needs:
-      - check-auto-tagging-will-work
     runs-on: ubuntu-latest
     steps:
       - name: Install latest Docker Compose
