@@ -10,6 +10,7 @@ permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all # Required for creating a release
 
     steps:
       - name: Checkout code
