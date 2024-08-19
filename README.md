@@ -11,8 +11,10 @@ A CLI tool to map the GCF data to the required JSON format for bulk-import.
 This package is not available on PyPI. To install it, you need to build the package and install it locally.
 
 ```bash
-make build
-pip install dist/gcf_data_mapper-<version>-py3-none-any.whl
+make build # Ensure you have the package built
+
+# Install the package into your environment
+poetry run pip install dist/gcf_data_mapper-<version>-py3-none-any.whl
 ```
 
 Goto the [releases page](https://github.com/climatepolicyradar/gcf-data-mapper/releases)
