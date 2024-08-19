@@ -14,10 +14,10 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # Install a specific version of Python
-pyenv install 3.11.5  # Example version
+pyenv install 3.10.14
 
 # Set the local version of Python for the project
-pyenv local 3.11.5
+pyenv local 3.10.14
 ```
 
 ## Install poetry
