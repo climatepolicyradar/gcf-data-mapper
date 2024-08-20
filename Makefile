@@ -19,8 +19,8 @@ init: share_trunk move_workflows
 
 setup_with_pyenv:
 	pyenv install 3.10
-	pyenv virtualenv 3.10 bulk-import
-	pyenv activate bulk-import
+	pyenv virtualenv 3.10 gcf-dm
+	pyenv activate gcf-dm
 	poetry install
 
 install_git_hooks: install_trunk
