@@ -5,7 +5,12 @@ import pytest
 from gcf_data_mapper.read import read_data_file
 
 
-@pytest.fixture()
+@pytest.fixture(
+    params=[
+        "tests/unit_tests/test_fixtures/test.json",
+        "tests/unit_tests/test_fixtures/test.csv",
+    ]
+)
 def get_test_data(request):
     """Fixture to yield expected data structure based on file type."""
     file_path = request.param
@@ -13,26 +18,13 @@ def get_test_data(request):
     yield read_data_file(file_path)
 
 
-@pytest.mark.parametrize(
-    "get_test_data",
-    [
-        "tests/unit_tests/test_fixtures/test.json",
-    ],
-)
-def test_reads_json_files(get_test_data):
-    data = read_data_file("tests/unit_tests/test_fixtures/test.json")
-    assert data == get_test_data
-
-
-@pytest.mark.parametrize(
-    "get_test_data",
-    [
-        "tests/unit_tests/test_fixtures/test.csv",
-    ],
-)
-def test_reads_csv_files(get_test_data):
-    data = read_data_file("tests/unit_tests/test_fixtures/test.csv")
-    assert data == get_test_data
+def test_reads_files(get_test_data):
+    if isinstance(get_test_data, list):
+        data = read_data_file("tests/unit_tests/test_fixtures/test.csv")
+        assert get_test_data == data
+    elif isinstance(get_test_data, dict):
+        data = read_data_file("tests/unit_tests/test_fixtures/test.json")
+        assert get_test_data == data
 
 
 def test_errors_on_invalid_file():
