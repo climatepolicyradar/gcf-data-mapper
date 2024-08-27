@@ -1,5 +1,6 @@
 import csv
 import json
+from typing import Any, Optional
 
 import click
 
@@ -14,14 +15,14 @@ def read_csv(file_path: str) -> list[str]:
         return data
 
 
-def read_json(file_path: str):
+def read_json(file_path: str) -> dict:
     """Reads a json file, we will just read the file for now and echo a value"""
     with open(file_path, "r") as file:
         data = file.read()
         return json.loads(data)
 
 
-def read_data_file(file_path: str):
+def read_data_file(file_path: str) -> Optional[dict[str, Any] | list[str]]:
     """Simple program that reads a data file, calls a function to read a csv or json file respectively"""
     file_extension = file_path.lower().split(".")[-1]
     if file_extension not in ["json", "csv"]:
