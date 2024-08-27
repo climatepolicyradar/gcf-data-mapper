@@ -1,36 +1,34 @@
-import json
+import os
 
-from click.testing import CliRunner
+import pytest
 
-from gcf_data_mapper.cli import cli, read_data_file
-
-
-def get_json_test_data():
-    with open("tests/unit_tests/test_fixtures/test.json", "r") as file:
-        data = file.read()
-        return json.loads(data)
+from gcf_data_mapper.read import read_data_file
 
 
-def test_reads_json_files():
-    runner = CliRunner()
-    result = runner.invoke(read_data_file, ["tests/unit_tests/test_fixtures/test.json"])
-    data = get_json_test_data()
-    assert result.exit_code == 0
-    output_data = json.loads(result.output)
-    assert data == output_data
+@pytest.fixture()
+def get__test_data():
+    """Yield data based on"""
+    assert os.path.exists("tests/unit_tests/test_fixtures/test.json")
+    yield read_data_file("tests/unit_tests/test_fixtures/test.json")
 
 
-def test_reads_csv_files():
-    runner = CliRunner()
-    result = runner.invoke(read_data_file, ["tests/unit_tests/test_fixtures/test.csv"])
-    assert result.exit_code == 0
-    assert "['Brazil', 'Canada', 'Egypt']" in result.output.strip()
+@pytest.fixture()
+def get_csv_test_data():
+    assert os.path.exists("tests/unit_tests/test_fixtures/test.csv")
+    yield read_data_file("tests/unit_tests/test_fixtures/test.csv")
+
+
+def test_reads_json_files(get_json_test_data):
+    data = read_data_file("tests/unit_tests/test_fixtures/test.json")
+    assert data == get_json_test_data
+
+
+def test_reads_csv_files(get_csv_test_data):
+    data = read_data_file("tests/unit_tests/test_fixtures/test.csv")
+    assert get_csv_test_data == data
 
 
 def test_errors_on_invalid_file():
-    runner = CliRunner()
-    result = runner.invoke(read_data_file, ["tests/unit_tests/test_fixtures/test.py"])
-    assert (
-        "Error reading file: File must be a valid json or csv file"
-        in result.output.strip()
-    )
+    with pytest.raises(ValueError) as e:
+        read_data_file("tests/unit_tests/test_fixtures/test.py")
+    assert str(e.value) == ("Error reading file: File must be a valid json or csv file")
