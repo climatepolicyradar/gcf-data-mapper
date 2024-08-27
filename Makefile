@@ -25,7 +25,6 @@ setup_with_pyenv:
 
 install_git_hooks: install_trunk
 	trunk init
-	trunk actions run configure-pyright
 
 check:
 	trunk fmt
