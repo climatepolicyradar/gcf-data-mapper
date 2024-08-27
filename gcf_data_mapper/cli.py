@@ -70,3 +70,7 @@ def entrypoint():
     cli.add_command(read_data_file)
     cli.add_command(wrangle_json)
     cli()
+
+
+if __name__ == "__main__":
+    entrypoint()

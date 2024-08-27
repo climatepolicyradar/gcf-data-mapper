@@ -3,12 +3,12 @@ import json
 import pytest
 from click.testing import CliRunner
 
-from gcf_data_mapper.cli import read_data_file, wrangle_json
+from gcf_data_mapper.cli import cli, read_data_file, wrangle_json
 
 
 def test_version():
     runner = CliRunner()
-    result = runner.invoke(wrangle_json, ["--version"])
+    result = runner.invoke(cli, ["--version"])
     assert result.exit_code == 0
     assert "version" in result.output.strip()
 
