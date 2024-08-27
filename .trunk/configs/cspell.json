@@ -25,7 +25,10 @@
     "pytest",
     "dotenv",
     "virtualenvs",
-    "PYTHONPATH"
+    "PYTHONPATH",
+    "markdownlint",
+    "shellcheck",
+    "SCRIPTDIR"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000

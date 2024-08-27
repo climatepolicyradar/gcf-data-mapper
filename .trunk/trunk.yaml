@@ -28,6 +28,7 @@ lint:
     # Hadolint seems to have excessive memory use on Mac.
     # Disable until we can investigate further.
     - hadolint
+
   definitions:
     - name: bandit
       direct_configs: [bandit.yaml]
@@ -39,6 +40,7 @@ lint:
     - linters: [cspell]
       paths:
         - .trunk/configs/cspell.json
+        - .gitignore
 
   enabled:
     - cspell@8.14.1
