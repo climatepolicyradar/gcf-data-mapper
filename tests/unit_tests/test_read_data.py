@@ -18,7 +18,6 @@ def get_test_data(request):
     [
         "tests/unit_tests/test_fixtures/test.json",
     ],
-    indirect=True,
 )
 def test_reads_json_files(get_test_data):
     data = read_data_file("tests/unit_tests/test_fixtures/test.json")
@@ -30,7 +29,6 @@ def test_reads_json_files(get_test_data):
     [
         "tests/unit_tests/test_fixtures/test.csv",
     ],
-    indirect=True,
 )
 def test_reads_csv_files(get_test_data):
     data = read_data_file("tests/unit_tests/test_fixtures/test.csv")
