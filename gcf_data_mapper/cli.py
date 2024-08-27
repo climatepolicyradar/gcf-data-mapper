@@ -4,6 +4,7 @@ from typing import Any, Optional
 import click
 
 from gcf_data_mapper.parsers.collection import collection
+from gcf_data_mapper.parsers.document import document
 from gcf_data_mapper.parsers.family import family
 
 
@@ -45,7 +46,7 @@ def wrangle_to_json(debug) -> dict[str, list[Optional[dict[str, Any]]]]:
     return {
         "collections": collection(debug),
         "families": family(debug),
-        "documents": [],
+        "documents": document(debug),
         "events": [],
     }
 
