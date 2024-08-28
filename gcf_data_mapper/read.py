@@ -1,9 +1,15 @@
 import csv
 import json
+from enum import Enum
 from typing import Optional, Union
 
 import click
 import pandas as pd
+
+
+class AllowedFileExtensions(Enum):
+    JSON = "json"
+    CSV = "csv"
 
 
 def read_csv_pd(
@@ -81,40 +87,72 @@ def read_json_pd(file_path: str):
     return df
 
 
-def read_data_file(file_path) -> pd.DataFrame:
+def read_into_pandas(file_path) -> pd.DataFrame:
     """Simple program that reads a data file, calls a function to read a csv or json file respectively"""
     file_extension = file_path.lower().split(".")[-1]
-    if file_extension not in ["json", "csv"]:
+    if file_extension not in [e.value for e in AllowedFileExtensions]:
         raise ValueError("File must be a valid json or csv file")
+
+    df = pd.DataFrame([])
     try:
-        if file_extension == "csv":
+        if file_extension == AllowedFileExtensions.CSV.value:
             return read_csv_pd(file_path)
             pass
             # return read_csv(file_path)
-        if file_extension == "json":
+        if file_extension == AllowedFileExtensions.JSON.value:
             return read_json_pd(file_path)
             # return read_json(file_path)
     except Exception as e:
         click.echo(f"Error reading file: {e}")
-    return pd.DataFrame([])
+    return df
 
 
-def concatenate_data(gcf_projects_file, mcf_projects_file, mcf_docs_file, debug: bool):
+def read(
+    gcf_projects_file: str,
+    mcf_projects_file: str,
+    mcf_docs_file: str,
+    debug: bool,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Put the mapped GCF data into a dictionary ready for dumping.
 
     The output of this function will get dumped as JSON to the output
     file.
 
-    :param click.Path gcf_projects_file: The GCF projects filename.
-    :param click.Path mcf_projects_file: The MCF projects filename.
-    :param click.Path mcf_docs_file: The MCF projects filename.
-    :param click.Path output_file: The output filename.
+    :param str gcf_projects_file: The GCF projects filename.
+    :param str mcf_projects_file: The MCF projects filename.
+    :param str mcf_docs_file: The MCF projects filename.
     :param bool debug: Whether debug mode is on.
     :return dict[str, list[Optional[dict[str, Any]]]]: The GCF data
         mapped to the Document-Family-Collection-Event entity it
         corresponds to.
     """
-    gcf_projects = read_data_file(gcf_projects_file)
-    mcf_projects = read_data_file(mcf_projects_file)
-    mcf_docs = read_data_file(mcf_docs_file)
-    return gcf_projects, mcf_projects, mcf_docs
+    gcf_projects: pd.DataFrame = read_into_pandas(gcf_projects_file)
+    mcf_projects: pd.DataFrame = read_into_pandas(mcf_projects_file)
+    mcf_docs: pd.DataFrame = read_into_pandas(mcf_docs_file)
+
+    if any(
+        data is None or data.empty for data in [gcf_projects, mcf_projects, mcf_docs]
+    ):
+        raise ValueError("One or more of the expected dataframes are empty")
+
+    # Join the MCF and GCF project data by the 'FP number' a.k.a ApprovedRef.
+    if gcf_projects.shape[0] != mcf_projects.shape[0]:
+        click.echo(
+            f"❌ GCF project data {gcf_projects.shape[0]}, MCF project data {mcf_projects.shape[0]}"
+        )
+        raise ValueError("Record number mismatch")
+
+    if debug:
+        click.echo("📝 Merging GCF and MCF project data")
+    mcf_projects.rename(columns={"FP number": "ApprovedRef"}, inplace=True)
+    project_info = pd.merge(
+        left=gcf_projects,
+        right=mcf_projects,
+        # left_on="ApprovedRef",
+        # right_on="FP number",
+    )
+    # merged_df.drop("team_name", axis=1, inplace=True)
+    if debug:
+        click.echo(project_info)
+        click.echo(mcf_docs)
+    return project_info, mcf_docs
