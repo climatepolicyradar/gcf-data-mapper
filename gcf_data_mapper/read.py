@@ -1,6 +1,6 @@
 import csv
 import json
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 import click
 
@@ -38,12 +38,15 @@ def read_json(file_path: str) -> dict:
         return json.load(file)
 
 
-def read_data_file(file_path: str) -> Union[dict[str, Any], list[dict[str, Any]], None]:
+def read_data_file(
+    file_path: str,
+) -> Optional[Union[dict[str, Any], list[dict[str, Any]]]]:
     """
     Simple program that reads a data file,
     calls a function to read a csv or json file respectively
 
     :param str: A file path to the csv/json file
+    :raises ValueError: if a non csv or json file type is provided
     :return dict | list[dict[str, Any]] | ValueError: A dictionary or list of dictionaries
     depending on the file type
     """
