@@ -85,25 +85,34 @@ def return_valid_json_data():
         ),
     ),
 )
-def test_reads_files(filepath: str, expected_output: Union[dict, list[dict[str, Any]]]):
+def test_reads_files_and_returns_expected_output(
+    filepath: str, expected_output: Union[dict, list[dict[str, Any]]]
+):
     assert os.path.exists(filepath)
     data = read_data_file(filepath)
     assert data is not None
     assert data == expected_output
 
 
-def test_invalid_json_file_does_not_return_expected_output():
-    filepath = os.path.join(fixtures_folder, "invalid_climate_json_data.json")
+@pytest.mark.parametrize(
+    "filepath, expected_output",
+    (
+        (
+            os.path.join(fixtures_folder, "invalid_climate_json_data.json"),
+            return_valid_json_data(),
+        ),
+        (
+            os.path.join(fixtures_folder, "invalid_climate_csv_data.csv"),
+            return_valid_csv_data(),
+        ),
+    ),
+)
+def test_invalid_files_do_not_return_expected_output(
+    filepath: str, expected_output: Union[dict, list[dict[str, Any]]]
+):
+    assert os.path.exists(filepath)
     data = read_data_file(filepath)
-    assert data is not None
-    assert data != return_valid_json_data()
-
-
-def test_invalid_csv_file_does_not_return_expected_output():
-    filepath = os.path.join(fixtures_folder, "invalid_climate_csv_data.csv")
-    data = read_data_file(filepath)
-    assert data is not None
-    assert data != return_valid_csv_data()
+    assert data != expected_output
 
 
 def test_raises_error_on_invalid_file_extension():
