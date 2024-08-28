@@ -9,22 +9,14 @@ def read_csv(file_path: str) -> list[dict[str, Any]]:
     """
     Reads a csv file and returns a list of dictionaries
 
-    :param str: a file path to the csv file
+    :param file_path str: a file path to the csv file
     :return list: a list of dictionaries, where each line in the csv file is
     mapped to a dictionary
     """
     with open(file_path, "r") as file:
         csv_reader = csv.DictReader(file)
-        data = [
-            {
-                "country": line["country"],
-                "capital": line["capital"],
-                "avg_temp_celsius": float(line["avg_temp_celsius"]),
-                "annual_rainfall_mm": int(line["annual_rainfall_mm"]),
-                "climate_zone": line["climate_zone"],
-            }
-            for line in csv_reader
-        ]
+        fieldnames = csv_reader.fieldnames or []
+        data = [{field: line[field] for field in fieldnames} for line in csv_reader]
         return data
 
 
@@ -32,7 +24,7 @@ def read_json(file_path: str) -> dict:
     """
     Reads a json file, and returns a dict
 
-    :param str: A file path to the csv file
+    :param file_path str: A file path to the csv file
     :return dict: A dictionary of the json data
     """
     with open(file_path, "r") as file:
@@ -46,9 +38,9 @@ def read_data_file(
     Simple program that reads a data file,
     calls a function to read a csv or json file respectively
 
-    :param str: A file path to the csv/json file
+    :param file_path str: A file path to the csv/json file
     :raises ValueError: if a non csv or json file type is provided
-    :return dict | list[dict[str, Any]] | ValueError: A dictionary or list of dictionaries
+    :return Optional[Union[dict[str, Any], list[dict[str, Any]]]]: A dictionary or list of dictionaries
     depending on the file type
     """
     file_extension = file_path.lower().split(".")[-1]
@@ -57,7 +49,7 @@ def read_data_file(
     try:
         if file_extension == "csv":
             return read_csv(file_path)
-        elif file_extension == "json":
+        else:
             return read_json(file_path)
     except Exception as e:
         click.echo(f"Error reading file: {e}")
