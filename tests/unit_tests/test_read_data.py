@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Union
 
 import pytest
 
@@ -75,11 +75,17 @@ def return_mock_test_json_data():
 @pytest.mark.parametrize(
     "filepath, expected_output",
     (
-        (os.path.join(fixtures_folder, "test.json"), return_mock_test_json_data()),
-        (os.path.join(fixtures_folder, "test.csv"), return_mock_test_csv_data()),
+        (
+            os.path.join(fixtures_folder, "test_country_climate_data.json"),
+            return_mock_test_json_data(),
+        ),
+        (
+            os.path.join(fixtures_folder, "test_climate_data.csv"),
+            return_mock_test_csv_data(),
+        ),
     ),
 )
-def test_reads_files(filepath: str, expected_output: dict | list[dict[str, Any]]):
+def test_reads_files(filepath: str, expected_output: Union[dict, list[dict[str, Any]]]):
     assert os.path.exists(filepath)
     data = read_data_file(filepath)
     assert data is not None
