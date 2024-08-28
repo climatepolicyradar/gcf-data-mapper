@@ -1,3 +1,6 @@
+# Very basic python file to test that the read function does not process non-csv/json files
+
+
 class TestClass:
     def __init__(self):
         self.message = "This is not a CSV or JSON file"

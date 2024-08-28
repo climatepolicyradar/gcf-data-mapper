@@ -1,60 +1,89 @@
 import os
+from typing import Any
 
 import pytest
 
 from gcf_data_mapper.read import read_data_file
 
-print()
 unit_tests_folder = os.path.dirname(os.path.abspath(__file__))
 fixtures_folder = os.path.join(unit_tests_folder, "test_fixtures")
 
 
-def good_test_json():
-    """Fixture to yield expected data structure based on file type.
-
-    what would you expected the output of read_data_file() to be with
-    the JSON data in your file read in?
-
-    return that data type with the above data in as the function would
-    be expected to output
+def return_mock_test_csv_data():
     """
-    pass
-
-
-def good_test_csv():
-    """Fixture to yield expected data structure based on file type.
-
-    what would you expected the output of read_data_file() to be with
-    the following data read in?
-
-    country,capital,avg_temp_celsius,annual_rainfall_mm,climate_zone
-    Brazil,Brasilia,21.5,1500,Tropical
-    Canada,Ottawa,6.3,940,Continental
-    Egypt,Cairo,22.1,25,Desert
-
-    return that data type with the above data in as the function would
-    be expected to output
+    Function which returns expected data structure of csv file.
     """
-    pass
+
+    csv_data = [
+        {
+            "country": "Brazil",
+            "capital": "Brasilia",
+            "avg_temp_celsius": 21.5,
+            "annual_rainfall_mm": 1500,
+            "climate_zone": "Tropical",
+        },
+        {
+            "country": "Canada",
+            "capital": "Ottawa",
+            "avg_temp_celsius": 6.3,
+            "annual_rainfall_mm": 940,
+            "climate_zone": "Continental",
+        },
+        {
+            "country": "Egypt",
+            "capital": "Cairo",
+            "avg_temp_celsius": 22.1,
+            "annual_rainfall_mm": 25,
+            "climate_zone": "Desert",
+        },
+    ]
+    return csv_data
+
+
+def return_mock_test_json_data():
+    """
+    Function which returns expected data structure of json file.
+    """
+
+    json_data = {
+        "climate_data": [
+            {
+                "country": "Brazil",
+                "capital": "Brasilia",
+                "climate_info": {
+                    "avg_temp_celsius": 21.5,
+                    "annual_rainfall_mm": 1500,
+                    "climate_zone": "Tropical",
+                },
+                "natural_disasters": ["Floods", "Landslides"],
+            },
+            {
+                "country": "Canada",
+                "capital": "Ottawa",
+                "climate_info": {
+                    "avg_temp_celsius": 6.3,
+                    "annual_rainfall_mm": 940,
+                    "climate_zone": "Continental",
+                },
+                "natural_disasters": ["Blizzards", "Wildfires"],
+            },
+        ]
+    }
+    return json_data
 
 
 @pytest.mark.parametrize(
     "filepath, expected_output",
     (
-        (os.path.join(fixtures_folder, "test.json"), good_test_json()),
-        (os.path.join(fixtures_folder, "test.csv"), good_test_csv()),
+        (os.path.join(fixtures_folder, "test.json"), return_mock_test_json_data()),
+        (os.path.join(fixtures_folder, "test.csv"), return_mock_test_csv_data()),
     ),
 )
-def test_reads_files(filepath):
+def test_reads_files(filepath: str, expected_output: dict | list[dict[str, Any]]):
     assert os.path.exists(filepath)
     data = read_data_file(filepath)
     assert data is not None
-    # if isinstance(get_test_data, list):
-    #     data = read_data_file("tests/unit_tests/test_fixtures/test.csv")
-    #     assert get_test_data == data
-    # elif isinstance(get_test_data, dict):
-    #     data = read_data_file("tests/unit_tests/test_fixtures/test.json")
-    #     assert get_test_data == data
+    assert data == expected_output
 
 
 def test_errors_on_invalid_file():

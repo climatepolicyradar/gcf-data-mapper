@@ -5,7 +5,7 @@ from typing import Any, Optional
 import click
 
 
-def read_csv(file_path: str) -> list[str]:
+def read_csv(file_path: str) -> list[dict[str, Any]]:
     """
     Reads a csv file and returns a list of values
 
@@ -14,9 +14,16 @@ def read_csv(file_path: str) -> list[str]:
     """
     with open(file_path, "r") as file:
         csv_reader = csv.DictReader(file)
-        data = []
-        for line in csv_reader:
-            data.append(line["country"])
+        data = [
+            {
+                "country": line["country"],
+                "capital": line["capital"],
+                "avg_temp_celsius": float(line["avg_temp_celsius"]),
+                "annual_rainfall_mm": int(line["annual_rainfall_mm"]),
+                "climate_zone": line["climate_zone"],
+            }
+            for line in csv_reader
+        ]
         return data
 
 
@@ -31,12 +38,14 @@ def read_json(file_path: str) -> dict:
         return json.load(file)
 
 
-def read_data_file(file_path: str) -> Optional[dict[str, Any] | list[str]]:
+def read_data_file(file_path: str) -> Optional[dict[str, Any] | list[dict[str, Any]]]:
     """
     Simple program that reads a data file,
     calls a function to read a csv or json file respectively
 
     :param str: A file path to the csv/json file
+    :return dict | list[dict[str, Any]]: A dictionary or list of dictionaries
+    depending on the file type
     """
     file_extension = file_path.lower().split(".")[-1]
     if file_extension not in ["json", "csv"]:
