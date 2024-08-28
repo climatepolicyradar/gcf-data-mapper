@@ -85,7 +85,7 @@ def return_valid_json_data():
         ),
     ),
 )
-def test_reads_files_and_returns_expected_output(
+def test_valid_files_return_expected_output(
     filepath: str, expected_output: Union[dict, list[dict[str, Any]]]
 ):
     assert os.path.exists(filepath)
