@@ -92,14 +92,14 @@ def test_reads_files(filepath: str, expected_output: Union[dict, list[dict[str, 
     assert data == expected_output
 
 
-def test_malformed_json_file_does_not_return_expected_output():
+def test_invalid_json_file_does_not_return_expected_output():
     filepath = os.path.join(fixtures_folder, "invalid_climate_json_data.json")
     data = read_data_file(filepath)
     assert data is not None
     assert data != return_valid_json_data()
 
 
-def test_malformed_csv_file_does_not_return_expected_output():
+def test_invalid_csv_file_does_not_return_expected_output():
     filepath = os.path.join(fixtures_folder, "invalid_climate_csv_data.csv")
     data = read_data_file(filepath)
     assert data is not None
