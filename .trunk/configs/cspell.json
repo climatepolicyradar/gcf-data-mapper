@@ -28,7 +28,10 @@
     "PYTHONPATH",
     "markdownlint",
     "shellcheck",
-    "SCRIPTDIR"
+    "SCRIPTDIR",
+    "chunksize",
+    "dataframe",
+    "dataframes"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
