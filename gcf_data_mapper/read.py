@@ -10,7 +10,8 @@ def read_csv(file_path: str) -> list[dict[str, Any]]:
     Reads a csv file and returns a list of dictionaries
 
     :param str: a file path to the csv file
-    :return list: A list of strings
+    :return list: a list of dictionaries, where each line in the csv file is
+    mapped to a dictionary
     """
     with open(file_path, "r") as file:
         csv_reader = csv.DictReader(file)
