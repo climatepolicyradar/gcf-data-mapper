@@ -1,0 +1,1 @@
+Very basic txt file to test that the read function does not process non-csv/json files

@@ -41,4 +41,4 @@ build: ## Build the project
 	poetry build
 
 test: ## Run tests using pytest
-	poetry run pytest
+	poetry run pytest -v

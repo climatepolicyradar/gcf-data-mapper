@@ -1,5 +1,5 @@
-import csv
 import json
+import os
 from enum import Enum
 from typing import Optional, Union
 
@@ -17,93 +17,83 @@ def read_csv_pd(
     header_rows: Optional[Union[int, list[int]]] = 0,
     chunk_size: int = 10**4,
 ) -> pd.DataFrame:
-    """Load the policies from the specified dataset into a Pandas DataFrame.
+    """Load the policies from the specified dataset into a Pandas DF.
 
-    :param str file_path:
-        The filepath passed by the user to the programme.
-    :param Optional[Union[int, list[int]]] header_rows:
-        The indexes of any rows in the file that contain headers. Defaults
-        to 0 (which is the first line of the file), but can also be None if
-        no header rows exist or an array of indexes if multiple rows
+    :param str file_path: The filepath passed by the user to the
+        programme.
+    :param Optional[Union[int, list[int]]] header_rows: The indexes of
+        any rows in the file that contain headers. Defaults to 0 (which
+        is the first line of the file), but can also be None if no
+        header rows exist or an array of indexes if multiple rows
         contain headers.
-    :param Optional[int] chunk_size:
-        The number of lines to read into memory in each batch iteratively.
-        Defaults to 10**4.
+    :param Optional[int] chunk_size: The number of lines to read into
+        memory in each batch iteratively. Defaults to 10**4.
 
-    :return Optional[pd.DataFrame]:
-        A Pandas DataFrame containing the policy data if the file is
-        successfully found and parsed by the Pandas CSV reader. Otherwise
-        this function will return None.
+    :return Optional[pd.DataFrame]: A Pandas DataFrame containing the
+        policy data if the file is successfully found and parsed by the
+        Pandas CSV reader. Otherwise this function will return None.
     """
-    # Should the path exist, read the CSV contents into memory iteratively in chunks of 'chunk_size' (10**4 by default).
-    # This helps prevent out of memory errors where there is insufficient memory to handling reading in the file
-    # contents e.g., when handling super large datasets.
+    # Should the path exist, read the CSV contents into memory iteratively in chunks of
+    # 'chunk_size' (10**4 by default).
+    # This helps prevent out of memory errors where there is insufficient memory to
+    # handling reading in the file contents e.g., when handling super large datasets.
     try:
-        # By using 'chunksize' we create a list of chunks (each chunk being a DataFrame containing 'chunk_size' lines of
-        # the original file).
+        # By using 'chunksize' we create a list of chunks (each chunk being a DataFrame
+        # containing 'chunk_size' lines of the original file).
         all_chunks = pd.read_csv(
             file_path, chunksize=chunk_size, header=header_rows, encoding="utf-8"
         )
 
-        # We can then concatenate each of the chunks into a single dataframe, thus reducing complexity.
+        # We can then concatenate each of the chunks into a single dataframe, thus
+        # reducing complexity.
         dataset = pd.concat(all_chunks)
-        # click.echo(dataset)
         return dataset
 
-    except FileExistsError:
-        click.echo("Error opening file: %s" % file_path)
-
-    except Exception:
+    except Exception as e:
+        print(e)
         click.echo("Error occurred reading CSV file using Pandas: %s" % file_path)
 
     return pd.DataFrame([])
-
-
-def read_csv(file_path: str):
-    """Reads a csv file, we will just read the file for now and echo a value"""
-    with open(file_path, "r") as file:
-        csv_reader = csv.DictReader(file)
-        data = []
-        for line in csv_reader:
-            data.append(line["country"])
-        click.echo(data)
-
-
-def read_json(file_path: str):
-    """Reads a json file, we will just read the file for now and echo a value"""
-    with open(file_path, "r") as file:
-        data = file.read()
-        # data = json.load(file)
-        click.echo(data)
 
 
 def read_json_pd(file_path: str):
     """Reads a json file, we will just read the file for now and echo a value"""
     with open(file_path, "r") as file:
         df = pd.json_normalize(json.load(file))
-    # df = pd.read_json(file_path)
-    # data = json.load(file)
-    # click.echo(df)
     return df
 
 
 def read_into_pandas(file_path) -> pd.DataFrame:
-    """Simple program that reads a data file, calls a function to read a csv or json file respectively"""
-    file_extension = file_path.lower().split(".")[-1]
+    """
+    Simple program that validates a file path for existence, type and size,
+    then calls a function to read the csv or json file respectively
+
+    :param file_path str: A file path to the csv/json file
+    :raises ValueError: if a non csv or json file type is provided
+    :raises FileNotFoundError: if the file does not exist
+    :raises ValueError: if the file is empty
+    :return Optional[Union[dict[str, Any], list[dict[str, Any]]]]: A
+        dictionary or list of dictionaries
+    depending on the file type
+    """
+    file_extension = os.path.splitext(file_path)[1][1:]
     if file_extension not in [e.value for e in AllowedFileExtensions]:
-        raise ValueError("File must be a valid json or csv file")
+        raise ValueError("Error reading file: File must be a valid json or csv file")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"No such file or directory: '{file_path}'")
+    if os.path.getsize(file_path) == 0:
+        raise ValueError("Error reading file: File is empty")
 
     df = pd.DataFrame([])
     try:
         if file_extension == AllowedFileExtensions.CSV.value:
             return read_csv_pd(file_path)
-            pass
-            # return read_csv(file_path)
         if file_extension == AllowedFileExtensions.JSON.value:
             return read_json_pd(file_path)
-            # return read_json(file_path)
     except Exception as e:
         click.echo(f"Error reading file: {e}")
+        raise e
+
     return df
 
 
@@ -148,11 +138,10 @@ def read(
     project_info = pd.merge(
         left=gcf_projects,
         right=mcf_projects,
-        # left_on="ApprovedRef",
-        # right_on="FP number",
     )
-    # merged_df.drop("team_name", axis=1, inplace=True)
+
     if debug:
         click.echo(project_info)
         click.echo(mcf_docs)
+
     return project_info, mcf_docs

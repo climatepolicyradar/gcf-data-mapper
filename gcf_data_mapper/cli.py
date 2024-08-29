@@ -47,7 +47,6 @@ def entrypoint(
     :param str output_file: The output filename.
     :param bool debug: Whether debug mode is on.
     """
-
     click.echo("🚀 Starting the GCF data mapping process.")
     if debug:
         click.echo("📝 Input files:")
