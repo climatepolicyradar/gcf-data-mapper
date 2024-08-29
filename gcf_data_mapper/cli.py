@@ -41,10 +41,10 @@ def entrypoint(
 ):
     """Simple program that wrangles GCF data into bulk import format.
 
-    :param click.Path gcf_projects_file: The GCF projects filename.
-    :param click.Path mcf_projects_file: The MCF projects filename.
-    :param click.Path mcf_docs_file: The MCF projects filename.
-    :param click.Path output_file: The output filename.
+    :param str gcf_projects_file: The GCF projects filename.
+    :param str mcf_projects_file: The MCF projects filename.
+    :param str mcf_docs_file: The MCF projects filename.
+    :param str output_file: The output filename.
     :param bool debug: Whether debug mode is on.
     """
 
