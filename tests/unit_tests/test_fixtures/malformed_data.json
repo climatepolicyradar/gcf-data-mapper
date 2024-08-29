@@ -1,0 +1,19 @@
+
+    {
+        "location": "New York",
+        "temperature": {
+            "value": 75,
+            "unit": "Fahrenheit",
+        },
+        "humidity": 60,
+        "conditions": [
+            "Sunny",
+            "Windy",
+        ],
+        "forecast": {
+            "day": "Monday",
+            "high": 80,
+            "low": 65
+        // Missing closing brace
+    }
+    

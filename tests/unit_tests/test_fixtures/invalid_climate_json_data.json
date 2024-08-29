@@ -1,0 +1,23 @@
+{
+  "climate_data": [
+    {
+      "country": "Brazil",
+      "capital": "Brasilia",
+      "climate_info": {
+        "avg_temp_celsius": "twenty-one point five",
+        "annual_rainfall_mm": 1500
+      },
+      "natural_disasters": ["Floods", "Landslides"]
+    },
+    {
+      "country": "Canada",
+      "capital": "Ottawa",
+      "climate_info": {
+        "avg_temp_celsius": 6.3,
+        "annual_rainfall_mm": "nine hundred forty",
+        "climate_zone": "Continental"
+      },
+      "natural_disasters": ["Blizzards", "Wildfires"]
+    }
+  ]
+}
