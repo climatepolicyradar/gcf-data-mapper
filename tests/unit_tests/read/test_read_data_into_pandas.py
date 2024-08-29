@@ -14,9 +14,9 @@ FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "test_fixtures")
         (os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"), 5, 3),
         (
             os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.csv"),
-            4,
+            7,
             2,
-        ),  # TODO: Fix
+        ),
     ),
 )
 def test_valid_files_return_expected_output(

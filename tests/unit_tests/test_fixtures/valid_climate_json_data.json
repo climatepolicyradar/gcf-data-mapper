@@ -7,6 +7,9 @@
       "annual_rainfall_mm": 1500,
       "climate_zone": "Tropical"
     },
+    "rivers": {
+      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
+    },
     "natural_disasters": ["Floods", "Landslides"]
   },
   {
@@ -16,6 +19,9 @@
       "avg_temp_celsius": 6.3,
       "annual_rainfall_mm": 940,
       "climate_zone": "Continental"
+    },
+    "rivers": {
+      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
     },
     "natural_disasters": ["Blizzards", "Wildfires"]
   }
