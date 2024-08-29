@@ -1,24 +1,22 @@
-{
-  "climate_data": [
-    {
-      "country": "Brazil",
-      "capital": "Brasilia",
-      "climate_info": {
-        "avg_temp_celsius": 21.5,
-        "annual_rainfall_mm": 1500,
-        "climate_zone": "Tropical"
-      },
-      "natural_disasters": ["Floods", "Landslides"]
+[
+  {
+    "country": "Brazil",
+    "capital": "Brasilia",
+    "climate_info": {
+      "avg_temp_celsius": 21.5,
+      "annual_rainfall_mm": 1500,
+      "climate_zone": "Tropical"
     },
-    {
-      "country": "Canada",
-      "capital": "Ottawa",
-      "climate_info": {
-        "avg_temp_celsius": 6.3,
-        "annual_rainfall_mm": 940,
-        "climate_zone": "Continental"
-      },
-      "natural_disasters": ["Blizzards", "Wildfires"]
-    }
-  ]
-}
+    "natural_disasters": ["Floods", "Landslides"]
+  },
+  {
+    "country": "Canada",
+    "capital": "Ottawa",
+    "climate_info": {
+      "avg_temp_celsius": 6.3,
+      "annual_rainfall_mm": 940,
+      "climate_zone": "Continental"
+    },
+    "natural_disasters": ["Blizzards", "Wildfires"]
+  }
+]

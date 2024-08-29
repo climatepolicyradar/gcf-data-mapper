@@ -18,7 +18,7 @@ def test_valid_files_return_expected_output(filepath: str):
     assert data.empty is False
 
     expected_num_records = 2
-    expected_num_cols = 4
+    expected_num_cols = 6
 
     assert data.shape[0] == expected_num_records
     assert data.shape[1] == expected_num_cols
