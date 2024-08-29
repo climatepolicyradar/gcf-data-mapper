@@ -58,9 +58,14 @@ def read_csv_pd(
 
 def read_json_pd(file_path: str):
     """Reads a json file, we will just read the file for now and echo a value"""
-    with open(file_path, "r") as file:
-        df = pd.json_normalize(json.load(file))
-    return df
+    try:
+        with open(file_path, "r") as file:
+            df = pd.json_normalize(json.load(file))
+        return df
+    except Exception as e:
+        print(e)
+        click.echo("Error occurred reading JSON file using Pandas: %s" % file_path)
+    return pd.DataFrame([])
 
 
 def read_into_pandas(file_path) -> pd.DataFrame:
@@ -76,11 +81,13 @@ def read_into_pandas(file_path) -> pd.DataFrame:
         dictionary or list of dictionaries
     depending on the file type
     """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"No such file or directory: '{file_path}'")
+
     file_extension = os.path.splitext(file_path)[1][1:]
     if file_extension not in [e.value for e in AllowedFileExtensions]:
         raise ValueError("Error reading file: File must be a valid json or csv file")
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"No such file or directory: '{file_path}'")
+
     if os.path.getsize(file_path) == 0:
         raise ValueError("Error reading file: File is empty")
 
