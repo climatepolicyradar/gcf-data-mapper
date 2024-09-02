@@ -37,8 +37,9 @@ jobs:
         run: |
           python -m pip install "poetry==1.7.1"
           poetry config virtualenvs.prefer-active-python true
-          poetry install --no-cache
+          poetry config virtualenvs.create true
           poetry install --only-root
+          poetry install --with dev --no-cache
 
       - name: Export PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
