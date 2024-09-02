@@ -47,4 +47,4 @@ jobs:
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Run Tests
-        run: pytest -vvv tests/unit_tests
+        run: poetry run pytest -vvv tests/unit_tests
