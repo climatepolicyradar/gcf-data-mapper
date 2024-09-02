@@ -17,10 +17,10 @@ def read_csv_pd(
     header_rows: Optional[Union[int, list[int]]] = 0,
     chunk_size: int = 10**4,
 ) -> pd.DataFrame:
-    """Load the policies from the specified dataset into a Pandas DF.
+    """Load the data from the specified CSV file into a Pandas DF.
 
     :param str file_path: The filepath passed by the user to the
-        programme.
+        tool.
     :param Optional[Union[int, list[int]]] header_rows: The indexes of
         any rows in the file that contain headers. Defaults to 0 (which
         is the first line of the file), but can also be None if no
@@ -30,7 +30,7 @@ def read_csv_pd(
         memory in each batch iteratively. Defaults to 10**4.
 
     :return Optional[pd.DataFrame]: A Pandas DataFrame containing the
-        policy data if the file is successfully found and parsed by the
+        CSV data if the file is successfully found and parsed by the
         Pandas CSV reader. Otherwise this function will return None.
     """
     # Should the path exist, read the CSV contents into memory iteratively in chunks of
@@ -57,7 +57,15 @@ def read_csv_pd(
 
 
 def read_json_pd(file_path: str):
-    """Reads a json file, we will just read the file for now and echo a value"""
+    """Load the data from the specified JSON file into a Pandas DF.
+
+    :param str file_path: The filepath passed by the user to the
+        tool.
+
+    :return Optional[pd.DataFrame]: A Pandas DataFrame containing the
+        JSON data if the file is successfully found and parsed by the
+        Pandas JSON reader. Otherwise this function will return None.
+    """
     try:
         with open(file_path, "r") as file:
             df = pd.json_normalize(json.load(file))
@@ -69,9 +77,11 @@ def read_json_pd(file_path: str):
 
 
 def read_into_pandas(file_path) -> pd.DataFrame:
-    """
-    Simple program that validates a file path for existence, type and size,
-    then calls a function to read the csv or json file respectively
+    """Read a CSV or JSON file into a Pandas dataframe.
+
+    Simple program that validates a file path for existence, type and
+    emptiness, which then calls a function to read the file into Pandas
+    based on its file type.
 
     :param file_path str: A file path to the csv/json file
     :raises ValueError: if a non csv or json file type is provided
