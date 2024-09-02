@@ -43,8 +43,5 @@ jobs:
       - name: Export PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
-      - name: Create .env
-        run: cp .env.example .env
-
       - name: Run Tests
         run: pytest -vvv tests/unit_tests
