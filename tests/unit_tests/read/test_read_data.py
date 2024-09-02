@@ -4,7 +4,7 @@ from typing import Any, Union
 
 import pytest
 
-from gcf_data_mapper.read import read_data_file
+from gcf_data_mapper.read import read
 
 UNIT_TESTS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "test_fixtures")
@@ -90,7 +90,7 @@ def test_valid_files_return_expected_output(
     filepath: str, expected_output: Union[dict, list[dict[str, Any]]]
 ):
     assert os.path.exists(filepath)
-    data = read_data_file(filepath)
+    data = read(filepath)
     assert data is not None
     assert data == expected_output
 
@@ -112,30 +112,30 @@ def test_invalid_files_do_not_return_expected_output(
     filepath: str, expected_output: Union[dict, list[dict[str, Any]]]
 ):
     assert os.path.exists(filepath)
-    data = read_data_file(filepath)
+    data = read(filepath)
     assert data != expected_output
 
 
 def test_raises_error_on_invalid_file_extension():
     with pytest.raises(ValueError) as e:
-        read_data_file(os.path.join(FIXTURES_FOLDER, "test_text_file.txt"))
+        read(os.path.join(FIXTURES_FOLDER, "test_text_file.txt"))
     assert str(e.value) == ("Error reading file: File must be a valid json or csv file")
 
 
 def test_raises_error_with_non_existent_file():
     non_existent_file_path = os.path.join(FIXTURES_FOLDER, "non_existent_file.csv")
     with pytest.raises(FileNotFoundError) as e:
-        read_data_file(non_existent_file_path)
+        read(non_existent_file_path)
     assert str(e.value) == f"No such file or directory: '{non_existent_file_path}'"
 
 
 def test_raises_error_with_empty_file():
     empty_file_path = os.path.join(FIXTURES_FOLDER, "empty_file.csv")
     with pytest.raises(ValueError) as e:
-        read_data_file(empty_file_path)
+        read(empty_file_path)
     assert str(e.value) == "Error reading file: File is empty"
 
 
 def test_raises_error_on_malformed_json():
     with pytest.raises(json.JSONDecodeError):
-        read_data_file(os.path.join(FIXTURES_FOLDER, "malformed_data.json"))
+        read(os.path.join(FIXTURES_FOLDER, "malformed_data.json"))
