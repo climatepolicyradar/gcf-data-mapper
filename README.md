@@ -24,4 +24,13 @@ to find the latest version.
 
 ## Usage
 
-TBD
+If `--output_file` is not passed, by default an output file called `output.json`
+will be created in the current directory if it does not already exist.
+
+If `--gcf_projects_file`, `mcf_projects_file` or `mcf_docs_file` is not passed,
+by default the GCF mapper tool will look for a sub-folder in the current working
+directory called `data` with the following files in it:
+
+```bash
+gcf_data_mapper --gcf_projects_file FILENAME --mcf_projects_file FILENAME --mcf_docs_file FILENAME --output_file FILENAME
+```

@@ -15,6 +15,6 @@ def collection(debug: bool) -> list[Optional[dict[str, Any]]]:
         Sheet.
     """
     if debug:
-        click.echo("📝 Wrangling GCF collection data.")
+        click.echo("📝 No GCF collection data to wrangle.")
 
     return []

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gcf-data-mapper"
-version = "0.1.4"
+version = "0.1.5"
 description = "A CLI tool to wrangle GCF data into format recognised by the bulk-import tool."
 authors = ["CPR-dev-team <tech@climatepolicyradar.org>"]
 license = "Apache-2.0"
@@ -10,6 +10,7 @@ packages = [{ include = "gcf_data_mapper" }]
 [tool.poetry.dependencies]
 python = ">=3.10"
 click = "^8.1.7"
+pandas = "^2.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
