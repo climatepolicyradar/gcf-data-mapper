@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install "poetry==1.7.1"
-          poetry config virtualenvs.create false
+          poetry config virtualenvs.prefer-active-python true
           poetry install --no-cache
           poetry install --only-root
 
