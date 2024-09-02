@@ -24,5 +24,18 @@
       "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
     },
     "natural_disasters": ["Blizzards", "Wildfires"]
+  },
+  {
+    "country": "Egypt",
+    "capital": "Cairo",
+    "climate_info": {
+      "avg_temp_celsius": 22.1,
+      "annual_rainfall_mm": 25,
+      "climate_zone": "Desert"
+    },
+    "rivers": {
+      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
+    },
+    "natural_disasters": ["Droughts"]
   }
 ]
