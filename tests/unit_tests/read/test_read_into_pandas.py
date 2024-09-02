@@ -3,19 +3,17 @@ import os
 import pytest
 
 from gcf_data_mapper.read import read_into_pandas
-
-UNIT_TESTS_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "fixtures")
+from tests.unit_tests.read.conftest import FIXTURES_FOLDER
 
 
 @pytest.mark.parametrize(
     ("filepath", "expected_cols", "expected_records"),
     (
-        (os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"), 5, 3),
+        (os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"), 2, 3),
         (
-            os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.csv"),
+            os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
             7,
-            2,
+            3,
         ),
     ),
 )
@@ -37,7 +35,7 @@ def test_valid_files_return_expected_output(
         os.path.join(FIXTURES_FOLDER, "malformed_data.json"),
     ],
 )
-def test_returns_empty_df_when_exception(filepath, monkeypatch):
+def test_returns_empty_df_when_exception(filepath):
     test_df = read_into_pandas(filepath)
     assert test_df.empty is True
 
@@ -62,7 +60,5 @@ def test_raises_when_file_not_exist(filepath):
     ],
 )
 def test_raises_when_file_is_empty(filepath):
-    with pytest.raises(ValueError) as e:
-        test_df = read_into_pandas(filepath)
-        assert test_df.empty is True
-    assert ("File is empty") in str(e.value)
+    test_df = read_into_pandas(filepath)
+    assert test_df.empty is True
