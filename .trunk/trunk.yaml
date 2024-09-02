@@ -43,7 +43,7 @@ lint:
         - .gitignore
     - linters: [pre-commit-hooks, prettier]
       paths:
-        - tests/unit_tests/test_fixtures/malformed_data.json
+        - tests/unit_tests/fixtures/malformed_data.json
 
   enabled:
     - cspell@8.14.1
