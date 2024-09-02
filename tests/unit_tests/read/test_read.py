@@ -7,7 +7,7 @@ import pytest
 from gcf_data_mapper.read import read
 
 UNIT_TESTS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "test_fixtures")
+FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "fixtures")
 
 
 def return_valid_csv_data():
@@ -46,30 +46,30 @@ def return_valid_json_data():
     Function which returns expected data structure of json file.
     """
 
-    json_data = {
-        "climate_data": [
-            {
-                "country": "Brazil",
-                "capital": "Brasilia",
-                "climate_info": {
-                    "avg_temp_celsius": 21.5,
-                    "annual_rainfall_mm": 1500,
-                    "climate_zone": "Tropical",
-                },
-                "natural_disasters": ["Floods", "Landslides"],
+    json_data = [
+        {
+            "country": "Brazil",
+            "capital": "Brasilia",
+            "climate_info": {
+                "avg_temp_celsius": 21.5,
+                "annual_rainfall_mm": 1500,
+                "climate_zone": "Tropical",
             },
-            {
-                "country": "Canada",
-                "capital": "Ottawa",
-                "climate_info": {
-                    "avg_temp_celsius": 6.3,
-                    "annual_rainfall_mm": 940,
-                    "climate_zone": "Continental",
-                },
-                "natural_disasters": ["Blizzards", "Wildfires"],
+            "rivers": {"names": [{"egypt": "Nile"}, {"london": "Thames"}]},
+            "natural_disasters": ["Floods", "Landslides"],
+        },
+        {
+            "country": "Canada",
+            "capital": "Ottawa",
+            "climate_info": {
+                "avg_temp_celsius": 6.3,
+                "annual_rainfall_mm": 940,
+                "climate_zone": "Continental",
             },
-        ]
-    }
+            "rivers": {"names": [{"egypt": "Nile"}, {"london": "Thames"}]},
+            "natural_disasters": ["Blizzards", "Wildfires"],
+        },
+    ]
     return json_data
 
 

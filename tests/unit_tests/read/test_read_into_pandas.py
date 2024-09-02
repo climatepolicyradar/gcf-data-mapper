@@ -5,7 +5,7 @@ import pytest
 from gcf_data_mapper.read import read_into_pandas
 
 UNIT_TESTS_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "test_fixtures")
+FIXTURES_FOLDER = os.path.join(UNIT_TESTS_FOLDER, "fixtures")
 
 
 @pytest.mark.parametrize(
