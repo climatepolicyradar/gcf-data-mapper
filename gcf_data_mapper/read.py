@@ -76,7 +76,7 @@ def read_json_pd(file_path: str):
     return pd.DataFrame([])
 
 
-def read_into_pandas(file_path) -> pd.DataFrame:
+def read_into_pandas(file_path: str, debug: bool = False) -> pd.DataFrame:
     """Read a CSV or JSON file into a Pandas dataframe.
 
     Simple program that validates a file path for existence, type and
@@ -84,6 +84,7 @@ def read_into_pandas(file_path) -> pd.DataFrame:
     based on its file type.
 
     :param file_path str: A file path to the csv/json file
+    :param bool debug: Whether debug mode is on.
     :raises ValueError: if a non csv or json file type is provided
     :raises FileNotFoundError: if the file does not exist
     :raises ValueError: if the file is empty
@@ -98,8 +99,8 @@ def read_into_pandas(file_path) -> pd.DataFrame:
     if file_extension not in [e.value for e in AllowedFileExtensions]:
         raise ValueError("Error reading file: File must be a valid json or csv file")
 
-    if os.path.getsize(file_path) == 0:
-        raise ValueError("Error reading file: File is empty")
+    if os.path.getsize(file_path) == 0 and debug:
+        click.echo(f"File '{file_path}' is empty")
 
     df = pd.DataFrame([])
     try:
@@ -118,7 +119,7 @@ def read(
     gcf_projects_file: str,
     mcf_projects_file: str,
     mcf_docs_file: str,
-    debug: bool,
+    debug: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Put the mapped GCF data into a dictionary ready for dumping.
 
@@ -133,9 +134,9 @@ def read(
         mapped to the Document-Family-Collection-Event entity it
         corresponds to.
     """
-    gcf_projects: pd.DataFrame = read_into_pandas(gcf_projects_file)
-    mcf_projects: pd.DataFrame = read_into_pandas(mcf_projects_file)
-    mcf_docs: pd.DataFrame = read_into_pandas(mcf_docs_file)
+    gcf_projects: pd.DataFrame = read_into_pandas(gcf_projects_file, debug)
+    mcf_projects: pd.DataFrame = read_into_pandas(mcf_projects_file, debug)
+    mcf_docs: pd.DataFrame = read_into_pandas(mcf_docs_file, debug)
 
     if any(
         data is None or data.empty for data in [gcf_projects, mcf_projects, mcf_docs]
