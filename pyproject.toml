@@ -18,6 +18,9 @@ pytest = "^8.3.2"
 [tool.poetry.scripts]
 gcf_data_mapper = "gcf_data_mapper.cli:greet"
 
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.6.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

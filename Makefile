@@ -42,3 +42,7 @@ build: ## Build the project
 
 test: ## Run tests using pytest
 	poetry run pytest -v
+
+test_coverage: ## Run tests using pytest with coverage
+	poetry run coverage run -m pytest -vvv tests
+	coverage report
