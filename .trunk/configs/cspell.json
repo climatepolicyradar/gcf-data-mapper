@@ -31,7 +31,11 @@
     "SCRIPTDIR",
     "chunksize",
     "dataframe",
-    "dataframes"
+    "dataframes",
+    "iloc",
+    "iterrows",
+    "notna",
+    "conftest"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
