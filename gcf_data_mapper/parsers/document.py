@@ -6,7 +6,7 @@ import click
 import pandas as pd
 
 
-class DocumentColumns(Enum):
+class RequiredColumns(Enum):
     SOURCE_URL = "Document page permalink"
     TITLE = "Title"
     TRANSLATED_FILES = "Translated files"
@@ -92,7 +92,7 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
     mapped_documents = []
 
     concatenated_string_of_url_docs = str(
-        translated_files_row[DocumentColumns.TRANSLATED_FILES.value]
+        translated_files_row[RequiredColumns.TRANSLATED_FILES.value]
     )
     url_docs = concatenated_string_of_url_docs.split("|")
 
@@ -104,9 +104,9 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
             mapped_documents.append(
                 {
                     "metadata": {
-                        "type": translated_files_row[DocumentColumns.TYPE.value]
+                        "type": translated_files_row[RequiredColumns.TYPE.value]
                     },
-                    "title": translated_files_row[DocumentColumns.TITLE.value],
+                    "title": translated_files_row[RequiredColumns.TITLE.value],
                     "source_url": url.strip(),
                     "variant_name": "Translated",
                 }
@@ -127,7 +127,7 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
         Sheet.
     """
 
-    required_columns = [column.value for column in DocumentColumns]
+    required_columns = [column.value for column in RequiredColumns]
     missing_columns = [col for col in required_columns if col not in mcf_docs.columns]
 
     if missing_columns:
@@ -146,12 +146,12 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
     # If the field contains a value we will map a separate object for each of the translated
     # files using the translated url as the source url
     for _, row in mcf_docs.iterrows():
-        has_translated_files = pd.notna(row.at[DocumentColumns.TRANSLATED_TITLES.value])
+        has_translated_files = pd.notna(row.at[RequiredColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
             {
-                "metadata": {"type": row[DocumentColumns.TYPE.value]},
-                "title": row[DocumentColumns.TITLE.value],
-                "source_url": row[DocumentColumns.SOURCE_URL.value],
+                "metadata": {"type": row[RequiredColumns.TYPE.value]},
+                "title": row[RequiredColumns.TITLE.value],
+                "source_url": row[RequiredColumns.SOURCE_URL.value],
                 "variant_name": "Original Translation",
             }
         )
