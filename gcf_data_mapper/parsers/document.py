@@ -142,9 +142,10 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
     # the underscore indicates that the index of the row will not be used in this loop.
     # We check if the field in the 'TRANSLATED_TITLES' column is not NaN. Note - Empty entries return as nan
     # Then we create a dictionary for each row with metadata type, title, source URL,
-    # and variant name.
-    # If the field contains a value we will map a separate object for each of the translated
-    # files using the translated url as the source url
+    # and variant name which is appended to the list.
+    # Separately, if that row also contains a value in the translated titles column,
+    # we will map a separate object for each of the translated versions, using the translated url
+    # as the source url and add those translated versions to the list
     for _, row in mcf_docs.iterrows():
         has_translated_files = pd.notna(row.at[RequiredColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
