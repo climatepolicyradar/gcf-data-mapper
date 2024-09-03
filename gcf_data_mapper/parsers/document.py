@@ -92,7 +92,6 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
     )
     url_docs = concatenated_string_of_url_docs.split("|")
 
-    # trunk-ignore(cspell/error)
     doc_id = translated_files_row.iloc[0]
 
     try:
@@ -135,9 +134,7 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
         click.echo("📝 Wrangling GCF document data.")
 
     mapped_docs = []
-    # trunk-ignore(cspell/error)
     for _, row in mcf_docs.iterrows():
-        # trunk-ignore(cspell/error)
         has_translated_files = pd.notna(row.at[DocumentColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
             {

@@ -181,7 +181,6 @@ def test_raises_error_on_missing_columns(test_df):
 
 
 def test_raises_error_on_invalid_urls(test_document_df_with_invalid_urls):
-    # trunk-ignore(cspell/error)
     doc_id = test_document_df_with_invalid_urls.iloc[
         0, 0
     ]  # This is the id of the row, there is only one item
@@ -193,7 +192,6 @@ def test_raises_error_on_invalid_urls(test_document_df_with_invalid_urls):
 
 
 def test_raises_error_on_duplicate_urls(test_document_df_with_duplicate_urls):
-    # trunk-ignore(cspell/error)
     doc_id = test_document_df_with_duplicate_urls.iloc[0, 0]
     with pytest.raises(ValueError) as e:
         document(test_document_df_with_duplicate_urls, debug=True)
@@ -203,7 +201,6 @@ def test_raises_error_on_duplicate_urls(test_document_df_with_duplicate_urls):
 
 
 def test_raises_error_on_empty_url(test_document_df_with_empty_url):
-    # trunk-ignore(cspell/error)
     doc_id = test_document_df_with_empty_url.iloc[0, 0]
     with pytest.raises(ValueError) as e:
         document(test_document_df_with_empty_url, debug=True)
