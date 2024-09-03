@@ -1,50 +1,10 @@
-from collections import namedtuple
-from enum import Enum
 from typing import Any, Optional
 
 import click
 import pandas as pd
 
+from gcf_data_mapper.enums.event import Event, EventColumnNames, Events
 from gcf_data_mapper.parsers.helpers import verify_required_fields_present
-
-
-class EventColumnNames(Enum):
-    """The fields the GCF data mapper needs to parse event data."""
-
-    APPROVED = "ApprovalDate"
-    UNDER_IMPLEMENTATION = "StartDate"
-    COMPLETED = "DateCompletion"
-    APPROVED_REF = "ApprovedRef"
-    PROJECTS_ID = "ProjectsID"
-
-
-class EventTypeNames(Enum):
-    """The GCF event type names (should map to the GCF taxonomy)."""
-
-    APPROVED = "Approved"
-    UNDER_IMPLEMENTATION = "Under Implementation"
-    COMPLETED = "Completed"
-
-
-Event = namedtuple("event", ["name", "type", "column_name"])
-
-
-class Events:
-    APPROVED = Event(
-        "approved",
-        EventTypeNames.APPROVED.value,
-        EventColumnNames.APPROVED.value,
-    )
-    UNDER_IMPLEMENTATION = Event(
-        "under_implementation",
-        EventTypeNames.UNDER_IMPLEMENTATION.value,
-        EventColumnNames.UNDER_IMPLEMENTATION.value,
-    )
-    COMPLETED = Event(
-        "completed",
-        EventTypeNames.COMPLETED.value,
-        EventColumnNames.COMPLETED.value,
-    )
 
 
 def append_event(
