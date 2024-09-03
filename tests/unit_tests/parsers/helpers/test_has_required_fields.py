@@ -21,7 +21,9 @@ from gcf_data_mapper.parsers.helpers import has_required_fields
         ),
     ],
 )
-def test_returns_false_when_missing_fields(test_df, expected_fields):
+def test_returns_false_when_missing_fields(
+    test_df: pd.DataFrame, expected_fields: set[str]
+):
     return_value = has_required_fields(test_df, expected_fields, debug=False)
     assert return_value is False
 
@@ -48,6 +50,8 @@ def test_returns_false_when_missing_fields(test_df, expected_fields):
         ),
     ],
 )
-def test_returns_true_when_no_missing_fields(test_df, expected_fields):
+def test_returns_true_when_no_missing_fields(
+    test_df: pd.DataFrame, expected_fields: set[str]
+):
     return_value = has_required_fields(test_df, expected_fields, debug=False)
     assert return_value is True
