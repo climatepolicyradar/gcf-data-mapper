@@ -8,10 +8,10 @@ import pytest
             "col1": ["record1"],
         },
         {
-            "ApprovedRef": ["some_ref"],
+            "ApprovalDate": ["some_approval"],
         },
         {
-            "ApprovedRef": ["some_ref"],
+            "ApprovalDate": ["some_ref"],
             "StartDate": ["some_start"],
         },
     ]
@@ -24,7 +24,7 @@ def required_cols_missing(request):
 def valid_data():
     yield pd.DataFrame(
         {
-            "ApprovedRef": ["some_ref"],
+            "ApprovalDate": ["some_approval"],
             "StartDate": ["some_start"],
             "DateCompletion": ["some_end"],
         }

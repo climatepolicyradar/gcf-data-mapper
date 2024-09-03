@@ -1,11 +1,11 @@
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.parsers.helpers import has_required_fields
+from gcf_data_mapper.parsers.helpers import verify_required_fields_present
 
 
 @pytest.mark.parametrize(
-    ("test_df", "expected_fields"),
+    ("test_df", "expected_fields", "expected_error"),
     [
         (
             pd.DataFrame(
@@ -14,18 +14,21 @@ from gcf_data_mapper.parsers.helpers import has_required_fields
                 }
             ),
             set(["fruits", "vegetables"]),
+            "Required fields '{'vegetables'}' not present in df columns '{'fruits'}'",
         ),
         (
             pd.DataFrame(),
             set(["cars"]),
+            "Required fields '{'cars'}' not present in df columns '{}'",
         ),
     ],
 )
 def test_returns_false_when_missing_fields(
-    test_df: pd.DataFrame, expected_fields: set[str]
+    test_df: pd.DataFrame, expected_fields: set[str], expected_error: str
 ):
-    return_value = has_required_fields(test_df, expected_fields, debug=False)
-    assert return_value is False
+    with pytest.raises(AttributeError) as e:
+        verify_required_fields_present(test_df, expected_fields)
+    assert str(e.value) == expected_error
 
 
 @pytest.mark.parametrize(
@@ -53,5 +56,5 @@ def test_returns_false_when_missing_fields(
 def test_returns_true_when_no_missing_fields(
     test_df: pd.DataFrame, expected_fields: set[str]
 ):
-    return_value = has_required_fields(test_df, expected_fields, debug=False)
+    return_value = verify_required_fields_present(test_df, expected_fields)
     assert return_value is True

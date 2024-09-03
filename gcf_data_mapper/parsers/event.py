@@ -4,7 +4,7 @@ from typing import Any, Optional
 import click
 import pandas as pd
 
-from gcf_data_mapper.parsers.helpers import has_required_fields
+from gcf_data_mapper.parsers.helpers import verify_required_fields_present
 
 
 class RequiredColumns(Enum):
@@ -27,7 +27,6 @@ def event(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, A
         click.echo("📝 Wrangling GCF event data.")
 
     required_fields = set(str(e.value) for e in RequiredColumns)
-    if not has_required_fields(projects_data, required_fields):
-        return []
+    verify_required_fields_present(projects_data, required_fields)
 
     return []
