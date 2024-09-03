@@ -7,6 +7,7 @@ import pandas as pd
 
 from gcf_data_mapper.parsers.collection import collection
 from gcf_data_mapper.parsers.document import document
+from gcf_data_mapper.parsers.event import event
 from gcf_data_mapper.parsers.family import family
 from gcf_data_mapper.read import read
 
@@ -91,7 +92,7 @@ def wrangle_to_json(
         "collections": collection(debug),
         "families": family(project_info, debug),
         "documents": document(doc_info, debug),
-        "events": [],
+        "events": event(project_info, debug),
     }
 
 
