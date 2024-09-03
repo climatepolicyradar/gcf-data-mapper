@@ -9,6 +9,7 @@ def verify_required_fields_present(
     :param pd.DataFrame data: The DataFrame to check.
     :param set[str] required_fields: The required DataFrame columns.
     :param bool debug: Whether debug mode is on.
+    :raise AttributeError if any of the required fields are missing.
     :return bool: True if the DataFrame contains the required fields.
     """
     cols = set(data.columns)
