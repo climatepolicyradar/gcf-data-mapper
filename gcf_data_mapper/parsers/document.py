@@ -86,7 +86,7 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
     Maps the GCF document with translated versions into the new json structure
 
     :param pd.Series translated_files_row: A row from the DataFrame containing the 'Translated files' field, which holds a string of translated source URLs separated by the pipe (|) character. This string includes multiple URLs for translated documents in various languages.
-    :return: A list of mcf document objects, each with a different source url reflecting the translated version of the original document
+    :return: A list of gcf document objects, each with a different source url reflecting the translated version of the original document
     """
 
     mapped_documents = []
@@ -116,10 +116,10 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
         raise e
 
 
-def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
+def document(gcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
     """Map the GCF document info to new structure.
 
-    :param pd.DataFrame mcf_docs: The MCF documents data.
+    :param pd.DataFrame gcf_docs: The GCF documents data.
     :param bool debug: Whether debug mode is on.
     :raises ValueError: If the DataFrame is missing one or more of the required column headers
     :return list[Optional[dict[str, Any]]]: A list of GCF families in
@@ -128,17 +128,17 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
     """
 
     required_columns = [column.value for column in RequiredColumns]
-    missing_columns = [col for col in required_columns if col not in mcf_docs.columns]
+    missing_columns = [col for col in required_columns if col not in gcf_docs.columns]
 
     if missing_columns:
         click.echo("Missing required columns: {}".format(", ".join(missing_columns)))
-        raise ValueError("Missing required columns in MCF data frame")
+        raise ValueError("Missing required columns in GCF data frame")
 
     if debug:
         click.echo("📝 Wrangling GCF document data.")
 
     mapped_docs = []
-    # We iterate over each row in the DataFrame mcf_docs using iterrows(),
+    # We iterate over each row in the DataFrame gcf_docs using iterrows(),
     # the underscore indicates that the index of the row will not be used in this loop.
     # We check if the field in the 'TRANSLATED_TITLES' column is not NaN. Note - Empty entries return as nan
     # Then we create a dictionary for each row with metadata type, title, source URL,
@@ -146,7 +146,7 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
     # Separately, if that row also contains a value in the translated titles column,
     # we will map a separate object for each of the translated versions, using the translated url
     # as the source url and add those translated versions to the list
-    for _, row in mcf_docs.iterrows():
+    for _, row in gcf_docs.iterrows():
         has_translated_files = pd.notna(row.at[RequiredColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
             {
