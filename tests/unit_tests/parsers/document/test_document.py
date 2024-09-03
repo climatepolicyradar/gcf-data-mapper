@@ -8,112 +8,106 @@ def parsed_document_data_with_translated_titles():
     return [
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/document/guidelines-enhanced-country-ownership-and-country-drivenness",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climateprojects.org/document/renewable-energy-strategies",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Original Translation",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climateprojects.org/docs/ar-renewable-energy-strategies.pdf",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climateprojects.org/docs/es-renewable-energy-strategies.pdf",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climateprojects.org/docs/fr-renewable-energy-strategies.pdf",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/ru-guidelines-enhanced-country-ownership-country-drivenns.pdf",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climate_projects.org/docs/ru-renewable-energy-strategies.pdf",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/zh-guidelines-enhanced-country-ownership-country-drivenns.pdf",
-            "title": "Guidelines for enhanced country ownership and country drivenness",
+            "source_url": "https://www.climateprojects.org/docs/zh-renewable-energy-strategies.pdf",
+            "title": "Strategies for Accelerating Renewable Energy Adoption",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/document/general-principles-and-indicative-list-eligible-costs-covered-under-gcf-fees-and-project",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climateprojects.org/document/sustainable-urban-development",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Original Translation",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/ar-principles-list-costs-pm_0.pdf",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climateprojects.org/docs/ar-sustainable-urban-development.pdf",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/es-principles-list-costs-pm.pdf",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climateprojects.org/docs/es-sustainable-urban-development.pdf",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/fr-principles-list-costs-pm.pdf",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climateprojects.org/docs/fr-sustainable-urban-development.pdf",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/ru-principles-list-costs-pm.pdf",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climate_projects.org/docs/ru-sustainable-urban-development.pdf",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/sites/default/files/document/zh-principles-list-costs-pm.pdf",
-            "title": "General principles and indicative list of eligible costs covered "
-            "under GCF fees and project management costs",
+            "source_url": "https://www.climateprojects.org/docs/zh-sustainable-urban-development.pdf",
+            "title": "Principles and Guidelines for Sustainable Urban Development",
             "variant_name": "Translated",
         },
         {
             "metadata": {
-                "type": "Policies, strategies, and guidelines",
+                "type": "Climate Action Plans",
             },
-            "source_url": "https://www.greenclimate.fund/document/climate-finance-investment-strategies",
-            "title": "Framework for climate finance and investment strategies",
+            "source_url": "https://www.climateprojects.org/document/climate-resilience-framework",
+            "title": "Framework for Climate Resilience and Adaptation",
             "variant_name": "Original Translation",
         },
     ]
@@ -124,34 +118,34 @@ def parsed_document_data_with_no_translated_titles():
     return [
         {
             "metadata": {
-                "type": "Approved funding proposal",
+                "type": "Climate change mitigation project",
             },
-            "source_url": "https://www.greenclimate.fund/document/enhancing-climate-resilience-water-sector-bahrain",
-            "title": "Enhancing climate resilience of the water sector in Bahrain",
+            "source_url": "https://www.climateprojects.org/solar-power-project",
+            "title": "Community-based solar power project",
             "variant_name": "Original Translation",
         },
         {
             "metadata": {
-                "type": "Approved funding proposal",
+                "type": "Renewable energy initiative",
             },
-            "source_url": "https://www.greenclimate.fund/document/nigeria-solar-ipp-support-programme",
-            "title": "Nigeria solar IPP support programme",
+            "source_url": "https://www.climateprojects.org/reforestation-program",
+            "title": "Afforestation and reforestation program",
             "variant_name": "Original Translation",
         },
         {
             "metadata": {
-                "type": "Approved funding proposal",
+                "type": "Sustainable agriculture program",
             },
-            "source_url": "https://www.greenclimate.fund/document/sustainable-urban-development-kenya",
-            "title": "Sustainable urban development in Kenya",
+            "source_url": "https://www.climateprojects.org/organic-farming-project",
+            "title": "Organic farming and soil conservation project",
             "variant_name": "Original Translation",
         },
         {
             "metadata": {
-                "type": "Approved funding proposal",
+                "type": "Carbon offset project",
             },
-            "source_url": "https://www.greenclimate.fund/document/renewable-energy-initiatives-india",
-            "title": "Renewable energy initiatives in India",
+            "source_url": "https://www.climateprojects.org/mangrove-conservation-project",
+            "title": "Mangrove restoration and conservation project",
             "variant_name": "Original Translation",
         },
     ]

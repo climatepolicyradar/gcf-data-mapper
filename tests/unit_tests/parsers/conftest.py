@@ -15,55 +15,60 @@ def test_df():
 def test_document_df_without_translated_docs():
     yield pd.DataFrame(
         {
-            "ID": [5539, 5540, 5541, 5542],
+            "ID": [1234, 2345, 3456, 4567],
             "Type": [
-                "Approved funding proposal",
-                "Approved funding proposal",
-                "Approved funding proposal",
-                "Approved funding proposal",
+                "Climate change mitigation project",
+                "Renewable energy initiative",
+                "Sustainable agriculture program",
+                "Carbon offset project",
             ],
             "Title": [
-                "Enhancing climate resilience of the water sector in Bahrain",
-                "Nigeria solar IPP support programme",
-                "Sustainable urban development in Kenya",
-                "Renewable energy initiatives in India",
+                "Community-based solar power project",
+                "Afforestation and reforestation program",
+                "Organic farming and soil conservation project",
+                "Mangrove restoration and conservation project",
             ],
-            "FP number": ["SAP003", "FP104", "FP105", "FP106"],
+            "FP number": ["CCP001", "REI002", "SAP003", "COP004"],
             "Organisation": [
-                "United Nations Environment Programme",
-                "Africa Finance Corporation",
-                "World Bank",
-                "Asian Development Bank",
+                "Global Climate Alliance",
+                "Renewable Energy Solutions",
+                "Green Agriculture Foundation",
+                "Carbon Neutral Group",
             ],
-            "Country": ["Bahrain", "Nigeria", "Kenya", "India"],
-            "Topic": ["", "", "", ""],
+            "Country": ["Global", "International", "Earth", "Planet"],
+            "Topic": [
+                "Solar Energy",
+                "Forest Conservation",
+                "Sustainable Farming",
+                "Ecosystem Restoration",
+            ],
             "Main file (English)": [
-                "https://www.greenclimate.fund/sites/default/files/document/funding-proposal-sap003-unep-bahrain.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/funding-proposal-fp104-afc-nigeria.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/funding-proposal-fp105-world-bank-kenya.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/funding-proposal-fp106-adb-india.pdf",
+                "https://www.climateprojects.org/solar-power-project.pdf",
+                "https://www.climateprojects.org/reforestation-program.pdf",
+                "https://www.climateprojects.org/organic-farming-project.pdf",
+                "https://www.climateprojects.org/mangrove-conservation-project.pdf",
             ],
             "Translated languages": [pd.NA for _ in range(4)],
             "Translated titles": [pd.NA for _ in range(4)],
             "Translated files": [pd.NA for _ in range(4)],
             "Document page permalink": [
-                "https://www.greenclimate.fund/document/enhancing-climate-resilience-water-sector-bahrain",
-                "https://www.greenclimate.fund/document/nigeria-solar-ipp-support-programme",
-                "https://www.greenclimate.fund/document/sustainable-urban-development-kenya",
-                "https://www.greenclimate.fund/document/renewable-energy-initiatives-india",
+                "https://www.climateprojects.org/solar-power-project",
+                "https://www.climateprojects.org/reforestation-program",
+                "https://www.climateprojects.org/organic-farming-project",
+                "https://www.climateprojects.org/mangrove-conservation-project",
             ],
-            "Cover date": ["2018-12-22", "2019-03-21", "2020-05-15", "2021-08-10"],
+            "Cover date": ["2022-01-01", "2022-02-01", "2022-03-01", "2022-04-01"],
             "Updated date (UTC)": [
-                "2019-07-30 05:38:06",
-                "2019-07-30 05:41:06",
-                "2020-06-01 10:00:00",
-                "2021-09-15 12:30:00",
+                "2022-01-15 08:00:00",
+                "2022-02-15 10:00:00",
+                "2022-03-15 12:00:00",
+                "2022-04-15 14:00:00",
             ],
             "Summary": [
-                'This document presents funding proposal "SAP003: Enhancing climate resilience of the water sector in Bahrain," as approved by the Board of the Green Climate Fund at B.21.',
-                'This document presents funding proposal "FP0104: Nigeria solar IPP support programme," as approved by the Board of the Green Climate Fund at B.22.',
-                'This document presents funding proposal "FP0105: Sustainable urban development in Kenya," as approved by the Board of the Green Climate Fund at B.23.',
-                'This document presents funding proposal "FP0106: Renewable energy initiatives in India," as approved by the Board of the Green Climate Fund at B.24.',
+                "This document presents a climate change mitigation project focusing on community-based solar power generation.",
+                "This document presents a renewable energy initiative for afforestation and reforestation.",
+                "This document presents a sustainable agriculture program emphasizing organic farming and soil conservation.",
+                "This document presents a carbon offset project for mangrove restoration and conservation.",
             ],
         }
     )
@@ -73,27 +78,27 @@ def test_document_df_without_translated_docs():
 def test_document_df_with_translated_docs():
     yield pd.DataFrame(
         {
-            "ID": [6614, 6615, 6616],
+            "ID": [1001, 1002, 1003],
             "Type": [
-                "Policies, strategies, and guidelines",
-                "Policies, strategies, and guidelines",
-                "Policies, strategies, and guidelines",
+                "Climate Action Plans",
+                "Climate Action Plans",
+                "Climate Action Plans",
             ],
             "Title": [
-                "Guidelines for enhanced country ownership and country drivenness",
-                "General principles and indicative list of eligible costs covered under GCF fees and project management costs",
-                "Framework for climate finance and investment strategies",
+                "Strategies for Accelerating Renewable Energy Adoption",
+                "Principles and Guidelines for Sustainable Urban Development",
+                "Framework for Climate Resilience and Adaptation",
             ],
-            "FP number": ["", "", ""],  # Assuming FP number is empty
+            "FP number": ["", "", ""],
             "Organisation": [
-                "Country ownership",
-                "Accreditation",
-                "Climate Finance Unit",
+                "Green Energy Initiative",
+                "Urban Sustainability Coalition",
+                "Climate Adaptation Network",
             ],
             "Main file (English)": [
-                "https://www.greenclimate.fund/sites/default/files/document/guidelines-enhanced-country-ownership-country-drivenness.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/principles-list-costs-pm.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/climate-finance-investment-strategies.pdf",
+                "https://www.climateprojects.org/docs/renewable-energy-strategies.pdf",
+                "https://www.climateprojects.org/docs/sustainable-urban-development.pdf",
+                "https://www.climateprojects.org/docs/climate-resilience-framework.pdf",
             ],
             "Translated languages": [
                 "العربية|Español|Français|Русский|中文",
@@ -101,30 +106,30 @@ def test_document_df_with_translated_docs():
                 pd.NA,
             ],
             "Translated titles": [
-                "المبادئ التوجيهية للملكية الق ُ طرية والتوجه الق طري|Directrices para aumentar la implicación nacional y el impulso de los países|Lignes directrices pour une meilleure appropriation et un plus grand pilotage par les pays|Руководящие принципы повышения ответственности и инициативности стран|国家自主权和国家驱动力加强准则",
-                "قائمة المبادئ العامة والرشادية للتكاليف المستوفاة الشروط المغطاة بموجب رسوم الصندوق الأخضر للمناخ ‏‪ GCF‬وتكاليف إدارة المشاريع |Principios generales y lista orientativa de gastos que podrían estar cubiertos en las comisiones y gastos de gestión de proyectos del GCF|Principes généraux et liste indicative des coûts admissibles au titre des honoraires et des frais de gestion des projets du GCF|Общие принципы и ориентировочный перечень приемлемых расходов, покрываемых за счет комиссионных выплат фонда GCF и расходов на управление проектами|一般原则以及GCF费用和项目管理费用所涵盖的合格费用的指示性清单",
+                "استراتيجيات تسريع تبني الطاقة المتجددة|Estrategias para acelerar la adopción de energías renovables|Stratégies pour accélérer l'adoption des énergies renouvelables|Стратегии по ускорению внедрения возобновляемых источников энергии|加速采用可再生能源的策略",
+                "مبادئ وإرشادات التنمية الحضرية المستدامة|Principios y directrices para el desarrollo urbano sostenible|Principes et directives pour le développement urbain durable|Принципы и рекомендации для устойчивого городского развития|可持续城市发展的原则和指南",
                 pd.NA,
             ],
             "Translated files": [
-                "https://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/ru-guidelines-enhanced-country-ownership-country-drivenns.pdf|https://www.greenclimate.fund/sites/default/files/document/zh-guidelines-enhanced-country-ownership-country-drivenns.pdf",
-                "https://www.greenclimate.fund/sites/default/files/document/ar-principles-list-costs-pm_0.pdf|https://www.greenclimate.fund/sites/default/files/document/es-principles-list-costs-pm.pdf|https://www.greenclimate.fund/sites/default/files/document/fr-principles-list-costs-pm.pdf|https://www.greenclimate.fund/sites/default/files/document/ru-principles-list-costs-pm.pdf|https://www.greenclimate.fund/sites/default/files/document/zh-principles-list-costs-pm.pdf",
+                "https://www.climateprojects.org/docs/ar-renewable-energy-strategies.pdf|https://www.climateprojects.org/docs/es-renewable-energy-strategies.pdf|https://www.climateprojects.org/docs/fr-renewable-energy-strategies.pdf|https://www.climate_projects.org/docs/ru-renewable-energy-strategies.pdf|https://www.climateprojects.org/docs/zh-renewable-energy-strategies.pdf",
+                "https://www.climateprojects.org/docs/ar-sustainable-urban-development.pdf|https://www.climateprojects.org/docs/es-sustainable-urban-development.pdf|https://www.climateprojects.org/docs/fr-sustainable-urban-development.pdf|https://www.climate_projects.org/docs/ru-sustainable-urban-development.pdf|https://www.climateprojects.org/docs/zh-sustainable-urban-development.pdf",
                 pd.NA,
             ],
             "Document page permalink": [
-                "https://www.greenclimate.fund/document/guidelines-enhanced-country-ownership-and-country-drivenness",
-                "https://www.greenclimate.fund/document/general-principles-and-indicative-list-eligible-costs-covered-under-gcf-fees-and-project",
-                "https://www.greenclimate.fund/document/climate-finance-investment-strategies",
+                "https://www.climateprojects.org/document/renewable-energy-strategies",
+                "https://www.climateprojects.org/document/sustainable-urban-development",
+                "https://www.climateprojects.org/document/climate-resilience-framework",
             ],
-            "Cover date": ["2017-07-06", "2018-03-01", "2021-05-15"],
+            "Cover date": ["2023-01-15", "2022-11-10", "2024-03-22"],
             "Updated date (UTC)": [
-                "2022-12-01 02:16:43",
-                "2022-12-01 01:50:56",
-                "2022-12-01 03:00:00",
+                "2023-06-15 12:30:00",
+                "2023-06-10 11:00:00",
+                "2024-03-22 09:15:00",
             ],
             "Summary": [
-                "Adopted by decision [decision:B.17/21]. Sets out guidelines for enhanced country ownership and country drivenness, covering guiding principles, role of country programmes and structured dialogues, role of country ownership in the Fund's operating modalities, and evaluation.",
-                "Adopted by decision [decision:B.19/09]. Outlines the general principles and an indicative list of eligible costs to be covered under accredited entity fees and project management costs.",
-                "Adopted by decision [decision:B.20/15]. Provides a framework for climate finance and investment strategies to enhance the effectiveness of climate actions.",
+                "Outlines strategies for accelerating the adoption of renewable energy technologies to reduce carbon emissions and promote sustainability.",
+                "Provides principles and guidelines for integrating sustainability into urban development projects to enhance environmental and social outcomes.",
+                "Describes a framework for improving climate resilience and adaptation measures to address the impacts of climate change on vulnerable communities.",
             ],
         }
     )
@@ -134,25 +139,25 @@ def test_document_df_with_translated_docs():
 def test_document_df_with_invalid_urls():
     yield pd.DataFrame(
         {
-            "ID": [6614],
+            "ID": [6617],
             "Type": ["Policies, strategies, and guidelines"],
             "Title": [
                 "Guidelines for enhanced country ownership and country drivenness"
             ],
-            "FP number": [""],  # Assuming FP number is empty
+            "FP number": [""],
             "Organisation": ["Country ownership"],
             "Main file (English)": [
-                "https://www.greenclimate.fund/sites/default/files/document/guidelines-enhanced-country-ownership-country-drivenness.pdf"
+                "https://www.mocksite.com/sites/default/files/document/guidelines-enhanced-country-ownership-country-drivenness.pdf"
             ],
             "Translated languages": ["العربية|Español|Français|Русский|中文"],
             "Translated titles": [
-                "المبادئ التوجيهية للملكية الق ُ طرية والتوجه الق طري|Directrices para aumentar la implicación nacional y el impulso de los países|Lignes directrices pour une meilleure appropriation et un plus grand pilotage par les pays|Руководящие принципы повышения ответственности и инициативности стран|国家自主权和国家驱动力加强准则"
+                "تغير المناخ|Cambio climático|Changement climatique|Изменение климата|气候变化"
             ],
             "Translated files": [
-                "htps://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|htps://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimatefund/this^is^invalid/sites/default/files/document/ru-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/zh-guidelines-enhanced-country-ownership-country-drivenness.pdf"  # Invalid URL introduced
+                "https://www.mocksite.com/sites/default/files/document/this^is^invalid/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.mocksite.com/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.mocksite.com/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.mocksite.com/sites/default/files/document/zh-guidelines-enhanced-country-ownership-country-drivenness.pdf"
             ],
             "Document page permalink": [
-                "https://www.greenclimate.fund/document/guidelines-enhanced-country-ownership-and-country-drivenness"
+                "https://www.mocksite.com/document/guidelines-enhanced-country-ownership-and-country-drivenness"
             ],
             "Cover date": ["2017-07-06"],
             "Updated date (UTC)": ["2022-12-01 02:16:43"],
@@ -174,19 +179,15 @@ def test_document_df_with_duplicate_urls():
             ],
             "FP number": [""],
             "Organisation": ["Country ownership"],
-            "Main file (English)": [
-                "https://www.greenclimate.fund/sites/default/files/document/guidelines-enhanced-country-ownership-country-drivenness.pdf"
-            ],
+            "Main file (English)": ["https://www.mocksite.com/mockfile.pdf"],
             "Translated languages": ["العربية|Español|Français|Русский|中文"],
             "Translated titles": [
-                "المبادئ التوجيهية للملكية الق ُ طرية والتوجه الق طري|Directrices para aumentar la implicación nacional y el impulso de los países|Lignes directrices pour une meilleure appropriation et un plus grand pilotage par les pays|Руководящие принципы повышения ответственности и инициативности стран|国家自主权和国家驱动力加强准则"
+                "تغير المناخ|Cambio climático|Changement climatique|Изменение климата|气候变化"
             ],
             "Translated files": [
-                "https://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf"
+                "https://www.mocksite.com/ar-file.pdf|https://www.mocksite.com/es-file.pdf|https://www.mocksite.com/fr-file.pdf|https://www.mocksite.com/zh-file.pdf|https://www.mocksite.com/zh-file.pdf"  # Empty URL
             ],
-            "Document page permalink": [
-                "https://www.greenclimate.fund/document/guidelines-enhanced-country-ownership-and-country-drivenness"
-            ],
+            "Document page permalink": ["https://www.mocksite.com/mockdocument"],
             "Cover date": ["2017-07-06"],
             "Updated date (UTC)": ["2022-12-01 02:16:43"],
             "Summary": [
@@ -207,19 +208,15 @@ def test_document_df_with_empty_url():
             ],
             "FP number": [""],
             "Organisation": ["Country ownership"],
-            "Main file (English)": [
-                "https://www.greenclimate.fund/sites/default/files/document/guidelines-enhanced-country-ownership-country-drivenness.pdf"
-            ],
+            "Main file (English)": ["https://www.mocksite.com/mockfile.pdf"],
             "Translated languages": ["العربية|Español|Français|Русский|中文"],
             "Translated titles": [
-                "المبادئ التوجيهية للملكية الق ُ طرية والتوجه الق طري|Directrices para aumentar la implicación nacional y el impulso de los países|Lignes directrices pour une meilleure appropriation et un plus grand pilotage par les pays|Руководящие принципы повышения ответственности и инициативности стран|国家自主权和国家驱动力加强准则"
+                "تغير المناخ|Cambio climático|Changement climatique|Изменение климата|气候变化"
             ],
             "Translated files": [
-                "https://www.greenclimate.fund/sites/default/files/document/ar-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/es-guidelines-enhanced-country-ownership-country-drivenness.pdf|https://www.greenclimate.fund/sites/default/files/document/fr-guidelines-enhanced-country-ownership-country-drivenness.pdf||https://www.greenclimate.fund/sites/default/files/document/zh-guidelines-enhanced-country-ownership-country-drivenness.pdf"  # Empty URL
+                "https://www.mocksite.com/ar-file.pdf|https://www.mocksite.com/es-file.pdf|https://www.mocksite.com/fr-file.pdf||https://www.mocksite.com/zh-file.pdf"  # Empty URL
             ],
-            "Document page permalink": [
-                "https://www.greenclimate.fund/document/guidelines-enhanced-country-ownership-and-country-drivenness"
-            ],
+            "Document page permalink": ["https://www.mocksite.com/mockdocument"],
             "Cover date": ["2017-07-06"],
             "Updated date (UTC)": ["2022-12-01 02:16:43"],
             "Summary": [
