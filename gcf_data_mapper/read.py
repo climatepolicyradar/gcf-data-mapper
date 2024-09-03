@@ -65,13 +65,13 @@ def read_json_pd(file_path: str) -> pd.DataFrame:
         the file is successfully found and parsed by the Pandas CSV
         reader. Otherwise an empty DataFrame will be returned.
     """
+    df = pd.DataFrame([])
     try:
         with open(file_path, "r") as file:
             df = pd.json_normalize(json.load(file))
-        return df
     except Exception as e:
         click.echo(f"❌ Error reading file {file_path}: {e}")
-    return pd.DataFrame([])
+    return df
 
 
 def read_into_pandas(file_path: str, debug: bool = False) -> pd.DataFrame:
