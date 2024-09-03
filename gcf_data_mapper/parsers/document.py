@@ -7,10 +7,11 @@ import pandas as pd
 
 
 class DocumentColumns(Enum):
-    TRANSLATED_FILES = "Translated files"
-    TYPE = "Type"
-    TITLE = "Title"
     SOURCE_URL = "Document page permalink"
+    TITLE = "Title"
+    TRANSLATED_FILES = "Translated files"
+    TRANSLATED_TITLES = "Translated titles"
+    TYPE = "Type"
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -39,26 +40,27 @@ def contains_empty_urls(urls: list[str]) -> bool:
     return False
 
 
-def contains_malformed_urls(urls: list[str]) -> bool:
+def contains_invalid_paths(urls: list[str]) -> bool:
     """
     Checks a list of urls for any malformed entries
 
     param: list[str] urls: A list of urls
     return bool: Returns true if malformed urls are present, or false if not
     """
-    malformed_urls_exist = False
     for url in urls:
-        if url.strip() and not urlparse(url).scheme:
-            malformed_urls_exist = True
-    return malformed_urls_exist
+        parsed_url = urlparse(url)
+        path = parsed_url.path
+        if any(not (c.isalnum() or c in "/-_.") for c in path):
+            return True
+    return False
 
 
 def validate_urls(urls: list[str], doc_id: str) -> None:
     """
     Validates a list of URLs for empty, duplicate, and malformed entries.
 
-    param: urls list[str] : A list of urls
-    param: doc_id str: The document id of the invalid source url/s
+    param: list[str] urls : A list of urls
+    param: str doc_id: The document id of the invalid source url/s
     raises ValueError: If the list contains duplicate, empty or malformed url/s
     """
     if contains_empty_urls(urls):
@@ -69,7 +71,7 @@ def validate_urls(urls: list[str], doc_id: str) -> None:
         raise ValueError(
             f"Duplicate URLs found in list of translated urls. DocumentId : {doc_id}"
         )
-    if contains_malformed_urls(urls):
+    if contains_invalid_paths(urls):
         raise ValueError(
             f"Malformed url found in list of translated urls. DocumentId : {doc_id}"
         )
@@ -85,15 +87,17 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
 
     mapped_documents = []
 
-    files_string = str(translated_files_row["Translated files"])
-    list_of_translated_doc_urls = files_string.split("|")
+    concatenated_string_of_url_docs = str(
+        translated_files_row[DocumentColumns.TRANSLATED_FILES.value]
+    )
+    url_docs = concatenated_string_of_url_docs.split("|")
 
     # trunk-ignore(cspell/error)
     doc_id = translated_files_row.iloc[0]
 
     try:
-        validate_urls(list_of_translated_doc_urls, doc_id)
-        for url in list_of_translated_doc_urls:
+        validate_urls(url_docs, doc_id)
+        for url in url_docs:
             mapped_documents.append(
                 {
                     "metadata": {
@@ -106,7 +110,7 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
             )
         return mapped_documents
     except Exception as e:
-        raise ValueError from e
+        raise e
 
 
 def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
@@ -134,7 +138,7 @@ def document(mcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
     # trunk-ignore(cspell/error)
     for _, row in mcf_docs.iterrows():
         # trunk-ignore(cspell/error)
-        has_translated_files = pd.notna(row.at["Translated files"])
+        has_translated_files = pd.notna(row.at[DocumentColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
             {
                 "metadata": {"type": row[DocumentColumns.TYPE.value]},
