@@ -50,7 +50,11 @@ def contains_invalid_paths(urls: list[str]) -> bool:
     for url in urls:
         parsed_url = urlparse(url)
         path = parsed_url.path
-        if any(not (c.isalnum() or c in "/-_.") for c in path):
+        # Reserved characters per RFC 3986
+        reserved_and_unreserved_characters = ":/?#[]@!$&'()*+,;=-_.~"
+        if any(
+            not (c.isalnum() or c in reserved_and_unreserved_characters) for c in path
+        ):
             return True
     return False
 
