@@ -41,7 +41,7 @@ lint:
       paths:
         - .trunk/configs/cspell.json
         - .gitignore
-        - tests/unit_tests/parsers/conftest.py
+        - tests/unit_tests/parsers/document/conftest.py
     - linters: [pre-commit-hooks, prettier]
       paths:
         - tests/unit_tests/fixtures/malformed_data.json

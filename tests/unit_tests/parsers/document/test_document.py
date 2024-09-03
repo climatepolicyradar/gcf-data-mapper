@@ -156,7 +156,7 @@ def test_returns_expected_value(
     parsed_document_data_with_no_translated_titles,
 ):
     document_data = document(test_document_df_without_translated_docs, debug=True)
-    assert document_data is not None
+    assert document_data != []
     assert document_data == parsed_document_data_with_no_translated_titles
 
 
@@ -164,14 +164,14 @@ def test_returns_expected_value_for_translated_titles(
     test_document_df_with_translated_docs, parsed_document_data_with_translated_titles
 ):
     document_data = document(test_document_df_with_translated_docs, debug=True)
-    assert document_data is not None
+    assert document_data != []
     assert document_data == parsed_document_data_with_translated_titles
 
 
-def test_raises_error_on_missing_columns(test_df):
+def test_raises_error_on_missing_columns(test_document_df):
     with pytest.raises(ValueError) as e:
-        document(test_df, debug=True)
-    assert str(e.value) == ("Missing required columns in MCF data frame")
+        document(test_document_df, debug=True)
+    assert str(e.value) == ("Missing required columns in GCF data frame")
 
 
 def test_raises_error_on_invalid_urls(test_document_df_with_invalid_urls):
