@@ -29,9 +29,9 @@ def read_csv_pd(
     :param Optional[int] chunk_size: The number of lines to read into
         memory in each batch iteratively. Defaults to 10**4.
 
-    :return Optional[pd.DataFrame]: A Pandas DataFrame containing the
-        CSV data if the file is successfully found and parsed by the
-        Pandas CSV reader. Otherwise this function will return None.
+    :return pd.DataFrame: A Pandas DataFrame containing the CSV data if
+        the file is successfully found and parsed by the Pandas CSV
+        reader. Otherwise an empty DataFrame will be returned.
     """
     # Should the path exist, read the CSV contents into memory iteratively in chunks of
     # 'chunk_size' (10**4 by default).
@@ -50,29 +50,27 @@ def read_csv_pd(
         return dataset
 
     except Exception as e:
-        print(e)
-        click.echo("Error occurred reading CSV file using Pandas: %s" % file_path)
+        click.echo(f"❌ Error reading file {file_path}: {e}")
 
     return pd.DataFrame([])
 
 
-def read_json_pd(file_path: str):
+def read_json_pd(file_path: str) -> pd.DataFrame:
     """Load the data from the specified JSON file into a Pandas DF.
 
     :param str file_path: The filepath passed by the user to the
         tool.
 
-    :return Optional[pd.DataFrame]: A Pandas DataFrame containing the
-        JSON data if the file is successfully found and parsed by the
-        Pandas JSON reader. Otherwise this function will return None.
+    :return pd.DataFrame: A Pandas DataFrame containing the CSV data if
+        the file is successfully found and parsed by the Pandas CSV
+        reader. Otherwise an empty DataFrame will be returned.
     """
     try:
         with open(file_path, "r") as file:
             df = pd.json_normalize(json.load(file))
         return df
     except Exception as e:
-        print(e)
-        click.echo("Error occurred reading JSON file using Pandas: %s" % file_path)
+        click.echo(f"❌ Error reading file {file_path}: {e}")
     return pd.DataFrame([])
 
 
@@ -103,14 +101,12 @@ def read_into_pandas(file_path: str, debug: bool = False) -> pd.DataFrame:
         click.echo(f"File '{file_path}' is empty")
 
     df = pd.DataFrame([])
-    try:
-        if file_extension == AllowedFileExtensions.CSV.value:
-            return read_csv_pd(file_path)
-        if file_extension == AllowedFileExtensions.JSON.value:
-            return read_json_pd(file_path)
-    except Exception as e:
-        click.echo(f"Error reading file: {e}")
-        raise e
+
+    if file_extension == AllowedFileExtensions.CSV.value:
+        df = read_csv_pd(file_path)
+
+    elif file_extension == AllowedFileExtensions.JSON.value:
+        df = read_json_pd(file_path)
 
     return df
 
