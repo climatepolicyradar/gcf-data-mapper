@@ -49,8 +49,7 @@ def test_returns_empty_df_when_exception(filepath):
 )
 def test_raises_when_file_not_exist(filepath):
     with pytest.raises(FileNotFoundError):
-        test_df = read_into_pandas(filepath)
-        assert test_df.empty is True
+        read_into_pandas(filepath)
 
 
 @pytest.mark.parametrize(
