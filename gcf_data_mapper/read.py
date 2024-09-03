@@ -97,10 +97,10 @@ def read_into_pandas(file_path: str, debug: bool = False) -> pd.DataFrame:
     if file_extension not in [e.value for e in AllowedFileExtensions]:
         raise ValueError("Error reading file: File must be a valid json or csv file")
 
-    if os.path.getsize(file_path) == 0 and debug:
-        click.echo(f"File '{file_path}' is empty")
-
     df = pd.DataFrame([])
+
+    if os.path.getsize(file_path) == 0:
+        return df
 
     if file_extension == AllowedFileExtensions.CSV.value:
         df = read_csv_pd(file_path)
