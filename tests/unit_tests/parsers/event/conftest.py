@@ -27,5 +27,20 @@ def valid_data():
             "ApprovalDate": ["some_approval"],
             "StartDate": ["some_start"],
             "DateCompletion": ["some_end"],
+            "ApprovedRef": ["an_approved_ref"],
+            "ProjectsID": ["a_project_id"],
+        }
+    )
+
+
+@pytest.fixture
+def mock_row():
+    return pd.Series(
+        {
+            "ApprovalDate": "2023-01-01",
+            "StartDate": None,
+            "DateCompletion": "2023-12-31",
+            "ApprovedRef": "FP123",
+            "ProjectsID": "PID456",
         }
     )
