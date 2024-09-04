@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, cast
 from urllib.parse import urlparse
 
 import click
@@ -12,6 +12,23 @@ class RequiredColumns(Enum):
     TRANSLATED_FILES = "Translated files"
     TRANSLATED_TITLES = "Translated titles"
     TYPE = "Type"
+    ID = "ID (Unique ID from our CMS for the document)"
+
+
+class ProjectsRequiredColumns(Enum):
+    APPROVED_REF = "ApprovedRef"
+    PROJECTS_ID = "ProjectsID"
+
+
+class IgnoreDocumentTypes(Enum):
+    """Filter the following columns out of the GCF document data.
+
+    TODO: Phase 2 GCF/MCF we will need to parse these document types too
+    but for now, we will omit them.
+    """
+
+    APPROVED_REF = "Policies, strategies, and guidelines"
+    PROJECTS_ID = "Country programme"
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -96,13 +113,19 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
     )
     url_docs = concatenated_string_of_url_docs.split("|")
 
-    doc_id = translated_files_row.iloc[0]
+    doc_id = translated_files_row.at[RequiredColumns.ID.value]
+
+    approved_ref = translated_files_row.at[ProjectsRequiredColumns.APPROVED_REF.value]
+
+    projects_id = translated_files_row.at[ProjectsRequiredColumns.PROJECTS_ID.value]
 
     try:
         validate_urls(url_docs, doc_id)
         for url in url_docs:
             mapped_documents.append(
                 {
+                    "import_id": f"GCF.document.{approved_ref}_{projects_id}.{doc_id}",
+                    "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
                     "metadata": {
                         "type": translated_files_row[RequiredColumns.TYPE.value]
                     },
@@ -141,8 +164,32 @@ def document(
 
     if debug:
         click.echo("📝 Wrangling GCF document data.")
+        click.echo(f"📝 {gcf_docs.shape[0]} GCF documents to map...")
+
+    # Left join the document data with the GCF projects data so we can determine the
+    # project a document should be associated with. We then need to filter out certain
+    # GCF document types for now until Phase 2, TODO.After this, convert the values
+    # in the Projects ID column to be integers so we don't end up with 5 parts to our
+    # import IDs (as there is full stop in float values when they're converted to str).
+    combo = pd.merge(
+        left=gcf_docs,
+        right=projects_data,
+        left_on="FP number",
+        right_on=ProjectsRequiredColumns.APPROVED_REF.value,
+        how="left",
+    )
+    combo = combo[
+        ~combo[RequiredColumns.TYPE.value].isin([e.value for e in IgnoreDocumentTypes])
+    ]
+    combo[ProjectsRequiredColumns.PROJECTS_ID.value] = cast(
+        pd.DataFrame, combo[ProjectsRequiredColumns.PROJECTS_ID.value]
+    ).convert_dtypes()
+
+    if debug:
+        click.echo(combo)
 
     mapped_docs = []
+
     # We iterate over each row in the DataFrame gcf_docs using iterrows(),
     # the underscore indicates that the index of the row will not be used in this loop.
     # We check if the field in the 'TRANSLATED_TITLES' column is not NaN. Note - Empty entries return as nan
@@ -151,10 +198,21 @@ def document(
     # Separately, if that row also contains a value in the translated titles column,
     # we will map a separate object for each of the translated versions, using the translated url
     # as the source url and add those translated versions to the list
-    for _, row in gcf_docs.iterrows():
+    for _, row in combo.iterrows():
+        document_id = row.at[RequiredColumns.ID.value]
+
+        approved_ref = row.at[ProjectsRequiredColumns.APPROVED_REF.value]
+        projects_id = row.at[ProjectsRequiredColumns.PROJECTS_ID.value]
+
+        if not all([pd.notna(approved_ref), pd.notna(projects_id)]):
+            click.echo(f"🛑 No project data associated with document ID {document_id}")
+            continue
+
         has_translated_files = pd.notna(row.at[RequiredColumns.TRANSLATED_TITLES.value])
         mapped_docs.append(
             {
+                "import_id": f"GCF.document.{approved_ref}_{projects_id}.{document_id}",
+                "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
                 "metadata": {"type": row[RequiredColumns.TYPE.value]},
                 "title": row[RequiredColumns.TITLE.value],
                 "source_url": row[RequiredColumns.SOURCE_URL.value],
