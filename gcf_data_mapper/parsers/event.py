@@ -3,7 +3,7 @@ from typing import Any, Optional
 import click
 import pandas as pd
 
-from gcf_data_mapper.enums.event import Event, EventColumnNames, Events
+from gcf_data_mapper.enums.event import Event, Events, RequiredEventColumns
 from gcf_data_mapper.parsers.helpers import verify_required_fields_present
 
 
@@ -127,15 +127,15 @@ def event(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, A
     if debug:
         click.echo("📝 Wrangling GCF event data.")
 
-    required_fields = set(str(e.value) for e in EventColumnNames)
+    required_fields = set(str(e.value) for e in RequiredEventColumns)
     verify_required_fields_present(projects_data, required_fields)
 
     gcf_events = []
     event_counter = {}
 
     for _, row in projects_data.iterrows():
-        approved_ref = row.at[EventColumnNames.APPROVED_REF.value]
-        projects_id = row.at[EventColumnNames.PROJECTS_ID.value]
+        approved_ref = row.at[RequiredEventColumns.APPROVED_REF.value]
+        projects_id = row.at[RequiredEventColumns.PROJECTS_ID.value]
         process_event(row, gcf_events, event_counter, approved_ref, projects_id)
 
     return gcf_events

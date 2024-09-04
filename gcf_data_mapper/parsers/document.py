@@ -1,34 +1,14 @@
-from enum import Enum
 from typing import Any, Optional, cast
 from urllib.parse import urlparse
 
 import click
 import pandas as pd
 
-
-class RequiredColumns(Enum):
-    SOURCE_URL = "Document page permalink"
-    TITLE = "Title"
-    TRANSLATED_FILES = "Translated files"
-    TRANSLATED_TITLES = "Translated titles"
-    TYPE = "Type"
-    ID = "ID (Unique ID from our CMS for the document)"
-
-
-class ProjectsRequiredColumns(Enum):
-    APPROVED_REF = "ApprovedRef"
-    PROJECTS_ID = "ProjectsID"
-
-
-class IgnoreDocumentTypes(Enum):
-    """Filter the following columns out of the GCF document data.
-
-    TODO: Phase 2 GCF/MCF we will need to parse these document types too
-    but for now, we will omit them.
-    """
-
-    APPROVED_REF = "Policies, strategies, and guidelines"
-    PROJECTS_ID = "Country programme"
+from gcf_data_mapper.enums.document import (
+    IgnoreDocumentTypes,
+    RequiredDocumentColumns,
+    RequiredFamilyDocumentColumns,
+)
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -109,15 +89,19 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
     mapped_documents = []
 
     concatenated_string_of_url_docs = str(
-        translated_files_row[RequiredColumns.TRANSLATED_FILES.value]
+        translated_files_row[RequiredDocumentColumns.TRANSLATED_FILES.value]
     )
     url_docs = concatenated_string_of_url_docs.split("|")
 
-    doc_id = translated_files_row.at[RequiredColumns.ID.value]
+    doc_id = translated_files_row.at[RequiredDocumentColumns.ID.value]
 
-    approved_ref = translated_files_row.at[ProjectsRequiredColumns.APPROVED_REF.value]
+    approved_ref = translated_files_row.at[
+        RequiredFamilyDocumentColumns.APPROVED_REF.value
+    ]
 
-    projects_id = translated_files_row.at[ProjectsRequiredColumns.PROJECTS_ID.value]
+    projects_id = translated_files_row.at[
+        RequiredFamilyDocumentColumns.PROJECTS_ID.value
+    ]
 
     try:
         validate_urls(url_docs, doc_id)
@@ -127,9 +111,9 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
                     "import_id": f"GCF.document.{approved_ref}_{projects_id}.{doc_id}",
                     "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
                     "metadata": {
-                        "type": translated_files_row[RequiredColumns.TYPE.value]
+                        "type": translated_files_row[RequiredDocumentColumns.TYPE.value]
                     },
-                    "title": translated_files_row[RequiredColumns.TITLE.value],
+                    "title": translated_files_row[RequiredDocumentColumns.TITLE.value],
                     "source_url": url.strip(),
                     "variant_name": "Translated",
                 }
@@ -154,7 +138,7 @@ def document(
         the 'destination' format described in the GCF Data Mapper Google
         Sheet.
     """
-    required_columns = [column.value for column in RequiredColumns]
+    required_columns = [column.value for column in RequiredDocumentColumns]
     missing_columns = [col for col in required_columns if col not in gcf_docs.columns]
 
     if missing_columns:
@@ -175,14 +159,16 @@ def document(
         left=gcf_docs,
         right=projects_data,
         left_on="FP number",
-        right_on=ProjectsRequiredColumns.APPROVED_REF.value,
+        right_on=RequiredFamilyDocumentColumns.APPROVED_REF.value,
         how="left",
     )
     combo = combo[
-        ~combo[RequiredColumns.TYPE.value].isin([e.value for e in IgnoreDocumentTypes])
+        ~combo[RequiredDocumentColumns.TYPE.value].isin(
+            [e.value for e in IgnoreDocumentTypes]
+        )
     ]
-    combo[ProjectsRequiredColumns.PROJECTS_ID.value] = cast(
-        pd.DataFrame, combo[ProjectsRequiredColumns.PROJECTS_ID.value]
+    combo[RequiredFamilyDocumentColumns.PROJECTS_ID.value] = cast(
+        pd.DataFrame, combo[RequiredFamilyDocumentColumns.PROJECTS_ID.value]
     ).convert_dtypes()
 
     if debug:
@@ -199,23 +185,25 @@ def document(
     # we will map a separate object for each of the translated versions, using the translated url
     # as the source url and add those translated versions to the list
     for _, row in combo.iterrows():
-        document_id = row.at[RequiredColumns.ID.value]
+        document_id = row.at[RequiredDocumentColumns.ID.value]
 
-        approved_ref = row.at[ProjectsRequiredColumns.APPROVED_REF.value]
-        projects_id = row.at[ProjectsRequiredColumns.PROJECTS_ID.value]
+        approved_ref = row.at[RequiredFamilyDocumentColumns.APPROVED_REF.value]
+        projects_id = row.at[RequiredFamilyDocumentColumns.PROJECTS_ID.value]
 
         if not all([pd.notna(approved_ref), pd.notna(projects_id)]):
             click.echo(f"🛑 No project data associated with document ID {document_id}")
             continue
 
-        has_translated_files = pd.notna(row.at[RequiredColumns.TRANSLATED_TITLES.value])
+        has_translated_files = pd.notna(
+            row.at[RequiredDocumentColumns.TRANSLATED_TITLES.value]
+        )
         mapped_docs.append(
             {
                 "import_id": f"GCF.document.{approved_ref}_{projects_id}.{document_id}",
                 "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
-                "metadata": {"type": row[RequiredColumns.TYPE.value]},
-                "title": row[RequiredColumns.TITLE.value],
-                "source_url": row[RequiredColumns.SOURCE_URL.value],
+                "metadata": {"type": row[RequiredDocumentColumns.TYPE.value]},
+                "title": row[RequiredDocumentColumns.TITLE.value],
+                "source_url": row[RequiredDocumentColumns.SOURCE_URL.value],
                 "variant_name": "Original Translation",
             }
         )

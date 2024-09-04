@@ -4,7 +4,7 @@ from enum import Enum
 Event = namedtuple("event", ["name", "type", "column_name"])
 
 
-class EventColumnNames(Enum):
+class RequiredEventColumns(Enum):
     """The fields the GCF data mapper needs to parse event data."""
 
     APPROVED = "ApprovalDate"
@@ -26,15 +26,15 @@ class Events:
     APPROVED = Event(
         "approved",
         EventTypeNames.APPROVED.value,
-        EventColumnNames.APPROVED.value,
+        RequiredEventColumns.APPROVED.value,
     )
     UNDER_IMPLEMENTATION = Event(
         "under_implementation",
         EventTypeNames.UNDER_IMPLEMENTATION.value,
-        EventColumnNames.UNDER_IMPLEMENTATION.value,
+        RequiredEventColumns.UNDER_IMPLEMENTATION.value,
     )
     COMPLETED = Event(
         "completed",
         EventTypeNames.COMPLETED.value,
-        EventColumnNames.COMPLETED.value,
+        RequiredEventColumns.COMPLETED.value,
     )
