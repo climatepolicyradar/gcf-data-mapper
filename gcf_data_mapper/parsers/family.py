@@ -16,5 +16,6 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
     """
     if debug:
         click.echo("📝 Wrangling GCF family data.")
+        click.echo(f"📝 {projects_data.shape[0]} GCF projects to map...")
 
     return []

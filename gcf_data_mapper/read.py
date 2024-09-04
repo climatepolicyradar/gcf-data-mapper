@@ -153,7 +153,6 @@ def read(
     )
 
     if debug:
-        click.echo(f"📝 {project_info.shape[0]} GCF projects to map...")
         click.echo(project_info)
         click.echo(mcf_docs)
 
