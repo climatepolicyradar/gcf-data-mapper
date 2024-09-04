@@ -20,3 +20,8 @@ def verify_required_fields_present(
         f"Required fields '{str(diff)}' not present in df columns '"
         f"{cols if cols != set() else r'{}'}'"
     )
+
+
+def check_required_column_value_not_na(row: pd.Series, column_enum) -> bool:
+    """Check if the row contains valid document column values (not NA)."""
+    return all(pd.notna(row[column.value]) for column in column_enum)
