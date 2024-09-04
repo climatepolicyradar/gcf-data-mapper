@@ -9,6 +9,7 @@ from gcf_data_mapper.enums.document import (
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
 )
+from gcf_data_mapper.parsers.helpers import verify_required_fields_present
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -138,13 +139,9 @@ def document(
         the 'destination' format described in the GCF Data Mapper Google
         Sheet.
     """
-    required_columns = [column.value for column in RequiredDocumentColumns]
-    missing_columns = [col for col in required_columns if col not in gcf_docs.columns]
 
-    if missing_columns:
-        raise ValueError(
-            f"Missing required columns {missing_columns} in GCF data frame"
-        )
+    required_fields = set(str(e.value) for e in RequiredDocumentColumns)
+    verify_required_fields_present(gcf_docs, required_fields)
 
     if debug:
         click.echo("📝 Wrangling GCF document data.")
