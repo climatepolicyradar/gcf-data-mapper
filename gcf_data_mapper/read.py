@@ -146,8 +146,6 @@ def read(
         )
         raise ValueError("Record number mismatch")
 
-    if debug:
-        click.echo("📝 Merging GCF and MCF project data")
     mcf_projects.rename(columns={"FP number": "ApprovedRef"}, inplace=True)
     project_info = pd.merge(
         left=gcf_projects,
@@ -155,6 +153,7 @@ def read(
     )
 
     if debug:
+        click.echo(f"📝 {project_info.shape[0]} GCF projects to map...")
         click.echo(project_info)
         click.echo(mcf_docs)
 

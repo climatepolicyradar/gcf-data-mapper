@@ -116,23 +116,28 @@ def map_translated_files(translated_files_row: pd.Series) -> list[dict]:
         raise e
 
 
-def document(gcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
+def document(
+    projects_data: pd.DataFrame, gcf_docs: pd.DataFrame, debug: bool
+) -> list[Optional[dict[str, Any]]]:
     """Map the GCF document info to new structure.
 
+    :param pd.DataFrame projects_data: The MCF and GCF project data,
+        joined on FP num.
     :param pd.DataFrame gcf_docs: The GCF documents data.
     :param bool debug: Whether debug mode is on.
-    :raises ValueError: If the DataFrame is missing one or more of the required column headers
+    :raises ValueError: If the DataFrame is missing one or more of the
+        required column headers
     :return list[Optional[dict[str, Any]]]: A list of GCF families in
         the 'destination' format described in the GCF Data Mapper Google
         Sheet.
     """
-
     required_columns = [column.value for column in RequiredColumns]
     missing_columns = [col for col in required_columns if col not in gcf_docs.columns]
 
     if missing_columns:
-        click.echo("Missing required columns: {}".format(", ".join(missing_columns)))
-        raise ValueError("Missing required columns in GCF data frame")
+        raise ValueError(
+            f"Missing required columns {missing_columns} in GCF data frame"
+        )
 
     if debug:
         click.echo("📝 Wrangling GCF document data.")
