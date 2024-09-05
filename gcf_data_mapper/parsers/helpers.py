@@ -25,19 +25,19 @@ def check_row_for_columns_with_empty_values(
     row: pd.Series, required_columns: list[str]
 ):
     """
-    Check that all required values in the given row are not empty (notna).
+    Check that all required values in the given row are not empty (isna).
 
-    :param pd.Series row: The row to check for notna values.
-    :param list[str] required_columns: A list of column names that will be used to verify.
-    :raises ValueError: If any value in the row is notna.
+    :param pd.Series row: The row to check for isna values.
+    :param list[str] required_columns: A list of column names that will be used to verify isna values.
+    :raises ValueError: If any column in the row has an empty value.
     """
 
-    # Ensure we are working with a pandas Series by re-selecting the required columns as a Series
-    row_subset = pd.Series(row[required_columns], index=required_columns)
+    empty_columns = [col for col in required_columns if pd.isna(row.at[col])]
 
-    breakpoint()
-    if row_subset.isna().any():
-        raise ValueError("This row has empty values")
+    if empty_columns:
+        raise ValueError(
+            f"This row has empty values in the following columns: {', '.join(empty_columns)}"
+        )
 
 
 def check_row_for_missing_columns(row: pd.Series, required_columns: list[str]):
@@ -45,7 +45,7 @@ def check_row_for_missing_columns(row: pd.Series, required_columns: list[str]):
     Check if a given row contains all required columns.
 
     :param pd.Series row: The row (Series) to check for missing columns.
-    :param list[str] required_columns: A list of column names that will be used to verify.
+    :param list[str] required_columns: A list of column names.
     :raises AttributeError: If any required columns are missing from the row.
     """
 

@@ -35,7 +35,8 @@
     "iloc",
     "iterrows",
     "notna",
-    "conftest"
+    "conftest",
+    "isna"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
