@@ -1,46 +1,18 @@
-from enum import Enum
 from typing import Any, Optional
 
 import click
 import pandas as pd
 
+from gcf_data_mapper.enums.family import (
+    FamilyColumnsNames,
+    FamilyNestedColumnNames,
+    GCFProjectBudgetSource,
+)
 from gcf_data_mapper.parsers.helpers import (
     check_row_for_columns_with_empty_values,
     check_row_for_missing_columns,
     get_value_in_nested_object,
 )
-
-
-class FamilyColumnsNames(Enum):
-    """The fields the GCF data mapper needs to parse family data/ metadata."""
-
-    APPROVED_REF = "ApprovedRef"
-    COUNTRIES = "Countries"
-    ENTITIES = "Entities"
-    FUNDING = "Funding"
-    PROJECT_URL = "ProjectURL"
-    PROJECTS_ID = "ProjectsID"
-    RESULT_AREAS = "ResultAreas"
-    SECTOR = "Sector"
-    THEME = "Theme"
-
-
-class FamilyNestedColumnNames(Enum):
-    """The fields the GCF data mapper needs to parse nested family data/ metadata."""
-
-    AREA = "Area"
-    BUDGET = "BudgetUSDeq"
-    NAME = "Name"
-    REGION = "Region"
-    SOURCE = "Source"
-    TYPE = "Type"
-
-
-class GCFProjectBudgetSource(Enum):
-    """The source of financing for the project's budget funding"""
-
-    CO_FINANCING = "Co-Financing"
-    GCF = "GCF"
 
 
 def get_budgets(row: pd.Series, source: str) -> list[int]:

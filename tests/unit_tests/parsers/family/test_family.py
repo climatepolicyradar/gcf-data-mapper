@@ -1,3 +1,5 @@
+from typing import Type
+
 import pandas as pd
 import pytest
 
@@ -25,9 +27,12 @@ def parsed_family_data():
     ]
 
 
-def test_returns_expected_family_data_structure(test_family_doc_df, parsed_family_data):
+def test_returns_expected_family_data_structure(
+    test_family_doc_df: pd.DataFrame, parsed_family_data: list[dict]
+):
     family_data = family(test_family_doc_df, debug=True)
     assert family_data != []
+    assert len(family_data) == len(parsed_family_data)
     assert family_data == parsed_family_data
 
 
@@ -71,7 +76,9 @@ def test_returns_expected_family_data_structure(test_family_doc_df, parsed_famil
         ),
     ],
 )
-def test_raises_error_on_validating_row(test_df, error, error_msg):
+def test_raises_error_on_validating_row(
+    test_df: pd.DataFrame, error: Type[Exception], error_msg: str
+):
     with pytest.raises(error) as e:
         family(test_df, debug=True)
     assert error_msg in str(e.value)
@@ -148,7 +155,7 @@ def test_raises_error_on_validating_row(test_df, error, error_msg):
     ],
 )
 def test_returns_expected_value_when_parsing_budget_data(
-    test_data_series, source, expected_value
+    test_data_series: pd.Series, source: str, expected_value: list[int]
 ):
     budgets = get_budgets(test_data_series, source)
     assert budgets == expected_value
@@ -210,7 +217,9 @@ def test_returns_empty_array_when_parsing_empty_data_frame():
         ),
     ],
 )
-def test_raises_error_on_validating_nested_objects_for_data(test_df, error, error_msg):
+def test_raises_error_on_validating_nested_objects_for_data(
+    test_df: pd.DataFrame, error: Type[Exception], error_msg: str
+):
     with pytest.raises(error) as e:
         family(test_df, debug=True)
     assert error_msg in str(e.value)

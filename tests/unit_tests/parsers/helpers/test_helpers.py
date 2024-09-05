@@ -141,7 +141,7 @@ def test_raises_error_for_columns_with_empty_values_in_a_given_row(
     ],
 )
 def test_raises_error_when_checking_for_value_in_nested_object(
-    object, key, error, error_msg
+    object: dict, key: str, error: Type[Exception], error_msg: str
 ):
     with pytest.raises(error) as e:
         get_value_in_nested_object(object, key)
