@@ -36,7 +36,9 @@
     "iterrows",
     "notna",
     "conftest",
-    "capsys"
+    "capsys",
+    "dtypes",
+    "isin"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
