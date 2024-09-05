@@ -25,8 +25,8 @@ class IgnoreDocumentTypes(Enum):
     but for now, we will omit them.
     """
 
-    APPROVED_REF = "Policies, strategies, and guidelines"
-    PROJECTS_ID = "Country programme"
+    POLICIES_STRATEGIES_GUIDELINES = "Policies, strategies, and guidelines"
+    COUNTRY_PROGRAMME = "Country programme"
 
 
 class DocumentVariantNames(Enum):
