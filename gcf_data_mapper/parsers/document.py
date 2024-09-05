@@ -61,7 +61,7 @@ def contains_invalid_paths(urls: list[str]) -> bool:
     return False
 
 
-def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
+def validate_urls(urls: list[str], doc_id: str) -> bool:
     """Validate a list of URLs for empty, duplicate, & malformed entries.
 
     TODO can we use Pydantic for this?
@@ -70,26 +70,26 @@ def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
     param: str doc_id: The document id of the invalid source urls
     raises ValueError: If the list contains duplicate, empty or,
         malformed urls
-    return Optional[bool]: None if one or more of the URls for the given
-        document ID are invalid, otherwise True.
+    return bool: None if one or more of the URls for the given document
+        ID are invalid, otherwise True.
     """
     if contains_empty_urls(urls):
         click.echo(
             f"🛑 Empty URL found in list of translated urls. DocumentId : {doc_id}"
         )
-        return None
+        return False
 
     if contains_duplicate_urls(urls):
         click.echo(
             f"🛑 Duplicate URLs found in list of translated urls. DocumentId : {doc_id}"
         )
-        return None
+        return False
 
     if contains_invalid_paths(urls):
         click.echo(
             f"🛑 Malformed url found in list of translated urls. DocumentId : {doc_id}"
         )
-        return None
+        return False
     return True
 
 
@@ -153,7 +153,7 @@ def map_translated_files(
     ).split("|")
     doc_id = translated_files_row.at[RequiredDocumentColumns.ID.value]
 
-    if validate_urls(url_docs, doc_id) is None:
+    if validate_urls(url_docs, doc_id) is False:
         return None
 
     for url in url_docs:

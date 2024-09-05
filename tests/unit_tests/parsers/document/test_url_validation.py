@@ -56,14 +56,14 @@ def test_url_validation_passes_with_valid_urls(urls, doc_id, expected):
 @pytest.mark.parametrize(
     "urls, doc_id, expected",
     [
-        (["http://example.com", "http://example.com"], "doc123", None),
-        (["http://example.com", ""], "doc456", None),
+        (["http://example.com", "http://example.com"], "doc123", False),
+        (["http://example.com", ""], "doc456", False),
         (
             ["http://example.com/valid", "http://example.com/invalid path"],
             "doc789",
-            None,
+            False,
         ),
     ],
 )
-def test_url_validation_returns_none_when_fails(urls, doc_id, expected):
+def test_url_validation_returns_false_when_fails(urls, doc_id, expected):
     assert validate_urls(urls, doc_id) == expected
