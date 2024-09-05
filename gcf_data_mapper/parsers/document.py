@@ -18,8 +18,7 @@ from gcf_data_mapper.parsers.helpers import (
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
-    """
-    Check a list of urls for any duplicate entries.
+    """Check a list of urls for any duplicate entries.
 
     param: list[str] urls: A list of urls
     return bool: Returns true if duplicate urls are present, False
@@ -32,8 +31,7 @@ def contains_duplicate_urls(urls: list[str]) -> bool:
 
 
 def contains_empty_urls(urls: list[str]) -> bool:
-    """
-    Check a list of urls for any empty entries.
+    """Check a list of urls for any empty entries.
 
     param: list[str] urls: a list of urls
     return bool: Returns true if empty urls are present, or false if not
@@ -45,8 +43,7 @@ def contains_empty_urls(urls: list[str]) -> bool:
 
 
 def contains_invalid_paths(urls: list[str]) -> bool:
-    """
-    Check a list of urls for any malformed entries.
+    """Check a list of urls for any malformed entries.
 
     param: list[str] urls: A list of urls
     return bool: Returns true if malformed urls are present, or false
@@ -65,8 +62,7 @@ def contains_invalid_paths(urls: list[str]) -> bool:
 
 
 def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
-    """
-    Validate a list of URLs for empty, duplicate, & malformed entries.
+    """Validate a list of URLs for empty, duplicate, & malformed entries.
 
     param: list[str] urls : A list of urls
     param: str doc_id: The document id of the invalid source urls
@@ -96,8 +92,7 @@ def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
 
 
 def has_translated_files(row: pd.Series) -> bool:
-    """
-    Check if the row has translated files.
+    """Check if the row has translated files.
 
     :param pd.Series row: The row to check.
     :return bool: True if translated files exist, False otherwise.
@@ -110,8 +105,7 @@ def map_document_metadata(
     variant_name: str,
     source_url: Optional[str] = None,
 ) -> dict[str, Any]:
-    """
-    Create a document dictionary with common fields.
+    """Create a document dictionary with common fields.
 
     :param pd.Series row: A record to map to a GCF document.
     :param str variant_name: The variant name.
@@ -141,8 +135,7 @@ def map_document_metadata(
 def map_translated_files(
     translated_files_row: pd.Series,
 ) -> Optional[list[dict[str, Any]]]:
-    """
-    Map the GCF document with translated versions into JSON.
+    """Map the GCF document with translated versions into JSON.
 
     :param pd.Series translated_files_row: A row from the DataFrame
         containing the 'Translated files' field.
