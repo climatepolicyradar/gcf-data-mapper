@@ -4,9 +4,9 @@ import pandas as pd
 import pytest
 
 from gcf_data_mapper.parsers.helpers import (
-    check_row_for_columns_with_empty_values,
     check_row_for_missing_columns,
     get_value_in_nested_object,
+    row_contains_columns_with_empty_values,
     verify_required_fields_present,
 )
 
@@ -107,7 +107,7 @@ def test_raises_error_for_columns_with_empty_values_in_a_given_row(
     error_msg: str,
 ):
     with pytest.raises(error) as e:
-        check_row_for_columns_with_empty_values(test_ds, required_columns)
+        row_contains_columns_with_empty_values(test_ds, required_columns)
     assert error_msg in str(e.value)
 
 

@@ -9,15 +9,14 @@ from gcf_data_mapper.enums.family import (
     GCFProjectBudgetSource,
 )
 from gcf_data_mapper.parsers.helpers import (
-    check_row_for_columns_with_empty_values,
     check_row_for_missing_columns,
     get_value_in_nested_object,
+    row_contains_columns_with_empty_values,
 )
 
 
 def get_budgets(row: pd.Series, source: str) -> list[int]:
-    """
-    Get the budget amount from the row based on the funding source.
+    """Get the budget amount from the row based on the funding source.
 
     :param pd.Series row: The row containing funding information.
     :param str source: The funding source to retrieve the budget from.
@@ -37,8 +36,7 @@ def get_budgets(row: pd.Series, source: str) -> list[int]:
 
 
 def map_family_metadata(row: pd.Series) -> dict:
-    """
-    Map the metadata of a family based on the provided row.
+    """Map the metadata of a family based on the provided row.
 
     :param pd.Series row: The row containing family information.
     :return dict: A dictionary containing mapped metadata for the family.
@@ -88,13 +86,33 @@ def map_family_metadata(row: pd.Series) -> dict:
     return metadata
 
 
-def map_family_data(row: pd.Series) -> dict:
-    """
-    Map the family data based on the provided row.
+def map_family_data(row: pd.Series) -> Optional[dict]:
+    """Map the family data based on the provided row.
 
     :param pd.Series row: The row containing family information.
-    :return dict: A dictionary containing mapped data for the family entity.
+    :return Optional[dict]: A dictionary containing mapped data for the family entity.
+    The function will return None, if the row contains missing data from expected columns/fields
     """
+
+    required_columns = [column.value for column in FamilyColumnsNames]
+
+    doc_id = (
+        row.at[FamilyColumnsNames.PROJECTS_ID.value]
+        if FamilyColumnsNames.PROJECTS_ID.value in row.index
+        and pd.notna(row.at[FamilyColumnsNames.PROJECTS_ID.value])
+        else None
+    )
+
+    if not doc_id:
+        click.echo("🛑 Skipping row as it does not contain a project id")
+        return None
+
+    # Check for missing required columns in the row and raise error accordingly
+    check_row_for_missing_columns(row, required_columns, doc_id)
+
+    if row_contains_columns_with_empty_values(row, required_columns):
+        click.echo(f"🛑 Skipping row as it contains empty column values: See {doc_id}")
+        return None
 
     # ToDo Map family data
     return {
@@ -116,12 +134,9 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
     if debug:
         click.echo("📝 Wrangling GCF family data.")
 
-    required_columns = [column.value for column in FamilyColumnsNames]
     mapped_families = []
 
     for _, row in projects_data.iterrows():
-        check_row_for_missing_columns(row, required_columns)
-        check_row_for_columns_with_empty_values(row, required_columns)
         mapped_families.append(map_family_data(row))
 
     return mapped_families
