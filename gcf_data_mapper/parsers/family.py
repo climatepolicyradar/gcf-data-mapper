@@ -4,78 +4,162 @@ from typing import Any, Optional
 import click
 import pandas as pd
 
-
-class MetadataProperties(Enum):
-    pass
-
-
-# To consider put these into helper functions ?
-def _get_family_doc_status():
-    return None
+from gcf_data_mapper.parsers.helpers import (
+    check_row_for_columns_with_empty_values,
+    check_row_for_missing_columns,
+)
 
 
-def _get_event_data():
-    event_type = ""
-    status = _get_family_doc_status()
+class FamilyColumnsNames(Enum):
+    """The fields the GCF data mapper needs to parse family data/ metadata."""
 
-    return status, event_type
-
-
-def _get_budget(row, source):
-    return next(
-        (
-            funding["BudgetUSDeq"]
-            for funding in row["Funding"]
-            if funding["Source"] == source
-        ),
-        None,
-    )  # should this be none or empty string?
+    APPROVED_REF = "ApprovedRef"
+    COUNTRIES = "Countries"
+    ENTITIES = "Entities"
+    FUNDING = "Funding"
+    PROJECT_URL = "ProjectURL"
+    PROJECTS_ID = "ProjectsID"
+    RESULT_AREAS = "ResultAreas"
+    SECTOR = "Sector"
+    THEME = "Theme"
 
 
-def _get_family_metadata(row):
-    co_financing_budget = _get_budget(row, "Co-Financing")
-    gcf_budget = _get_budget(
-        row, "GCF"
-    )  # should this be the first value or a sum of the multiple finances where this applies, see line 1387
+class FamilyNestedColumnNames(Enum):
+    """The fields the GCF data mapper needs to parse nested family data/ metadata."""
+
+    AREA = "Area"
+    BUDGET = "BudgetUSDeq"
+    NAME = "Name"
+    REGION = "Region"
+    SOURCE = "Source"
+    TYPE = "Type"
+
+
+class GCFProjectBudgetSource(Enum):
+    """The source of financing for the project's budget funding"""
+
+    CO_FINANCING = "Co-Financing"
+    GCF = "GCF"
+
+
+# This checks that a key value pair exists on a nested dictionary, we want to be strict
+# with our validation so want to be alerted when data that we expect to be there does
+# not exist, we can then take this back to the client and handle it accordingly
+def _get_value_in_nested_object(object: dict, key: str) -> Any:
+    """
+    Retrieve the value associated with a given key in a nested dictionary object.
+
+    :param dict object: The dictionary from which to retrieve the value.
+    :param str key: The key value that will be used to retrieve that value.
+
+    :raises KeyError: If the specified key does not exist in the dictionary.
+    :raises ValueError: If the key exists but the associated value is empty (None,
+    empty string, or empty list).
+
+    :return Any: The value associated with the specified key.
+    """
+
+    # The get function, checks for a key in a dict and defaults to None instead of
+    # raising a key error. However for null values in a json object this converts to a NoneType,
+    # so to avoid false positives, we set the default to a specified string so that we
+    # can know for sure when a value is empty vs when a key does not exists
+    value = object.get(key, "key does not exist")
+
+    if value == "key does not exist":
+        raise KeyError(f"key: {key} does not exist on this dict")
+
+    # Check for false values like empty string, empty list, or empty dict or None
+    if not value:
+        raise ValueError(f"Key '{key}' exists, but the value is empty")
+
+    return value
+
+
+def _get_budgets(row: pd.Series, source: str) -> list[int]:
+    """
+    Get the budget amount from the row based on the funding source.
+
+    :param pd.Series row: The row containing funding information.
+    :param str source: The funding source to retrieve the budget from.
+
+    :return list[int]: A list of budget amounts corresponding to the source,
+    or [0] if the source is not found.
+    """
+
+    budgets = [
+        _get_value_in_nested_object(funding, FamilyNestedColumnNames.BUDGET.value)
+        for funding in row.at[FamilyColumnsNames.FUNDING.value]
+        if _get_value_in_nested_object(funding, FamilyNestedColumnNames.SOURCE.value)
+        == source
+    ]
+
+    return budgets if budgets else [0]
+
+
+def _map_family_metadata(row: pd.Series) -> dict:
+    """
+    Map the metadata of a family based on the provided row.
+
+    :param pd.Series row: The row containing family information.
+    :return dict: A dictionary containing mapped metadata for the family.
+    """
+
+    co_financing_budgets = _get_budgets(row, GCFProjectBudgetSource.CO_FINANCING.value)
+    gcf_budgets = _get_budgets(row, GCFProjectBudgetSource.GCF.value)
     implementing_agencies = set(
-        [entity.get("Name", "") for entity in row.get("Entities", [])]
+        [
+            _get_value_in_nested_object(entity, FamilyNestedColumnNames.NAME.value)
+            for entity in row.at[FamilyColumnsNames.ENTITIES.value]
+        ]
     )
-    regions = set([country.get("Region", "") for country in row.get("Countries", [])])
+    regions = set(
+        [
+            _get_value_in_nested_object(country, FamilyNestedColumnNames.REGION.value)
+            for country in row.at[FamilyColumnsNames.COUNTRIES.value]
+        ]
+    )
     result_areas = set(
-        [result.get("Area", "") for result in row.get("ResultAreas", [])]
+        [
+            _get_value_in_nested_object(result, FamilyNestedColumnNames.AREA.value)
+            for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
+        ]
     )
     result_types = set(
-        [result.get("Type", "") for result in row.get("ResultAreas", [])]
+        [
+            _get_value_in_nested_object(result, FamilyNestedColumnNames.TYPE.value)
+            for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
+        ]
     )
 
-    status, event_type = _get_event_data()
-
     metadata = {
-        "Regions": list(regions),
-        "ProjectID": row.get("ProjectsID", ""),
-        "ApprovedRef": row.get("ApprovedRef", ""),
-        "Project value (fund spend)": gcf_budget,
-        "Project value (co-financing)": co_financing_budget,
-        "Implementing Agencies": list(implementing_agencies),
-        "Project URL": row.get("ProjectURL", ""),
-        "Theme": row.get("Theme", ""),
-        "Result Areas": list(result_areas),
-        "Result Types": list(result_types),
-        "Sector": row.get("Sector", ""),
-        "Status": status,
-        "event_types": event_type,
+        "regions": list(regions),
+        "project_id": [row.at[FamilyColumnsNames.PROJECTS_ID.value]],
+        "approved_ref": [row.at[FamilyColumnsNames.APPROVED_REF.value]],
+        "project_value_fund_spend": gcf_budgets,
+        "project_value_co_financing": co_financing_budgets,
+        "implementing_agencies": list(implementing_agencies),
+        "project_url": [row.at[FamilyColumnsNames.PROJECT_URL.value]],
+        "theme": [row.at[FamilyColumnsNames.THEME.value]],
+        "result_areas": list(result_areas),
+        "result_types": list(result_types),
+        "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
     }
 
     return metadata
 
 
-def _map_family_data(row):
+def _map_family_data(row: pd.Series) -> dict:
+    """
+    Map the family data based on the provided row.
+
+    :param pd.Series row: The row containing family information.
+    :return dict: A dictionary containing mapped data for the family entity.
+    """
+
     # ToDo Map family data
-    data = {}
-
-    data["metadata"] = _get_family_metadata(row)
-
-    return data
+    return {
+        "metadata": _map_family_metadata(row),
+    }
 
 
 def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
@@ -91,10 +175,13 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
 
     if debug:
         click.echo("📝 Wrangling GCF family data.")
+
+    required_columns = [column.value for column in FamilyColumnsNames]
     mapped_families = []
 
     for _, row in projects_data.iterrows():
-        mapped_families.append({"metadata": _map_family_data(row)})
-        breakpoint()
+        check_row_for_missing_columns(row, required_columns)
+        check_row_for_columns_with_empty_values(row, required_columns)
+        mapped_families.append(_map_family_data(row))
 
     return mapped_families
