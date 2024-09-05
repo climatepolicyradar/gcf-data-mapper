@@ -1,10 +1,6 @@
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.enums.document import (
-    RequiredDocumentColumns,
-    RequiredFamilyDocumentColumns,
-)
 from gcf_data_mapper.parsers.document import process_row
 
 
@@ -33,36 +29,36 @@ def test_process_row_with_no_translations_success(
     [
         (
             {
-                RequiredFamilyDocumentColumns.APPROVED_REF.value: None,
+                "ApprovedRef": None,
             },
             "Skipping row with missing required family columns: None",
         ),
         (
             {
-                RequiredFamilyDocumentColumns.APPROVED_REF.value: None,
-                RequiredFamilyDocumentColumns.PROJECTS_ID.value: None,
+                "ApprovedRef": None,
+                "ProjectsID": None,
             },
             "Skipping row with missing required family columns: None",
         ),
         (
             {
-                RequiredFamilyDocumentColumns.APPROVED_REF.value: "ref123",
-                RequiredFamilyDocumentColumns.PROJECTS_ID.value: "proj123",
-                RequiredDocumentColumns.ID.value: None,
-                RequiredDocumentColumns.TITLE.value: None,
-                RequiredDocumentColumns.TYPE.value: None,
-                RequiredDocumentColumns.SOURCE_URL.value: None,
+                "ApprovedRef": "ref123",
+                "ProjectsID": "proj123",
+                "ID (Unique ID from our CMS for the document)": None,
+                "Title": None,
+                "Type": None,
+                "Document page permalink": None,
             },
             "Skipping row with missing required document columns: None",
         ),
         (
             {
-                RequiredFamilyDocumentColumns.APPROVED_REF.value: "ref123",
-                RequiredFamilyDocumentColumns.PROJECTS_ID.value: "proj123",
-                RequiredDocumentColumns.ID.value: "123",
-                RequiredDocumentColumns.TITLE.value: "title123",
-                RequiredDocumentColumns.TYPE.value: None,
-                RequiredDocumentColumns.SOURCE_URL.value: None,
+                "ApprovedRef": "ref123",
+                "ProjectsID": "proj123",
+                "ID (Unique ID from our CMS for the document)": "123",
+                "Title": "title123",
+                "Type": None,
+                "Document page permalink": None,
             },
             "Skipping row with missing required document columns: 123",
         ),

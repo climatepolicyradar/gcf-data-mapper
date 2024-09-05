@@ -1,10 +1,6 @@
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.enums.document import (
-    RequiredDocumentColumns,
-    TranslatedDocumentColumns,
-)
 from gcf_data_mapper.parsers.document import map_translated_files
 
 
@@ -25,8 +21,8 @@ def test_translated_files_mapped_to_documents(valid_doc_row, expected_objects, r
 def test_translated_files_not_mapped_with_invalid_urls():
     row = pd.Series(
         {
-            TranslatedDocumentColumns.TRANSLATED_FILES.value: "http://example.com|",
-            RequiredDocumentColumns.ID.value: "doc123",
+            "Translated files": "http://example.com|",
+            "ID (Unique ID from our CMS for the document)": "doc123",
         }
     )
     assert map_translated_files(row) is None

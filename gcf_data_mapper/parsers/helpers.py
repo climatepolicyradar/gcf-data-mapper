@@ -16,6 +16,7 @@ def verify_required_fields_present(
     diff = set(required_fields).difference(cols)
     if diff == set():
         return True
+
     raise AttributeError(
         f"Required fields '{str(diff)}' not present in df columns '"
         f"{cols if cols != set() else r'{}'}'"
