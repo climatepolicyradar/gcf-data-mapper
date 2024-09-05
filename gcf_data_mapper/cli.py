@@ -92,7 +92,7 @@ def wrangle_to_json(
     return {
         "collections": collection(debug),
         "families": family(project_info, debug),
-        "documents": document(doc_info, debug),
+        "documents": document(project_info, doc_info, debug),
         "events": event(project_info, debug),
     }
 
