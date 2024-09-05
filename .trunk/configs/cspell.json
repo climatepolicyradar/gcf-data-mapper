@@ -36,8 +36,11 @@
     "iterrows",
     "notna",
     "conftest",
-    "isna",
-    "capsys"
+    "capsys",
+    "dtypes",
+    "isin",
+    "pydantic",
+    "getfixturevalue"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
