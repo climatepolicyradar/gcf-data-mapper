@@ -39,7 +39,8 @@
     "capsys",
     "dtypes",
     "isin",
-    "pydantic"
+    "pydantic",
+    "getfixturevalue"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000

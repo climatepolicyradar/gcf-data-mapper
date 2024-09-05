@@ -4,29 +4,20 @@ import pytest
 from gcf_data_mapper.enums.document import (
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
-    TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.document import process_row
 
 
-@pytest.fixture
-def mock_row():
-    return pd.Series(
-        {
-            RequiredFamilyDocumentColumns.APPROVED_REF.value: "ref123",
-            RequiredFamilyDocumentColumns.PROJECTS_ID.value: "proj123",
-            RequiredDocumentColumns.ID.value: "doc123",
-            RequiredDocumentColumns.TYPE.value: "type123",
-            RequiredDocumentColumns.TITLE.value: "title123",
-            TranslatedDocumentColumns.SOURCE_URL.value: "link123,link456",
-            TranslatedDocumentColumns.TRANSLATED_FILES.value: "url123|url456",
-            TranslatedDocumentColumns.TRANSLATED_TITLES.value: "title123|title456",
-        }
-    )
-
-
-def test_process_row_success(mock_row):
-    result = process_row(mock_row, debug=False)
+@pytest.mark.parametrize(
+    "valid_doc_row",
+    [
+        "mock_valid_doc_row_with_one_translation",
+        "mock_valid_doc_row_with_two_translations",
+        "mock_valid_doc_row_with_many_translations",
+    ],
+)
+def test_process_row_success(valid_doc_row, request):
+    result = process_row(request.getfixturevalue(valid_doc_row), debug=False)
     assert isinstance(result, list)
 
 
