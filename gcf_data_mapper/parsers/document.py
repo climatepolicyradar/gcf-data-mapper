@@ -64,6 +64,8 @@ def contains_invalid_paths(urls: list[str]) -> bool:
 def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
     """Validate a list of URLs for empty, duplicate, & malformed entries.
 
+    TODO can we use Pydantic for this?
+
     param: list[str] urls : A list of urls
     param: str doc_id: The document id of the invalid source urls
     raises ValueError: If the list contains duplicate, empty or,

@@ -38,7 +38,8 @@
     "conftest",
     "capsys",
     "dtypes",
-    "isin"
+    "isin",
+    "pydantic"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
