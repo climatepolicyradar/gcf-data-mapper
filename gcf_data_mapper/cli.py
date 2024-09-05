@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from typing import Any, Optional
@@ -110,6 +111,13 @@ def dump_output(
     """
     if debug:
         click.echo(f"📝 Output file {click.format_filename(output_file)}")
+
+    try:
+        with open(output_file, "w+", encoding="utf-8") as f:
+            json.dump(mapped_data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        click.echo(f"❌ Failed to dump JSON to file. Error: {e}.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
