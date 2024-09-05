@@ -7,9 +7,9 @@ import pandas as pd
 from gcf_data_mapper.enums.document import (
     DocumentVariantNames,
     IgnoreDocumentTypes,
-    OptionalDocumentColumns,
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
+    TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.helpers import (
     check_required_column_value_not_na,
@@ -102,7 +102,7 @@ def has_translated_files(row: pd.Series) -> bool:
     :param pd.Series row: The row to check.
     :return bool: True if translated files exist, False otherwise.
     """
-    return pd.notna(row.at[OptionalDocumentColumns.TRANSLATED_TITLES.value])
+    return pd.notna(row.at[TranslatedDocumentColumns.TRANSLATED_TITLES.value])
 
 
 def map_document_metadata(
@@ -126,7 +126,7 @@ def map_document_metadata(
     title = row[RequiredDocumentColumns.TITLE.value]
 
     if source_url is None:
-        source_url = cast(str, row[OptionalDocumentColumns.SOURCE_URL.value])
+        source_url = cast(str, row[TranslatedDocumentColumns.SOURCE_URL.value])
 
     return {
         "import_id": f"GCF.document.{approved_ref}_{projects_id}.{doc_id}",
@@ -154,7 +154,7 @@ def map_translated_files(
 
     mapped_documents = []
     url_docs = str(
-        translated_files_row[OptionalDocumentColumns.TRANSLATED_FILES.value]
+        translated_files_row[TranslatedDocumentColumns.TRANSLATED_FILES.value]
     ).split("|")
     doc_id = translated_files_row.at[RequiredDocumentColumns.ID.value]
 
@@ -221,7 +221,7 @@ def document(
         gcf_docs, {str(e.value) for e in RequiredDocumentColumns}
     )
     verify_required_fields_present(
-        gcf_docs, {str(e.value) for e in OptionalDocumentColumns}
+        gcf_docs, {str(e.value) for e in TranslatedDocumentColumns}
     )
     verify_required_fields_present(
         projects_data, {str(e.value) for e in RequiredFamilyDocumentColumns}

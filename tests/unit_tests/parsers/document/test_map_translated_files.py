@@ -2,9 +2,9 @@ import pandas as pd
 import pytest
 
 from gcf_data_mapper.enums.document import (
-    OptionalDocumentColumns,
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
+    TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.document import map_translated_files
 
@@ -18,8 +18,8 @@ def mock_row():
             RequiredDocumentColumns.ID.value: "doc123",
             RequiredDocumentColumns.TYPE.value: "type123",
             RequiredDocumentColumns.TITLE.value: "title123",
-            OptionalDocumentColumns.SOURCE_URL.value: "link123",
-            OptionalDocumentColumns.TRANSLATED_FILES.value: "http://example.com|http://example.org",
+            TranslatedDocumentColumns.SOURCE_URL.value: "link123",
+            TranslatedDocumentColumns.TRANSLATED_FILES.value: "http://example.com|http://example.org",
         }
     )
 
@@ -32,7 +32,7 @@ def test_translated_files_mapped_to_documents(mock_row):
 def test_translated_files_not_mapped_with_invalid_urls():
     row = pd.Series(
         {
-            OptionalDocumentColumns.TRANSLATED_FILES.value: "http://example.com|",
+            TranslatedDocumentColumns.TRANSLATED_FILES.value: "http://example.com|",
             RequiredDocumentColumns.ID.value: "doc123",
         }
     )

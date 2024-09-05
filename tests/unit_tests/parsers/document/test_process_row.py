@@ -2,9 +2,9 @@ import pandas as pd
 import pytest
 
 from gcf_data_mapper.enums.document import (
-    OptionalDocumentColumns,
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
+    TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.document import process_row
 
@@ -18,9 +18,9 @@ def mock_row():
             RequiredDocumentColumns.ID.value: "doc123",
             RequiredDocumentColumns.TYPE.value: "type123",
             RequiredDocumentColumns.TITLE.value: "title123",
-            OptionalDocumentColumns.SOURCE_URL.value: "link123,link456",
-            OptionalDocumentColumns.TRANSLATED_FILES.value: "url123|url456",
-            OptionalDocumentColumns.TRANSLATED_TITLES.value: "title123|title456",
+            TranslatedDocumentColumns.SOURCE_URL.value: "link123,link456",
+            TranslatedDocumentColumns.TRANSLATED_FILES.value: "url123|url456",
+            TranslatedDocumentColumns.TRANSLATED_TITLES.value: "title123|title456",
         }
     )
 
