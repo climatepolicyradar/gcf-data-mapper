@@ -95,7 +95,7 @@ def test_raises_error_for_missing_columns_in_a_given_row(
             pd.Series({"Fruit": pd.NA, "Plant": pd.NA, "Tree": "Oak"}),
             ["Fruit", "Plant"],
             ValueError,
-            "This row has empty values in the following columns: Fruit, Plant",
+            "This row has columns with empty values",
         )
     ],
 )

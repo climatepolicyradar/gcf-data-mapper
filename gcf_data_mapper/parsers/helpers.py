@@ -32,12 +32,11 @@ def check_row_for_columns_with_empty_values(
     :raises ValueError: If any column in the row has an empty value.
     """
 
-    empty_columns = [col for col in required_columns if pd.isna(row.at[col])]
+    # Ensure we are working with a pandas Series by re-selecting the required columns as a Series
+    row_subset = pd.Series(row[required_columns], index=required_columns)
 
-    if empty_columns:
-        raise ValueError(
-            f"This row has empty values in the following columns: {', '.join(empty_columns)}"
-        )
+    if row_subset.isna().any():
+        raise ValueError("This row has columns with empty values")
 
 
 def check_row_for_missing_columns(row: pd.Series, required_columns: list[str]):
