@@ -6,6 +6,7 @@ import pytest
 from gcf_data_mapper.parsers.helpers import (
     check_row_for_columns_with_empty_values,
     check_row_for_missing_columns,
+    get_value_in_nested_object,
     verify_required_fields_present,
 )
 
@@ -73,7 +74,7 @@ def test_returns_true_when_no_missing_fields(
             pd.Series({"Fruit": "Apple", "Plant": "Rose", "Tree": "Oak"}),
             ["Colour", "Age"],
             AttributeError,
-            "The data series is missing these required columns: Colour, Age",
+            "The data series is missing these required columns: Age, Colour",
         )
     ],
 )
@@ -96,7 +97,7 @@ def test_raises_error_for_missing_columns_in_a_given_row(
             ["Fruit", "Plant"],
             ValueError,
             "This row has columns with empty values",
-        )
+        ),
     ],
 )
 def test_raises_error_for_columns_with_empty_values_in_a_given_row(
@@ -108,3 +109,46 @@ def test_raises_error_for_columns_with_empty_values_in_a_given_row(
     with pytest.raises(error) as e:
         check_row_for_columns_with_empty_values(test_ds, required_columns)
     assert error_msg in str(e.value)
+
+
+@pytest.mark.parametrize(
+    ("object,key,error,error_msg"),
+    [
+        (
+            {"Fruit": "Apple", "Plant": "Rose", "Tree": "Oak"},
+            "Colour",
+            KeyError,
+            "key: 'Colour' does not exist on this dict",
+        ),
+        (
+            {"Fruit": "", "Plant": "Rose", "Tree": "Oak"},
+            "Fruit",
+            ValueError,
+            "Key 'Fruit' exists, but the value is empty",
+        ),
+        (
+            {"Fruits": [], "Plant": "Rose", "Tree": "Oak"},
+            "Fruits",
+            ValueError,
+            "Key 'Fruits' exists, but the value is empty",
+        ),
+        (
+            {"Fruit": "Apple", "Plant": None, "Tree": "Oak"},
+            "Plant",
+            ValueError,
+            "Key 'Plant' exists, but the value is empty",
+        ),
+    ],
+)
+def test_raises_error_when_checking_for_value_in_nested_object(
+    object, key, error, error_msg
+):
+    with pytest.raises(error) as e:
+        get_value_in_nested_object(object, key)
+    assert error_msg in str(e.value)
+
+
+def test_returns_value_in_nested_object():
+    test_obj = {"Fruit": "Apple", "Plant": "Rose", "Tree": "Oak"}
+    value = get_value_in_nested_object(test_obj, "Fruit")
+    assert value == "Apple"
