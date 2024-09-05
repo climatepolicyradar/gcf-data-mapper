@@ -127,8 +127,8 @@ def document(gcf_docs: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any
         Sheet.
     """
 
-    required_columns = [column.value for column in RequiredColumns]
-    missing_columns = [col for col in required_columns if col not in gcf_docs.columns]
+    required_columns = set([column.value for column in RequiredColumns])
+    missing_columns = required_columns.difference(set(gcf_docs.columns))
 
     if missing_columns:
         click.echo("Missing required columns: {}".format(", ".join(missing_columns)))
