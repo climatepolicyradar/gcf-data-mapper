@@ -42,28 +42,27 @@ def test_contains_invalid_paths(urls, expected):
 
 
 @pytest.mark.parametrize(
-    "urls, doc_id, expected",
+    "urls, doc_id",
     [
-        (["http://example.com", "http://example.org"], "doc123", True),
-        (["some_url1", "some_url2"], "doc456", True),
-        (["http://example.com/valid", "http://example.com/also_valid"], "doc789", True),
+        (["http://example.com", "http://example.org"], "doc123"),
+        (["some_url1", "some_url2"], "doc456"),
+        (["http://example.com/valid", "http://example.com/also_valid"], "doc789"),
     ],
 )
-def test_url_validation_passes_with_valid_urls(urls, doc_id, expected):
-    assert validate_urls(urls, doc_id) == expected
+def test_url_validation_passes_with_valid_urls(urls, doc_id):
+    assert validate_urls(urls, doc_id) is True
 
 
 @pytest.mark.parametrize(
-    "urls, doc_id, expected",
+    "urls, doc_id",
     [
-        (["http://example.com", "http://example.com"], "doc123", False),
-        (["http://example.com", ""], "doc456", False),
+        (["http://example.com", "http://example.com"], "doc123"),
+        (["http://example.com", ""], "doc456"),
         (
             ["http://example.com/valid", "http://example.com/invalid path"],
             "doc789",
-            False,
         ),
     ],
 )
-def test_url_validation_returns_false_when_fails(urls, doc_id, expected):
-    assert validate_urls(urls, doc_id) == expected
+def test_url_validation_returns_false_when_fails(urls, doc_id):
+    assert validate_urls(urls, doc_id) is False
