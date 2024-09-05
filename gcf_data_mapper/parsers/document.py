@@ -246,7 +246,7 @@ def document(
 
     combo = combo[
         ~combo[RequiredDocumentColumns.TYPE.value].isin(
-            {e.value for e in IgnoreDocumentTypes}
+            [e.value for e in IgnoreDocumentTypes]
         )
     ]
 
