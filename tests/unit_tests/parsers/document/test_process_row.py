@@ -16,8 +16,15 @@ from gcf_data_mapper.parsers.document import process_row
         "mock_valid_doc_row_with_many_translations",
     ],
 )
-def test_process_row_success(valid_doc_row, request):
+def test_process_row_with_translations_success(valid_doc_row, request):
     result = process_row(request.getfixturevalue(valid_doc_row), debug=False)
+    assert isinstance(result, list)
+
+
+def test_process_row_with_no_translations_success(
+    mock_valid_doc_row_with_no_translations,
+):
+    result = process_row(mock_valid_doc_row_with_no_translations, debug=False)
     assert isinstance(result, list)
 
 

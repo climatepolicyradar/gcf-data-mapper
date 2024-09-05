@@ -13,7 +13,7 @@ from gcf_data_mapper.parsers.document import map_translated_files
     [
         ("mock_valid_doc_row_with_one_translation", 1),
         ("mock_valid_doc_row_with_two_translations", 2),
-        ("mock_valid_doc_row_with_many_translations", 2),
+        ("mock_valid_doc_row_with_many_translations", 3),
     ],
 )
 def test_translated_files_mapped_to_documents(valid_doc_row, expected_objects, request):
