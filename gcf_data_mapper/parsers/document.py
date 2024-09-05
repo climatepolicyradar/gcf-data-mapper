@@ -227,6 +227,11 @@ def document(
         projects_data, {str(e.value) for e in RequiredFamilyDocumentColumns}
     )
 
+    # Left join the document data with the GCF projects data so we can determine the
+    # project a document should be associated with. We then need to filter out certain
+    # GCF document types for now until Phase 2, TODO.After this, convert the values
+    # in the Projects ID column to be integers so we don't end up with 5 parts to our
+    # import IDs (as there is full stop in float values when they're converted to str).
     combo = pd.merge(
         left=gcf_docs,
         right=projects_data,
@@ -247,6 +252,20 @@ def document(
     if debug:
         click.echo(f"📊 Mapping {combo.shape[0]} GCF documents in phase 1...")
 
+    # Iterate through each document record to create a document object to append to our
+    # master list of documents. If the field in the 'TRANSLATED_TITLES' column is not NA
+    # we will map a separate object for each of the translated versions of the current
+    # document, using the translated url as the source url. We then create a document
+    # object for each translated document and add those translated doc objects to our
+    # list.
+    #
+    # The block of code inside the for loop will not raise errors where data validation
+    # fails, instead the row containing invalid document data will be skipped and debug
+    # provided about why the row wasn't able to be processed. This is to prevent dodgy
+    # rows from stopping the whole parser from running.
+    #
+    # TODO: Might be nice to output dodgy rows to a separate output file that can be
+    # used to send back to the fund for them to amend.
     mapped_docs = []
     for _, row in combo.iterrows():
         result = process_row(row, debug)
