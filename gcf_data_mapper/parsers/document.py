@@ -122,7 +122,7 @@ def map_document_metadata(
     title = row[RequiredDocumentColumns.TITLE.value]
 
     if source_url is None:
-        source_url = cast(str, row[TranslatedDocumentColumns.SOURCE_URL.value])
+        source_url = cast(str, row[RequiredDocumentColumns.SOURCE_URL.value])
 
     return {
         "import_id": f"GCF.document.{approved_ref}_{projects_id}.{doc_id}",

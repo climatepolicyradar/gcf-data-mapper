@@ -5,10 +5,10 @@ class RequiredDocumentColumns(Enum):
     TITLE = "Title"
     TYPE = "Type"
     ID = "ID (Unique ID from our CMS for the document)"
+    SOURCE_URL = "Document page permalink"
 
 
 class TranslatedDocumentColumns(Enum):
-    SOURCE_URL = "Document page permalink"
     TRANSLATED_FILES = "Translated files"
     TRANSLATED_TITLES = "Translated titles"
 
