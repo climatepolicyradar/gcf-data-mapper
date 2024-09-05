@@ -79,19 +79,19 @@ def validate_urls(urls: list[str], doc_id: str) -> Optional[bool]:
         click.echo(
             f"🛑 Empty URL found in list of translated urls. DocumentId : {doc_id}"
         )
-        return
+        return None
 
     if contains_duplicate_urls(urls):
         click.echo(
             f"🛑 Duplicate URLs found in list of translated urls. DocumentId : {doc_id}"
         )
-        return
+        return None
 
     if contains_invalid_paths(urls):
         click.echo(
             f"🛑 Malformed url found in list of translated urls. DocumentId : {doc_id}"
         )
-        return
+        return None
     return True
 
 
