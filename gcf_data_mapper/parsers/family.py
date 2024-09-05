@@ -10,7 +10,7 @@ from gcf_data_mapper.enums.family import (
 )
 from gcf_data_mapper.parsers.helpers import (
     check_row_for_missing_columns,
-    get_value_in_nested_object,
+    get_value_from_nested_object,
     row_contains_columns_with_empty_values,
 )
 
@@ -25,10 +25,12 @@ def get_budgets(row: pd.Series, source: str) -> list[int]:
     or [0] if the source is not found.
     """
 
+    funding_list = row.at[FamilyColumnsNames.FUNDING.value]
+
     budgets = [
-        get_value_in_nested_object(funding, FamilyNestedColumnNames.BUDGET.value)
-        for funding in row.at[FamilyColumnsNames.FUNDING.value]
-        if get_value_in_nested_object(funding, FamilyNestedColumnNames.SOURCE.value)
+        get_value_from_nested_object(funding, FamilyNestedColumnNames.BUDGET.value)
+        for funding in funding_list
+        if get_value_from_nested_object(funding, FamilyNestedColumnNames.SOURCE.value)
         == source
     ]
 
@@ -46,25 +48,25 @@ def map_family_metadata(row: pd.Series) -> dict:
     gcf_budgets = get_budgets(row, GCFProjectBudgetSource.GCF.value)
     implementing_agencies = set(
         [
-            get_value_in_nested_object(entity, FamilyNestedColumnNames.NAME.value)
+            get_value_from_nested_object(entity, FamilyNestedColumnNames.NAME.value)
             for entity in row.at[FamilyColumnsNames.ENTITIES.value]
         ]
     )
     regions = set(
         [
-            get_value_in_nested_object(country, FamilyNestedColumnNames.REGION.value)
+            get_value_from_nested_object(country, FamilyNestedColumnNames.REGION.value)
             for country in row.at[FamilyColumnsNames.COUNTRIES.value]
         ]
     )
     result_areas = set(
         [
-            get_value_in_nested_object(result, FamilyNestedColumnNames.AREA.value)
+            get_value_from_nested_object(result, FamilyNestedColumnNames.AREA.value)
             for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
         ]
     )
     result_types = set(
         [
-            get_value_in_nested_object(result, FamilyNestedColumnNames.TYPE.value)
+            get_value_from_nested_object(result, FamilyNestedColumnNames.TYPE.value)
             for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
         ]
     )

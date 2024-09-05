@@ -73,7 +73,7 @@ def check_row_for_missing_columns(
 # This checks that a key value pair exists on a nested dictionary, we want to be strict
 # with our validation so want to be alerted when data that we expect to be there does
 # not exist, we can then take this back to the client and handle it accordingly
-def get_value_in_nested_object(object: dict, key: str) -> Any:
+def get_value_from_nested_object(object: dict, key: str) -> Any:
     """Retrieve the value associated with a given key in a nested dictionary object.
 
     :param dict object: The dictionary from which to retrieve the value.
