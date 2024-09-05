@@ -28,12 +28,50 @@ def test_process_row_with_no_translations_success(
     assert isinstance(result, list)
 
 
-def test_process_row_returns_none_with_missing_required_columns():
-    row = pd.Series(
-        {
-            RequiredFamilyDocumentColumns.APPROVED_REF.value: None,
-            RequiredFamilyDocumentColumns.PROJECTS_ID.value: None,
-            RequiredDocumentColumns.ID.value: None,
-        }
-    )
+@pytest.mark.parametrize(
+    ("row_with_missing_cols", "expected_error_msg"),
+    [
+        (
+            {
+                RequiredFamilyDocumentColumns.APPROVED_REF.value: None,
+            },
+            "Skipping row with missing required family columns: None",
+        ),
+        (
+            {
+                RequiredFamilyDocumentColumns.APPROVED_REF.value: None,
+                RequiredFamilyDocumentColumns.PROJECTS_ID.value: None,
+            },
+            "Skipping row with missing required family columns: None",
+        ),
+        (
+            {
+                RequiredFamilyDocumentColumns.APPROVED_REF.value: "ref123",
+                RequiredFamilyDocumentColumns.PROJECTS_ID.value: "proj123",
+                RequiredDocumentColumns.ID.value: None,
+                RequiredDocumentColumns.TITLE.value: None,
+                RequiredDocumentColumns.TYPE.value: None,
+                RequiredDocumentColumns.SOURCE_URL.value: None,
+            },
+            "Skipping row with missing required document columns: None",
+        ),
+        (
+            {
+                RequiredFamilyDocumentColumns.APPROVED_REF.value: "ref123",
+                RequiredFamilyDocumentColumns.PROJECTS_ID.value: "proj123",
+                RequiredDocumentColumns.ID.value: "123",
+                RequiredDocumentColumns.TITLE.value: "title123",
+                RequiredDocumentColumns.TYPE.value: None,
+                RequiredDocumentColumns.SOURCE_URL.value: None,
+            },
+            "Skipping row with missing required document columns: 123",
+        ),
+    ],
+)
+def test_process_row_returns_none_with_na_in_required_columns(
+    row_with_missing_cols, expected_error_msg, capsys
+):
+    row = pd.Series(row_with_missing_cols)
     assert process_row(row, debug=False) is None
+    captured = capsys.readouterr()
+    assert expected_error_msg in captured.out

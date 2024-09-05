@@ -177,7 +177,13 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
         the 'destination' format described in the GCF Data Mapper Google
         Sheet.
     """
-    doc_id = row.at[RequiredDocumentColumns.ID.value]
+    doc_id = (
+        row.at[RequiredDocumentColumns.ID.value]
+        if RequiredDocumentColumns.ID.value in row.index
+        and pd.notna(row.at[RequiredDocumentColumns.ID.value])
+        else None
+    )
+
     if not check_required_column_value_not_na(row, RequiredFamilyDocumentColumns):
         click.echo(f"🛑 Skipping row with missing required family columns: {doc_id}")
         return None
