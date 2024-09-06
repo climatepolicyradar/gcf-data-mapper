@@ -10,77 +10,83 @@ from gcf_data_mapper.enums.family import (
 )
 from gcf_data_mapper.parsers.helpers import (
     check_row_for_missing_columns,
-    get_value_from_nested_object,
+    lists_contain_empty_values,
     row_contains_columns_with_empty_values,
 )
 
 
-def get_budgets(row: pd.Series, source: str) -> list[int]:
+def get_budgets(funding_list: list[dict], source: str) -> list[int]:
     """Get the budget amount from the row based on the funding source.
 
-    :param pd.Series row: The row containing funding information.
+    :param list[dict] row: A list of all the funding information, represented in dictionaries
     :param str source: The funding source to retrieve the budget from.
 
     :return list[int]: A list of budget amounts corresponding to the source,
-    or [0] if the source is not found.
+        or [0] if the source is not found.
     """
 
-    funding_list = row.at[FamilyColumnsNames.FUNDING.value]
+    budget_key = FamilyNestedColumnNames.BUDGET.value
+    source_key = FamilyNestedColumnNames.SOURCE.value
 
     budgets = [
-        get_value_from_nested_object(funding, FamilyNestedColumnNames.BUDGET.value)
-        for funding in funding_list
-        if get_value_from_nested_object(funding, FamilyNestedColumnNames.SOURCE.value)
-        == source
+        funding[budget_key] for funding in funding_list if funding[source_key] == source
     ]
 
     return budgets if budgets else [0]
 
 
-def map_family_metadata(row: pd.Series) -> dict:
+def map_family_metadata(row: pd.Series) -> Optional[dict]:
     """Map the metadata of a family based on the provided row.
 
     :param pd.Series row: The row containing family information.
     :return dict: A dictionary containing mapped metadata for the family.
     """
 
-    co_financing_budgets = get_budgets(row, GCFProjectBudgetSource.CO_FINANCING.value)
-    gcf_budgets = get_budgets(row, GCFProjectBudgetSource.GCF.value)
-    implementing_agencies = set(
-        [
-            get_value_from_nested_object(entity, FamilyNestedColumnNames.NAME.value)
-            for entity in row.at[FamilyColumnsNames.ENTITIES.value]
-        ]
+    countries = row.at[FamilyColumnsNames.COUNTRIES.value]
+    entities = row.at[FamilyColumnsNames.ENTITIES.value]
+    funding_sources = row.at[FamilyColumnsNames.FUNDING.value]
+    result_areas = row.at[FamilyColumnsNames.RESULT_AREAS.value]
+
+    area_key = FamilyNestedColumnNames.AREA.value
+    name_key = FamilyNestedColumnNames.NAME.value
+    region_key = FamilyNestedColumnNames.REGION.value
+    type_key = FamilyNestedColumnNames.TYPE.value
+
+    co_financing_budgets = get_budgets(
+        funding_sources, GCFProjectBudgetSource.CO_FINANCING.value
     )
-    regions = set(
+    gcf_budgets = get_budgets(funding_sources, GCFProjectBudgetSource.GCF.value)
+
+    implementing_agencies = [entity[name_key] for entity in entities]
+    regions = [country[region_key] for country in countries]
+    result_areas = [result[area_key] for result in result_areas]
+    result_types = [result[type_key] for result in result_areas]
+
+    # As we are filtering the budget information by source for gcf and co financing, we
+    # know there will be instances where only one type of funding exists so checking
+    # for empty/false values would create false positives, hence the exclusion from this
+    # check
+    if lists_contain_empty_values(
         [
-            get_value_from_nested_object(country, FamilyNestedColumnNames.REGION.value)
-            for country in row.at[FamilyColumnsNames.COUNTRIES.value]
-        ]
-    )
-    result_areas = set(
-        [
-            get_value_from_nested_object(result, FamilyNestedColumnNames.AREA.value)
-            for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
-        ]
-    )
-    result_types = set(
-        [
-            get_value_from_nested_object(result, FamilyNestedColumnNames.TYPE.value)
-            for result in row.at[FamilyColumnsNames.RESULT_AREAS.value]
-        ]
-    )
+            ("Implementing Agencies", implementing_agencies),
+            ("Regions", regions),
+            ("Result Areas", result_areas),
+            ("Result Types", result_types),
+        ],
+        row.at[FamilyColumnsNames.PROJECTS_ID.value],
+    ):
+        return None
 
     metadata = {
         "approved_ref": [row.at[FamilyColumnsNames.APPROVED_REF.value]],
-        "implementing_agencies": list(implementing_agencies),
+        "implementing_agencies": list(set(implementing_agencies)),
         "project_id": [row.at[FamilyColumnsNames.PROJECTS_ID.value]],
         "project_url": [row.at[FamilyColumnsNames.PROJECT_URL.value]],
         "project_value_fund_spend": gcf_budgets,
         "project_value_co_financing": co_financing_budgets,
-        "regions": list(regions),
-        "result_areas": list(result_areas),
-        "result_types": list(result_types),
+        "regions": list(set(regions)),
+        "result_areas": list(set(result_areas)),
+        "result_types": list(set(result_types)),
         "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
         "theme": [row.at[FamilyColumnsNames.THEME.value]],
     }
@@ -88,12 +94,12 @@ def map_family_metadata(row: pd.Series) -> dict:
     return metadata
 
 
-def map_family_data(row: pd.Series) -> Optional[dict]:
+def process_row(row: pd.Series) -> Optional[dict]:
     """Map the family data based on the provided row.
 
     :param pd.Series row: The row containing family information.
     :return Optional[dict]: A dictionary containing mapped data for the family entity.
-    The function will return None, if the row contains missing data from expected columns/fields
+        The function will return None, if the row contains missing data from expected columns/fields
     """
 
     required_columns = [column.value for column in FamilyColumnsNames]
@@ -139,6 +145,6 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
     mapped_families = []
 
     for _, row in projects_data.iterrows():
-        mapped_families.append(map_family_data(row))
+        mapped_families.append(process_row(row))
 
     return mapped_families

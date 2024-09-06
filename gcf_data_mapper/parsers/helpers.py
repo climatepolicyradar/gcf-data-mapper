@@ -1,5 +1,3 @@
-from typing import Any
-
 import click
 import pandas as pd
 
@@ -37,9 +35,9 @@ def row_contains_columns_with_empty_values(
 
     :param pd.Series row: The row to check for isna values.
     :param list[str] required_columns: A list of column names that will be used to verify
-    isna values.
+        isna values.
     :return bool: True if the row contains columns with empty values, false if if all
-    expected columns are populated
+        expected columns are populated
     """
 
     # Ensure we are working with a pandas Series by re-selecting the required columns as a Series
@@ -58,7 +56,7 @@ def check_row_for_missing_columns(
     :param pd.Series row: The row (Series) to check for missing columns.
     :param list[str] required_columns: A list of column names.
     :param str id_identifier: This is the id (i.e project id) of the offending row, this should
-    make it easier to debug where and why the tool has errored
+        make it easier to debug where and why the tool has errored
     :raises AttributeError: If any required columns are missing from the row.
     """
 
@@ -70,33 +68,21 @@ def check_row_for_missing_columns(
         )
 
 
-# This checks that a key value pair exists on a nested dictionary, we want to be strict
-# with our validation so want to be alerted when data that we expect to be there does
-# not exist, we can then take this back to the client and handle it accordingly
-def get_value_from_nested_object(object: dict, key: str) -> Any:
-    """Retrieve the value associated with a given key in a nested dictionary object.
+def lists_contain_empty_values(list_values: list[tuple], id: str):
+    """Checks the list in a tuple for empty (falsy) values; {}, [], None, ''
 
-    :param dict object: The dictionary from which to retrieve the value.
-    :param str key: The key value that will be used to retrieve that value.
-    :param str id_identifier: This is the id (i.e project id) of the offending row, this should
-    make it easier to debug where we have missing data
-
-    :raises KeyError: If the specified key does not exist in the dictionary.
-
-    :return Any: The value associated with the specified key.
+    :param list[tuple] list_values: A list of tuples containing the name and array of values
+    :param str id: The ID of the project to include in message that we echo to the terminal.
+    :return bool: True if any list contains empty values, False otherwise.
     """
+    lists_with_empty_values = [
+        name for name, array in list_values if any(not value for value in array)
+    ]
 
-    # The get function, checks for a key in a dict and defaults to None instead of
-    # raising a key error. However for null values in a json object this converts to a NoneType,
-    # so to avoid false positives, we set the default to a specified string so that we
-    # can know for sure when a value is empty vs when a key does not exists
-    value = object.get(key, "key does not exist")
+    if lists_with_empty_values:
+        click.echo(
+            f"🛑 The following lists contain empty values: {', '.join(sorted(lists_with_empty_values))}. ID: {id}"
+        )
+        return True
 
-    if value == "key does not exist":
-        raise KeyError(f"key: '{key}' does not exist on this dict")
-
-    # Check for false values like empty string, empty list, or empty dict or None
-    if not value:
-        click.echo(f"🛑 Key '{key}' exists, but the value is empty")
-
-    return value
+    return False
