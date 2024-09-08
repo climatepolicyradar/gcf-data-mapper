@@ -1,9 +1,7 @@
-from typing import Type
-
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.parsers.family import family, get_budgets
+from gcf_data_mapper.parsers.family import family, get_budgets, process_row
 
 
 @pytest.fixture
@@ -36,190 +34,141 @@ def test_returns_expected_family_data_structure(
     assert family_data == parsed_family_data
 
 
-@pytest.mark.parametrize(
-    ("test_df,error,error_msg"),
-    [
-        (
-            pd.DataFrame(
-                [
-                    {
-                        "Funding": "",
-                        "ProjectURL": "",
-                        "ProjectsID": "",
-                        "ResultAreas": "",
-                        "Sector": "",
-                        "Theme": "",
-                    }
-                ]
-            ),
-            AttributeError,
-            "The data series is missing these required columns: ApprovedRef, Countries, Entities",
-        ),
-        (
-            pd.DataFrame(
-                [
-                    {
-                        "ApprovedRef": None,
-                        "Countries": [{"Region": "Asia"}],
-                        "Entities": [{"Name": "Innovation"}],
-                        "Funding": [{"Source": "GCF"}],
-                        "ProjectURL": "www.fake-url.com",
-                        "ProjectsID": "ABC",
-                        "ResultAreas": [{"Area": "Coastal"}],
-                        "Sector": "TestSector",
-                        "Theme": "TestTheme",
-                    }
-                ]
-            ),
-            ValueError,
-            "This row has columns with empty values",
-        ),
-    ],
-)
-def test_raises_error_on_validating_row(
-    test_df: pd.DataFrame, error: Type[Exception], error_msg: str
-):
-    with pytest.raises(error) as e:
-        family(test_df, debug=True)
-    assert error_msg in str(e.value)
+def test_raises_error_on_validating_row_for_missing_columns():
+    test_data_frame = pd.DataFrame(
+        [
+            {
+                "Funding": [{"Source": "GCF"}],
+                "ProjectURL": "www.fake-url.com",
+                "ProjectsID": 100,
+                "ResultAreas": [{"Area": "Coastal"}],
+                "Sector": "TestSector",
+                "Theme": "TestTheme",
+            }
+        ]
+    )
+
+    expected_error_message = "The data series at id 100 is missing these required columns: ApprovedRef, Countries, Entities"
+
+    with pytest.raises(AttributeError) as e:
+        family(test_data_frame, debug=True)
+    assert expected_error_message == str(e.value)
 
 
 @pytest.mark.parametrize(
-    ("test_data_series, source, expected_value"),
+    ("funding_list, source, expected_value"),
     [
         (
-            pd.Series(
+            [
                 {
-                    "Funding": [
-                        {
-                            "Source": "GCF",
-                            "Budget": 1000,
-                            "BudgetUSDeq": 2000,
-                        },
-                        {
-                            "Source": "Co-Financing",
-                            "Budget": 1000,
-                            "BudgetUSDeq": 2000,
-                        },
-                    ]
-                }
-            ),
+                    "Source": "GCF",
+                    "Budget": 1000,
+                    "BudgetUSDeq": 2000,
+                },
+                {
+                    "Source": "Co-Financing",
+                    "Budget": 1000,
+                    "BudgetUSDeq": 2000,
+                },
+            ],
             "GCF",
             [2000],
         ),
         (
-            pd.Series(
+            [
                 {
-                    "Funding": [
-                        {
-                            "Source": "GCF",
-                            "Budget": 1000,
-                            "BudgetUSDeq": 2000,
-                        },
-                        {
-                            "Source": "Co-Financing",
-                            "Budget": 1000,
-                            "BudgetUSDeq": 2000,
-                        },
-                        {
-                            "Source": "Co-Financing",
-                            "Budget": 2000,
-                            "BudgetUSDeq": 4000,
-                        },
-                    ]
-                }
-            ),
+                    "Source": "GCF",
+                    "Budget": 1000,
+                    "BudgetUSDeq": 2000,
+                },
+                {
+                    "Source": "Co-Financing",
+                    "Budget": 1000,
+                    "BudgetUSDeq": 2000,
+                },
+                {
+                    "Source": "Co-Financing",
+                    "Budget": 2000,
+                    "BudgetUSDeq": 4000,
+                },
+            ],
             "Co-Financing",
             [2000, 4000],
         ),
         (
-            pd.Series(
+            [
                 {
-                    "Funding": [
-                        {
-                            "Source": "Co-Financing",
-                            "Budget": 1000,
-                            "BudgetUSDeq": 2000,
-                        },
-                        {
-                            "Source": "Co-Financing",
-                            "Budget": 2000,
-                            "BudgetUSDeq": 4000,
-                        },
-                    ]
-                }
-            ),
+                    "Source": "Co-Financing",
+                    "Budget": 1000,
+                    "BudgetUSDeq": 2000,
+                },
+                {
+                    "Source": "Co-Financing",
+                    "Budget": 2000,
+                    "BudgetUSDeq": 4000,
+                },
+            ],
             "GCF",
             [0],
         ),
     ],
 )
 def test_returns_expected_value_when_parsing_budget_data(
-    test_data_series: pd.Series, source: str, expected_value: list[int]
+    funding_list: list[dict], source: str, expected_value: list[int]
 ):
-    budgets = get_budgets(test_data_series, source)
+    budgets = get_budgets(funding_list, source)
     assert budgets == expected_value
 
 
 def test_returns_empty_array_when_parsing_empty_data_frame():
     empty_data_frame = pd.DataFrame([])
     family_docs = family(empty_data_frame, debug=True)
-
     assert family_docs == []
 
 
 @pytest.mark.parametrize(
-    ("test_df,error,error_msg"),
+    ("test_ds,return_value,error_message"),
     [
         (
-            pd.DataFrame(
-                [
-                    {
-                        "ApprovedRef": "Test Approved Ref",
-                        "Countries": [{"Region": "Asia"}],
-                        "Entities": [{"Name": "Innovation"}],
-                        "Funding": [{"BudgetUSDeq": 2000}],
-                        "ProjectURL": "www.fake-url.com",
-                        "ProjectsID": "Test Project ID",
-                        "ResultAreas": [{"Area": "Coastal"}],
-                        "Sector": "TestSector",
-                        "Theme": "TestTheme",
-                    }
-                ]
+            pd.Series(
+                {
+                    "ApprovedRef": pd.NA,
+                    "Countries": pd.NA,
+                    "Entities": pd.NA,
+                    "Funding": [{"Source": "GCF"}],
+                    "ProjectURL": "www.fake-url.com",
+                    "ProjectsID": 100,
+                    "ResultAreas": [{"Area": "Coastal"}],
+                    "Sector": "TestSector",
+                    "Theme": "TestTheme",
+                }
             ),
-            KeyError,
-            "key: 'Source' does not exist on this dict",
+            None,
+            "🛑 Skipping row as it contains empty column values: See Project 100",
         ),
         (
-            pd.DataFrame(
-                [
-                    {
-                        "ApprovedRef": "Test Approved Ref",
-                        "Countries": [{"Region": "Asia"}],
-                        "Entities": [{"Name": "Innovation"}],
-                        "Funding": [
-                            {
-                                "Source": None,
-                                "Budget": 2000,
-                                "BudgetUSDeq": 4000,
-                            },
-                        ],
-                        "ProjectURL": "www.fake-url.com",
-                        "ProjectsID": "Test Project ID",
-                        "ResultAreas": [{"Area": "Coastal"}],
-                        "Sector": "TestSector",
-                        "Theme": "TestTheme",
-                    }
-                ]
+            pd.Series(
+                {
+                    "ApprovedRef": pd.NA,
+                    "Countries": pd.NA,
+                    "Entities": pd.NA,
+                    "Funding": [{"Source": "GCF"}],
+                    "ProjectURL": "www.fake-url.com",
+                    "ProjectsID": pd.NA,
+                    "ResultAreas": [{"Area": "Coastal"}],
+                    "Sector": "TestSector",
+                    "Theme": "TestTheme",
+                }
             ),
-            ValueError,
-            "Key 'Source' exists, but the value is empty",
+            None,
+            "🛑 Skipping row as it does not contain a project id",
         ),
     ],
 )
-def test_raises_error_on_validating_nested_objects_for_data(
-    test_df: pd.DataFrame, error: Type[Exception], error_msg: str
+def test_skips_processing_row_if_row_contains_empty_values(
+    test_ds, return_value, error_message, capsys
 ):
-    with pytest.raises(error) as e:
-        family(test_df, debug=True)
-    assert error_msg in str(e.value)
+    return_value = process_row(test_ds)
+    assert return_value is None
+    captured = capsys.readouterr()
+    assert error_message == captured.out.strip()
