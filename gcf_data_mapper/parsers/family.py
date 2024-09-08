@@ -9,8 +9,8 @@ from gcf_data_mapper.enums.family import (
     GCFProjectBudgetSource,
 )
 from gcf_data_mapper.parsers.helpers import (
+    arrays_contain_empty_values,
     check_row_for_missing_columns,
-    lists_contain_empty_values,
     row_contains_columns_with_empty_values,
 )
 
@@ -59,19 +59,19 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
 
     implementing_agencies = [entity[name_key] for entity in entities]
     regions = [country[region_key] for country in countries]
-    result_areas = [result[area_key] for result in result_areas]
-    result_types = [result[type_key] for result in result_areas]
+    areas = [result[area_key] for result in result_areas]
+    types = [result[type_key] for result in result_areas]
 
     # As we are filtering the budget information by source for gcf and co financing, we
     # know there will be instances where only one type of funding exists so checking
     # for empty/false values would create false positives, hence the exclusion from this
     # check
-    if lists_contain_empty_values(
+    if arrays_contain_empty_values(
         [
             ("Implementing Agencies", implementing_agencies),
             ("Regions", regions),
-            ("Result Areas", result_areas),
-            ("Result Types", result_types),
+            ("Result Areas", areas),
+            ("Result Types", types),
         ],
         row.at[FamilyColumnsNames.PROJECTS_ID.value],
     ):
@@ -85,8 +85,8 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         "project_value_fund_spend": gcf_budgets,
         "project_value_co_financing": co_financing_budgets,
         "regions": list(set(regions)),
-        "result_areas": list(set(result_areas)),
-        "result_types": list(set(result_types)),
+        "result_areas": list(set(areas)),
+        "result_types": list(set(types)),
         "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
         "theme": [row.at[FamilyColumnsNames.THEME.value]],
     }
@@ -119,7 +119,9 @@ def process_row(row: pd.Series) -> Optional[dict]:
     check_row_for_missing_columns(row, required_columns, doc_id)
 
     if row_contains_columns_with_empty_values(row, required_columns):
-        click.echo(f"🛑 Skipping row as it contains empty column values: See {doc_id}")
+        click.echo(
+            f"🛑 Skipping row as it contains empty column values: See Project {doc_id}"
+        )
         return None
 
     # ToDo Map family data

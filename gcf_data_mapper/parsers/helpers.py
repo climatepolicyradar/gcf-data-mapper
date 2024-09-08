@@ -64,24 +64,25 @@ def check_row_for_missing_columns(
 
     if missing_columns:
         raise AttributeError(
-            f"The data series at id {id_identifier} is missing these required columns: {', '.join(sorted(missing_columns))}"
+            f"The data series at id {id_identifier} is missing these required columns: "
+            f"{', '.join(sorted(str(col) for col in missing_columns))}"
         )
 
 
-def lists_contain_empty_values(list_values: list[tuple], id: str):
+def arrays_contain_empty_values(list_values: list[tuple], id: str):
     """Checks the list in a tuple for empty (falsy) values; {}, [], None, ''
 
     :param list[tuple] list_values: A list of tuples containing the name and array of values
     :param str id: The ID of the project to include in message that we echo to the terminal.
     :return bool: True if any list contains empty values, False otherwise.
     """
-    lists_with_empty_values = [
+    arrays_with_empty_values = [
         name for name, array in list_values if any(not value for value in array)
     ]
 
-    if lists_with_empty_values:
+    if arrays_with_empty_values:
         click.echo(
-            f"🛑 The following lists contain empty values: {', '.join(sorted(lists_with_empty_values))}. ID: {id}"
+            f"🛑 The following lists contain empty values: {', '.join(sorted(arrays_with_empty_values))}. ID: {id}"
         )
         return True
 
