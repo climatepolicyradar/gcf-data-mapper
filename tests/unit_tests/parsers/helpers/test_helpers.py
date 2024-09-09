@@ -18,12 +18,12 @@ from gcf_data_mapper.parsers.helpers import (
                 }
             ),
             set(["fruits", "vegetables"]),
-            "Required fields '{'vegetables'}' not present in df columns '{'fruits'}'",
+            "Required fields ['vegetables'] not present in df columns ['fruits']",
         ),
         (
             pd.DataFrame(),
             set(["cars"]),
-            "Required fields '{'cars'}' not present in df columns '{}'",
+            "Required fields ['cars'] not present in df columns []",
         ),
     ],
 )
