@@ -10,8 +10,8 @@ from gcf_data_mapper.enums.family import (
 )
 from gcf_data_mapper.parsers.helpers import (
     arrays_contain_empty_values,
-    check_row_for_missing_columns,
     row_contains_columns_with_empty_values,
+    verify_required_fields_present,
 )
 
 
@@ -39,7 +39,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     """Map the metadata of a family based on the provided row.
 
     :param pd.Series row: The row containing family information.
-    :return dict: A dictionary containing mapped metadata for the family.
+    :return Optional[dict]: A dictionary containing mapped metadata for the family.
     """
 
     countries = row.at[FamilyColumnsNames.COUNTRIES.value]
@@ -94,37 +94,30 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     return metadata
 
 
-def process_row(row: pd.Series) -> Optional[dict]:
+def process_row(
+    row: pd.Series, projects_id: str, required_columns: list[str]
+) -> Optional[dict]:
     """Map the family data based on the provided row.
 
     :param pd.Series row: The row containing family information.
+    :param str projects_id: The id of the current project that is being reformatted/processed
+    :param list required_columns: The list of required columns that we need to extract the
+        data from in the project
     :return Optional[dict]: A dictionary containing mapped data for the family entity.
         The function will return None, if the row contains missing data from expected columns/fields
     """
 
-    required_columns = [column.value for column in FamilyColumnsNames]
-
-    doc_id = (
-        row.at[FamilyColumnsNames.PROJECTS_ID.value]
-        if FamilyColumnsNames.PROJECTS_ID.value in row.index
-        and pd.notna(row.at[FamilyColumnsNames.PROJECTS_ID.value])
-        else None
-    )
-
-    if not doc_id:
+    if pd.isna(projects_id) or bool(projects_id) is False:
         click.echo("🛑 Skipping row as it does not contain a project id")
         return None
 
-    # Check for missing required columns in the row and raise error accordingly
-    check_row_for_missing_columns(row, required_columns, doc_id)
-
     if row_contains_columns_with_empty_values(row, required_columns):
         click.echo(
-            f"🛑 Skipping row as it contains empty column values: See Project {doc_id}"
+            f"🛑 Skipping row as it contains empty column values: See Project ID {projects_id}"
         )
         return None
 
-    # ToDo Map family data
+    # TODO: Map family data
     return {
         "metadata": map_family_metadata(row),
     }
@@ -146,7 +139,11 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
 
     mapped_families = []
 
+    required_fields = set(str(e.value) for e in FamilyColumnsNames)
+    verify_required_fields_present(projects_data, required_fields)
+
     for _, row in projects_data.iterrows():
-        mapped_families.append(process_row(row))
+        projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
+        mapped_families.append(process_row(row, projects_id, list(required_fields)))
 
     return mapped_families

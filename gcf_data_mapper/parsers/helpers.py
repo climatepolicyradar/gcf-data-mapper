@@ -17,9 +17,12 @@ def verify_required_fields_present(
     if diff == set():
         return True
 
+    # sets are naturally un-ordered, sorting them means we can test the error message reliably
+    sorted_diff = sorted(diff)
+    sorted_cols = sorted(cols)
+
     raise AttributeError(
-        f"Required fields '{str(diff)}' not present in df columns '"
-        f"{cols if cols != set() else r'{}'}'"
+        f"Required fields {sorted_diff} not present in df columns {sorted_cols}"
     )
 
 
@@ -48,28 +51,7 @@ def row_contains_columns_with_empty_values(
     return False
 
 
-def check_row_for_missing_columns(
-    row: pd.Series, required_columns: list[str], id_identifier: str
-):
-    """Check if a given row contains all required columns.
-
-    :param pd.Series row: The row (Series) to check for missing columns.
-    :param list[str] required_columns: A list of column names.
-    :param str id_identifier: This is the id (i.e project id) of the offending row, this should
-        make it easier to debug where and why the tool has errored
-    :raises AttributeError: If any required columns are missing from the row.
-    """
-
-    missing_columns = set(required_columns).difference(set(row.index))
-
-    if missing_columns:
-        raise AttributeError(
-            f"The data series at id {id_identifier} is missing these required columns: "
-            f"{', '.join(sorted(str(col) for col in missing_columns))}"
-        )
-
-
-def arrays_contain_empty_values(list_values: list[tuple], id: str):
+def arrays_contain_empty_values(list_values: list[tuple], id: str) -> bool:
     """Checks the list in a tuple for empty (falsy) values; {}, [], None, ''
 
     :param list[tuple] list_values: A list of tuples containing the name and array of values
@@ -82,7 +64,7 @@ def arrays_contain_empty_values(list_values: list[tuple], id: str):
 
     if arrays_with_empty_values:
         click.echo(
-            f"🛑 The following lists contain empty values: {', '.join(sorted(arrays_with_empty_values))}. ID: {id}"
+            f"🛑 The following lists contain empty values: {', '.join(sorted(arrays_with_empty_values))}. Projects ID {id}"
         )
         return True
 

@@ -3,7 +3,6 @@ import pytest
 
 from gcf_data_mapper.parsers.helpers import (
     arrays_contain_empty_values,
-    check_row_for_missing_columns,
     row_contains_columns_with_empty_values,
     verify_required_fields_present,
 )
@@ -63,21 +62,6 @@ def test_returns_true_when_no_missing_fields(
 ):
     return_value = verify_required_fields_present(test_df, expected_fields)
     assert return_value is True
-
-
-def test_raises_error_for_missing_columns_in_a_given_row():
-    test_data_series = pd.Series({"Fruit": "Apple", "Plant": "Rose", "Tree": "Oak"})
-    test_id_identifier = "P001"
-    required_columns = ["Colour", "Age"]
-    expected_error_message = (
-        "The data series at id P001 is missing these required columns: Age, Colour"
-    )
-
-    with pytest.raises(AttributeError) as e:
-        check_row_for_missing_columns(
-            test_data_series, required_columns, test_id_identifier
-        )
-    assert str(e.value) == expected_error_message
 
 
 @pytest.mark.parametrize(
@@ -161,7 +145,7 @@ def test_check_arrays_for_empty_values(
                 ("Trees", ["Oak", "Sycamore"]),
             ],
             "P002",
-            "🛑 The following lists contain empty values: Plants. ID: P002",
+            "🛑 The following lists contain empty values: Plants. Projects ID P002",
         ),
     ],
 )
