@@ -32,6 +32,10 @@ def get_budgets(funding_list: list[dict], source: str) -> list[int]:
         funding[budget_key] for funding in funding_list if funding[source_key] == source
     ]
 
+    # Where we have projects which have been solely funded by the fund (GCF), or solely co-financed
+    # - so in instances where there will be no funding that match either the GCF or co-financing
+    # source value, we will map the `project_value_fund spend` or the `project_value_co_financing`
+    # as an array with 0 i.e [0]
     return budgets if budgets else [0]
 
 
