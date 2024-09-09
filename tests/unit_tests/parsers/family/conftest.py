@@ -1,6 +1,8 @@
 import pandas as pd
 import pytest
 
+from gcf_data_mapper.enums.family import FamilyColumnsNames, FamilyNestedColumnNames
+
 
 @pytest.fixture()
 def test_family_doc_df():
@@ -47,3 +49,13 @@ def test_family_doc_df():
             }
         ]
     )
+
+
+@pytest.fixture()
+def required_family_columns():
+    required_columns = [column.value for column in FamilyColumnsNames]
+    required_nested_family_columns = [
+        column.value for column in FamilyNestedColumnNames
+    ]
+
+    return required_columns, required_nested_family_columns
