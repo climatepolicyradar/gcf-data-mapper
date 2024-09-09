@@ -8,6 +8,10 @@ from gcf_data_mapper.parsers.family import family, get_budgets, process_row
 def parsed_family_data():
     return [
         {
+            "category": "MCF",
+            "description": "The Summary of the Project",
+            "geographies": ["BGD"],
+            "import_id": "GCF.family.FP003.12660",
             "metadata": {
                 "approved_ref": ["FP003"],
                 "implementing_agencies": ["Green Innovations"],
@@ -20,7 +24,8 @@ def parsed_family_data():
                 "result_types": ["Adaptation"],
                 "sector": ["Environment"],
                 "theme": ["Adaptation"],
-            }
+            },
+            "title": "Enhancing resilience of coastal ecosystems and communities",
         }
     ]
 
@@ -44,11 +49,13 @@ def test_raises_error_on_validating_row_for_missing_columns():
                 "ProjectURL": "www.fake-url.com",
                 "ProjectsID": 100,
                 "ResultAreas": [{"Area": "Coastal"}],
+                "Summary": "Fake Summary",
+                "ProjectName": "Fake Project Name",
             }
         ]
     )
 
-    expected_error_message = "Required fields ['Countries', 'Sector', 'Theme'] not present in df columns ['ApprovedRef', 'Entities', 'Funding', 'ProjectURL', 'ProjectsID', 'ResultAreas']"
+    expected_error_message = "Required fields ['Countries', 'Sector', 'Theme'] not present in df columns ['ApprovedRef', 'Entities', 'Funding', 'ProjectName', 'ProjectURL', 'ProjectsID', 'ResultAreas', 'Summary']"
     with pytest.raises(AttributeError) as e:
         family(test_data_frame, debug=True)
     assert expected_error_message == str(e.value)
@@ -131,8 +138,10 @@ def test_returns_expected_value_when_parsing_budget_data(
                     "Funding": [{"Source": "GCF"}],
                     "ProjectURL": "www.fake-url.com",
                     "ProjectsID": 100,
+                    "ProjectName": "Fake Project Name",
                     "ResultAreas": [{"Area": "Coastal"}],
                     "Sector": "TestSector",
+                    "Summary": "Fake Summary",
                     "Theme": "TestTheme",
                 }
             ),

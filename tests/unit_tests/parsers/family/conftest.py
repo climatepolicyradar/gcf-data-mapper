@@ -15,6 +15,7 @@ def test_family_doc_df():
                 "Theme": "Adaptation",
                 "Sector": "Environment",
                 "ProjectURL": "https://www.climateaction.fund/project/FP003",
+                "Summary": "The Summary of the Project",
                 "Countries": [
                     {
                         "CountryName": "Bangladesh",
