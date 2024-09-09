@@ -13,11 +13,14 @@ class FamilyColumnsNames(Enum):
     RESULT_AREAS = "ResultAreas"
     SECTOR = "Sector"
     THEME = "Theme"
+    TITLE = "ProjectName"
+    SUMMARY = "Summary"
 
 
 class FamilyNestedColumnNames(Enum):
     """The fields the GCF data mapper needs to parse nested family data/ metadata."""
 
+    COUNTRY_ISO3 = "ISO3"
     AREA = "Area"
     BUDGET = "BudgetUSDeq"
     NAME = "Name"
