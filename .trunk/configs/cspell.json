@@ -40,7 +40,8 @@
     "dtypes",
     "isin",
     "pydantic",
-    "getfixturevalue"
+    "getfixturevalue",
+    "isna"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
