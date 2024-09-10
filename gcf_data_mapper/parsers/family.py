@@ -98,8 +98,54 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     return metadata
 
 
+def map_family_data(
+    row: pd.Series,
+) -> Optional[dict]:
+    """Map the data of a family based on the provided row.
+
+    :param pd.Series row: The containing family and family metadata information.
+    :return Optional[dict]: A dictionary containing the mapped family data.
+    """
+
+    family_metadata = map_family_metadata(row)
+
+    # When processing the family metadata if there are any empty/falsy values we return None
+    # and skip the row. Therefore we don't want to process the rest of the family data so we
+    # return None in this conditional.
+    if family_metadata is None:
+        click.echo("🛑 Skipping row as family metadata has missing information")
+        return None
+
+    approved_ref = row.at[FamilyColumnsNames.APPROVED_REF.value]
+    projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
+    summary = row.at[FamilyColumnsNames.SUMMARY.value]
+    title = row.at[FamilyColumnsNames.TITLE.value]
+
+    geographies = [
+        country[FamilyNestedColumnNames.COUNTRY_ISO3.value]
+        for country in row.at[FamilyColumnsNames.COUNTRIES.value]
+    ]
+
+    import_id = f"GCF.family.{approved_ref}.{projects_id}"
+
+    family_data = {
+        # For now we are hard coding the category as MCF
+        "category": "MCF",
+        "collections": [],
+        "description": summary,
+        "geographies": geographies,
+        "import_id": import_id,
+        "metadata": family_metadata,
+        "title": title,
+    }
+
+    return family_data
+
+
 def process_row(
-    row: pd.Series, projects_id: str, required_columns: list[str]
+    row: pd.Series,
+    projects_id: str,
+    required_columns: list[str],
 ) -> Optional[dict]:
     """Map the family data based on the provided row.
 
@@ -121,13 +167,12 @@ def process_row(
         )
         return None
 
-    # TODO: Map family data
-    return {
-        "metadata": map_family_metadata(row),
-    }
+    return map_family_data(row)
 
 
-def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
+def family(
+    gcf_projects_data: pd.DataFrame, debug: bool
+) -> list[Optional[dict[str, Any]]]:
     """Map the GCF family info to new structure.
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
@@ -144,9 +189,11 @@ def family(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, 
     mapped_families = []
 
     required_fields = set(str(e.value) for e in FamilyColumnsNames)
-    verify_required_fields_present(projects_data, required_fields)
 
-    for _, row in projects_data.iterrows():
+    verify_required_fields_present(gcf_projects_data, required_fields)
+    # Do a check that the projects data has the field you need
+
+    for _, row in gcf_projects_data.iterrows():
         projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
         mapped_families.append(process_row(row, projects_id, list(required_fields)))
 
