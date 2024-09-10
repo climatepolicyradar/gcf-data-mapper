@@ -9,6 +9,7 @@ def parsed_family_data():
     return [
         {
             "category": "MCF",
+            "collections": [],
             "description": "The Summary of the Project",
             "geographies": ["BGD"],
             "import_id": "GCF.family.FP003.12660",

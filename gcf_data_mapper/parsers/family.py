@@ -131,6 +131,7 @@ def map_family_data(
     family_data = {
         # For now we are hard coding the category as MCF
         "category": "MCF",
+        "collections": [],
         "description": summary,
         "geographies": geographies,
         "import_id": import_id,
