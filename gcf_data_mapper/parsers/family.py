@@ -115,13 +115,13 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     )
     gcf_budgets = get_budgets(funding_sources, GCFProjectBudgetSource.GCF.value)
 
+    if gcf_budgets is None or co_financing_budgets is None:
+        return None
+
     implementing_agencies = [entity[name_key] for entity in entities]
     regions = [country[region_key] for country in countries]
     areas = [result[area_key] for result in result_areas]
     types = [result[type_key] for result in result_areas]
-
-    if gcf_budgets is None or co_financing_budgets is None:
-        return None
 
     # As we are filtering the budget information by source for gcf and co financing, we
     # know there will be instances where only one type of funding exists so checking
