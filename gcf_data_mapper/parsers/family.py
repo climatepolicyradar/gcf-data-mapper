@@ -113,6 +113,7 @@ def map_family_data(
     # and skip the row. Therefore we don't want to process the rest of the family data so we
     # return None in this conditional.
     if family_metadata is None:
+        click.echo("🛑 Skipping row as family metadata has missing information")
         return None
 
     approved_ref = row.at[FamilyColumnsNames.APPROVED_REF.value]
@@ -133,7 +134,7 @@ def map_family_data(
         "description": summary,
         "geographies": geographies,
         "import_id": import_id,
-        "metadata": map_family_metadata(row),
+        "metadata": family_metadata,
         "title": title,
     }
 
