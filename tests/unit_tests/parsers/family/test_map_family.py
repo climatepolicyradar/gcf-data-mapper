@@ -24,6 +24,7 @@ def parsed_family_data():
                 "result_areas": ["Coastal protection and restoration"],
                 "result_types": ["Adaptation"],
                 "sector": ["Environment"],
+                "status": "Under Implementation",
                 "theme": ["Adaptation"],
             },
             "title": "Enhancing resilience of coastal ecosystems and communities",
@@ -63,11 +64,14 @@ def test_raises_error_on_validating_row_for_missing_columns():
                 "ResultAreas": [{"Area": "Coastal"}],
                 "Summary": "Fake Summary",
                 "ProjectName": "Fake Project Name",
+                "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                "StartDate": "2024-06-28T00:00:00.000Z",
+                "DateCompletion": None,
             }
         ]
     )
 
-    expected_error_message = "Required fields ['Countries', 'Sector', 'Theme'] not present in df columns ['ApprovedRef', 'Entities', 'Funding', 'ProjectName', 'ProjectURL', 'ProjectsID', 'ResultAreas', 'Summary']"
+    expected_error_message = "Required fields ['Countries', 'Sector', 'Theme'] not present in df columns ['ApprovalDate', 'ApprovedRef', 'DateCompletion', 'Entities', 'Funding', 'ProjectName', 'ProjectURL', 'ProjectsID', 'ResultAreas', 'StartDate', 'Summary']"
     with pytest.raises(AttributeError) as e:
         family(test_data_frame, debug=True)
     assert expected_error_message == str(e.value)
