@@ -5,7 +5,7 @@ from gcf_data_mapper.enums.family import FamilyColumnsNames, FamilyNestedColumnN
 
 
 @pytest.fixture()
-def test_family_doc_df():
+def mock_family_doc_df():
     yield pd.DataFrame(
         [
             {
@@ -49,6 +49,133 @@ def test_family_doc_df():
                 ],
             }
         ]
+    )
+
+
+@pytest.fixture()
+def mock_family_row_ds():
+    yield pd.Series(
+        {
+            "ProjectsID": 1,
+            "ApprovedRef": "FP004",
+            "ProjectName": "Enhancing resilience of marine ecosystems",
+            "Theme": "Adaptation",
+            "Sector": "Private",
+            "ProjectURL": "https://www.climateaction.fund/project/FP004",
+            "Summary": "The Summary of the Project",
+            "Countries": [
+                {
+                    "CountryName": "Haiti",
+                    "ISO3": "HTI",
+                    "Region": "Latin America and the Caribbean",
+                },
+            ],
+            "Entities": [
+                {
+                    "Name": "Climate Action Innovations",
+                }
+            ],
+            "Funding": [
+                {
+                    "Source": "GCF",
+                    "Budget": 82000,
+                    "BudgetUSDeq": 82000,
+                },
+                {
+                    "ProjectBudgetID": 412,
+                    "Source": "Co-Financing",
+                    "Budget": 620000,
+                    "BudgetUSDeq": 620000,
+                },
+            ],
+            "ResultAreas": [
+                {
+                    "Area": "The Area for the Result Area",
+                    "Type": "The Type for the Result Area",
+                },
+            ],
+        }
+    )
+
+
+@pytest.fixture()
+def mock_family_row_no_result_areas():
+    yield pd.Series(
+        {
+            "ProjectsID": 2,
+            "ApprovedRef": "FP004",
+            "ProjectName": "Enhancing resilience of marine ecosystems",
+            "Theme": "Adaptation",
+            "Sector": "Private",
+            "ProjectURL": "https://www.climateaction.fund/project/FP004",
+            "Summary": "The Summary of the Project",
+            "Countries": [
+                {
+                    "CountryName": "Haiti",
+                    "ISO3": "HTI",
+                    "Region": "Latin America and the Caribbean",
+                },
+            ],
+            "Entities": [
+                {
+                    "Name": "Climate Action Innovations",
+                }
+            ],
+            "Funding": [
+                {
+                    "Source": "GCF",
+                    "Budget": 82000,
+                    "BudgetUSDeq": 82000,
+                },
+                {
+                    "ProjectBudgetID": 412,
+                    "Source": "Co-Financing",
+                    "Budget": 620000,
+                    "BudgetUSDeq": 620000,
+                },
+            ],
+            "ResultAreas": [
+                {"Area": "", "Type": ""},
+            ],
+        }
+    )
+
+
+@pytest.fixture()
+def mock_family_row_no_entities_no_regions():
+    yield pd.Series(
+        {
+            "ProjectsID": 3,
+            "ApprovedRef": "FP004",
+            "ProjectName": "Enhancing resilience of marine ecosystems",
+            "Theme": "Adaptation",
+            "Sector": "Private",
+            "ProjectURL": "https://www.climateaction.fund/project/FP004",
+            "Summary": "The Summary of the Project",
+            "Countries": [
+                {"Region": ""},
+            ],
+            "Entities": [{"Name": ""}],
+            "Funding": [
+                {
+                    "Source": "GCF",
+                    "Budget": 82000,
+                    "BudgetUSDeq": 82000,
+                },
+                {
+                    "ProjectBudgetID": 412,
+                    "Source": "Co-Financing",
+                    "Budget": 620000,
+                    "BudgetUSDeq": 620000,
+                },
+            ],
+            "ResultAreas": [
+                {
+                    "Area": "The Area for the Result Area",
+                    "Type": "The Type for the Result Area",
+                },
+            ],
+        }
     )
 
 
