@@ -47,6 +47,9 @@ def mock_family_doc_df():
                         "Type": "Adaptation",
                     },
                 ],
+                "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                "StartDate": "2024-06-28T00:00:00.000Z",
+                "DateCompletion": None,
             }
         ]
     )
@@ -94,6 +97,9 @@ def mock_family_row_ds():
                     "Type": "The Type for the Result Area",
                 },
             ],
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
         }
     )
 
@@ -137,6 +143,9 @@ def mock_family_row_no_result_areas():
             "ResultAreas": [
                 {"Area": "", "Type": ""},
             ],
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
         }
     )
 
@@ -175,6 +184,49 @@ def mock_family_row_no_entities_no_regions():
                     "Type": "The Type for the Result Area",
                 },
             ],
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
+        }
+    )
+
+
+@pytest.fixture()
+def mock_family_row_with_non_int_budget_values():
+    yield pd.Series(
+        {
+            "ProjectsID": 3,
+            "ApprovedRef": "FP004",
+            "ProjectName": "Enhancing resilience of marine ecosystems",
+            "Theme": "Adaptation",
+            "Sector": "Private",
+            "ProjectURL": "https://www.climateaction.fund/project/FP004",
+            "Summary": "The Summary of the Project",
+            "Countries": [
+                {"Region": ""},
+            ],
+            "Entities": [{"Name": ""}],
+            "Funding": [
+                {
+                    "Source": "GCF",
+                    "Budget": "82000",
+                    "BudgetUSDeq": "82000",
+                },
+                {
+                    "Source": "Co-Financing",
+                    "Budget": 620000.20,
+                    "BudgetUSDeq": 620000.50,
+                },
+            ],
+            "ResultAreas": [
+                {
+                    "Area": "The Area for the Result Area",
+                    "Type": "The Type for the Result Area",
+                },
+            ],
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
         }
     )
 

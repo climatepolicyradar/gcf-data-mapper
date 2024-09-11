@@ -1,7 +1,15 @@
+from typing import Optional
+
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.parsers.family import get_budgets, map_family_metadata
+from gcf_data_mapper.enums.event import Events
+from gcf_data_mapper.parsers.family import (
+    calculate_status,
+    contains_invalid_date_entries,
+    get_budgets,
+    map_family_metadata,
+)
 
 
 @pytest.fixture()
@@ -17,6 +25,7 @@ def parsed_family_metadata():
         "result_areas": ["The Area for the Result Area"],
         "result_types": ["The Type for the Result Area"],
         "sector": ["Private"],
+        "status": "Under Implementation",
         "theme": ["Adaptation"],
     }
 
@@ -117,3 +126,154 @@ def test_returns_expected_value_when_parsing_budget_data(
 ):
     budgets = get_budgets(funding_list, source)
     assert budgets == expected_value
+
+
+def test_map_family_metadata_returns_none_if_budget_does_not_contain_valid_int_types(
+    mock_family_row_with_non_int_budget_values: pd.Series,
+):
+    result = map_family_metadata(mock_family_row_with_non_int_budget_values)
+    assert result is None
+
+
+@pytest.mark.parametrize(
+    ("mock_family_row, expected_status"),
+    [
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                    "StartDate": None,
+                    "DateCompletion": None,
+                }
+            ),
+            Events.APPROVED.type,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                    "StartDate": "2024-06-28T00:00:00.000Z",
+                    "DateCompletion": None,
+                }
+            ),
+            Events.UNDER_IMPLEMENTATION.type,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                    "StartDate": "2018-06-30T00:00:00.000Z",
+                    "DateCompletion": "2022-06-30T00:00:00.000Z",
+                }
+            ),
+            Events.COMPLETED.type,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": None,
+                    "StartDate": None,
+                    "DateCompletion": None,
+                }
+            ),
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": pd.NA,
+                    "StartDate": pd.NA,
+                    "DateCompletion": pd.NA,
+                }
+            ),
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "",  # invalid date entry
+                    "StartDate": "2018-06-30T00:00:00.000Z",
+                    "DateCompletion": "2022-06-30T00:00:00.000Z",
+                }
+            ),
+            None,
+        ),
+    ],
+)
+def test_returns_status(mock_family_row: pd.Series, expected_status: Optional[str]):
+    status = calculate_status(mock_family_row)
+    assert status == expected_status
+
+
+@pytest.mark.parametrize(
+    ("list_of_dates, return_value"),
+    [
+        (
+            [
+                pd.to_datetime("2016-06-30T00:00:00.000Z"),
+                pd.to_datetime("2018-06-30T00:00:00.000Z"),
+                pd.to_datetime("2022-06-30T00:00:00.000Z"),
+            ],
+            False,
+        ),
+        (
+            [None, None, pd.to_datetime("2016-06-30T00:00:00.000Z")],
+            False,
+        ),
+        (
+            [
+                pd.to_datetime("2018-06-30T00:00:00.000Z"),
+                pd.to_datetime(""),
+                pd.to_datetime("2022-06-30T00:00:00.000Z"),
+            ],
+            True,
+        ),
+    ],
+)
+def test_dates_contain_invalid_date_entries(list_of_dates: list, return_value):
+    result = contains_invalid_date_entries(list_of_dates)
+    assert result == return_value
+
+
+@pytest.mark.parametrize(
+    ("mock_row, output_message"),
+    [
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": pd.NA,
+                    "StartDate": pd.NA,
+                    "DateCompletion": pd.NA,
+                }
+            ),
+            "🛑 Row contains invalid date entries",
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                    "StartDate": "2018-06-30T00:00:00.000Z",
+                    "DateCompletion": "",
+                }
+            ),
+            "🛑 Row contains invalid date entries",
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": None,
+                    "StartDate": None,
+                    "DateCompletion": None,
+                }
+            ),
+            "🛑 Row missing event date information to calculate status",
+        ),
+    ],
+)
+def test_skips_processing_row_if_calculate_status_returns_none(
+    mock_row: pd.Series, output_message: str, capsys
+):
+    return_value = map_family_metadata(mock_row)
+    assert return_value is None
+    captured = capsys.readouterr()
+    assert output_message == captured.out.strip()
