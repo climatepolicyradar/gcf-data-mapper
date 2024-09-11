@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, Union
 
 import click
 import pandas as pd
@@ -57,13 +57,15 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     return None
 
 
-def get_budgets(funding_list: list[dict], source: str) -> Optional[list[int]]:
+def get_budgets(
+    funding_list: list[dict], source: str
+) -> Optional[list[Union[int, float]]]:
     """Get the budget amount from the row based on the funding source.
 
     :param list[dict] row: A list of all the funding information, represented in dictionaries
     :param str source: The funding source to retrieve the budget from.
 
-    :return Optional[list[int]]: A list of budget amounts corresponding to the source,
+    :return Optional[list[Union[int, float]]: A list of budget amounts corresponding to the source,
         or [0] if the source is not found.
     """
 
@@ -75,7 +77,7 @@ def get_budgets(funding_list: list[dict], source: str) -> Optional[list[int]]:
     ]
 
     # Check for any invalid values
-    if any(not isinstance(budget, (int)) for budget in budgets):
+    if any(not isinstance(budget, (int, float)) for budget in budgets):
         click.echo("🛑 Funding entries does not have valid int budget values")
         return None
 
@@ -164,16 +166,18 @@ def map_family_data(
     """
 
     family_metadata = map_family_metadata(row)
+    projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
 
     # When processing the family metadata if there are any empty/falsy values we return None
     # and skip the row. Therefore we don't want to process the rest of the family data so we
     # return None in this conditional.
     if family_metadata is None:
-        click.echo("🛑 Skipping row as family metadata has missing information")
+        click.echo(
+            f"🛑 Skipping row as family metadata has missing information, ProjectsID : {projects_id}"
+        )
         return None
 
     approved_ref = row.at[FamilyColumnsNames.APPROVED_REF.value]
-    projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
     summary = row.at[FamilyColumnsNames.SUMMARY.value]
     title = row.at[FamilyColumnsNames.TITLE.value]
 
