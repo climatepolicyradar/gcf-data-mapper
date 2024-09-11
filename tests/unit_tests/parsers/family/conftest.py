@@ -192,7 +192,7 @@ def mock_family_row_no_entities_no_regions():
 
 
 @pytest.fixture()
-def mock_family_row_with_non_int_budget_values():
+def mock_family_row_with_non_int_non_float_budget_values():
     yield pd.Series(
         {
             "ProjectsID": 3,
@@ -214,8 +214,8 @@ def mock_family_row_with_non_int_budget_values():
                 },
                 {
                     "Source": "Co-Financing",
-                    "Budget": 620000.20,
-                    "BudgetUSDeq": 620000.50,
+                    "Budget": "620000.20",
+                    "BudgetUSDeq": "620000.50",
                 },
             ],
             "ResultAreas": [

@@ -129,9 +129,9 @@ def test_returns_expected_value_when_parsing_budget_data(
 
 
 def test_map_family_metadata_returns_none_if_budget_does_not_contain_valid_int_types(
-    mock_family_row_with_non_int_budget_values: pd.Series,
+    mock_family_row_with_non_int_non_float_budget_values: pd.Series,
 ):
-    result = map_family_metadata(mock_family_row_with_non_int_budget_values)
+    result = map_family_metadata(mock_family_row_with_non_int_non_float_budget_values)
     assert result is None
 
 
