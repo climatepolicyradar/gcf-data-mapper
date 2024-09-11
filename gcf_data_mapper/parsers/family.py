@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Optional, Union
+from typing import Any, Iterable, Optional
 
 import click
 import pandas as pd
@@ -57,15 +57,13 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     return None
 
 
-def get_budgets(
-    funding_list: list[dict], source: str
-) -> Optional[list[Union[int, float]]]:
+def get_budgets(funding_list: list[dict], source: str) -> Optional[list[int]]:
     """Get the budget amount from the row based on the funding source.
 
     :param list[dict] row: A list of all the funding information, represented in dictionaries
     :param str source: The funding source to retrieve the budget from.
 
-    :return Optional[list[Union[int, float]]]: A list of budget amounts corresponding to the source,
+    :return Optional[list[int]]: A list of budget amounts corresponding to the source,
         or [0] if the source is not found.
     """
 
@@ -77,8 +75,8 @@ def get_budgets(
     ]
 
     # Check for any invalid values
-    if any(not isinstance(budget, (int, float)) for budget in budgets):
-        click.echo("🛑 Funding entries does not have valid (int, float) budget values")
+    if any(not isinstance(budget, (int)) for budget in budgets):
+        click.echo("🛑 Funding entries does not have valid int budget values")
         return None
 
     # Where we have projects which have been solely funded by the fund (GCF), or solely co-financed
