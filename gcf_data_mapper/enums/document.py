@@ -30,5 +30,5 @@ class IgnoreDocumentTypes(Enum):
 
 
 class DocumentVariantNames(Enum):
-    ORIGINAL = "Original Translation"
-    TRANSLATION = "Translated"
+    ORIGINAL = "Original Language"
+    TRANSLATION = "Translation"
