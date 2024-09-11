@@ -246,7 +246,7 @@ def test_dates_contain_invalid_date_entries(list_of_dates: list, return_value):
                     "DateCompletion": pd.NA,
                 }
             ),
-            "🛑 Row contains invalid date entries",
+            "- Row contains invalid date entries",
         ),
         (
             pd.Series(
@@ -256,7 +256,7 @@ def test_dates_contain_invalid_date_entries(list_of_dates: list, return_value):
                     "DateCompletion": "",
                 }
             ),
-            "🛑 Row contains invalid date entries",
+            "- Row contains invalid date entries",
         ),
         (
             pd.Series(
@@ -266,7 +266,7 @@ def test_dates_contain_invalid_date_entries(list_of_dates: list, return_value):
                     "DateCompletion": None,
                 }
             ),
-            "🛑 Row missing event date information to calculate status",
+            "- Row missing event date information to calculate status",
         ),
     ],
 )

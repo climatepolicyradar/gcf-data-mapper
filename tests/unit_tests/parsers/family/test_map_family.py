@@ -152,8 +152,10 @@ def test_skips_processing_row_if_row_contains_empty_values(
 
 
 def test_skips_processing_row_if_family_metadata_has_missing_data(
-    mock_family_row_no_result_areas, capsys
+    mock_family_row_no_result_areas: pd.Series, capsys
 ):
+    projects_id = mock_family_row_no_result_areas.ProjectsID
+
     family_data = map_family_data(mock_family_row_no_result_areas)
     assert family_data is None
     captured = capsys.readouterr()
@@ -161,6 +163,6 @@ def test_skips_processing_row_if_family_metadata_has_missing_data(
     # from map_family_data informing that the row is being skipped
     map_family_data_output = captured.out.strip().split("\n")
     assert (
-        "🛑 Skipping row as family metadata has missing information"
+        f"🛑 Skipping row as family metadata has missing information, see ProjectsID : {projects_id}"
         == map_family_data_output[1]
     )
