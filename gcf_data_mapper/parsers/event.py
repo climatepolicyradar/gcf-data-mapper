@@ -32,7 +32,7 @@ def append_event(
     gcf_events.append(
         {
             "import_id": f"GCF.event.{approved_ref}_{projects_id}.n{n_value:04}",
-            "family_import_id": f"GCF.event.{approved_ref}.{projects_id}",
+            "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
             "event_title": event.type,
             "date": row[event.column_name],
             "event_type_value": event.type,
