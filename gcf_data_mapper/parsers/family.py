@@ -166,16 +166,18 @@ def map_family_data(
     """
 
     family_metadata = map_family_metadata(row)
+    projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
 
     # When processing the family metadata if there are any empty/falsy values we return None
     # and skip the row. Therefore we don't want to process the rest of the family data so we
     # return None in this conditional.
     if family_metadata is None:
-        click.echo("🛑 Skipping row as family metadata has missing information")
+        click.echo(
+            f"🛑 Skipping row as family metadata has missing information, ProjectsID : {projects_id}"
+        )
         return None
 
     approved_ref = row.at[FamilyColumnsNames.APPROVED_REF.value]
-    projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
     summary = row.at[FamilyColumnsNames.SUMMARY.value]
     title = row.at[FamilyColumnsNames.TITLE.value]
 
