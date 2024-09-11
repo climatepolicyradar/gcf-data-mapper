@@ -10,7 +10,7 @@ def parsed_family_data():
         {
             "category": "MCF",
             "collections": [],
-            "description": "The Summary of the Project",
+            "summary": "The Summary of the Project",
             "geographies": ["BGD"],
             "import_id": "GCF.family.FP003.12660",
             "metadata": {
@@ -24,7 +24,7 @@ def parsed_family_data():
                 "result_areas": ["Coastal protection and restoration"],
                 "result_types": ["Adaptation"],
                 "sector": ["Environment"],
-                "status": "Under Implementation",
+                "status": ["Under Implementation"],
                 "theme": ["Adaptation"],
             },
             "title": "Enhancing resilience of coastal ecosystems and communities",

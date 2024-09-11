@@ -25,7 +25,7 @@ def parsed_family_metadata():
         "result_areas": ["The Area for the Result Area"],
         "result_types": ["The Type for the Result Area"],
         "sector": ["Private"],
-        "status": "Under Implementation",
+        "status": ["Under Implementation"],
         "theme": ["Adaptation"],
     }
 
