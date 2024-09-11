@@ -149,7 +149,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         "result_areas": list(set(areas)),
         "result_types": list(set(types)),
         "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
-        "status": status,
+        "status": [status],
         "theme": [row.at[FamilyColumnsNames.THEME.value]],
     }
 
@@ -192,7 +192,7 @@ def map_family_data(
         # For now we are hard coding the category as MCF
         "category": "MCF",
         "collections": [],
-        "description": summary,
+        "summary": summary,
         "geographies": geographies,
         "import_id": import_id,
         "metadata": family_metadata,

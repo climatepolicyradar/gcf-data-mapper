@@ -127,7 +127,7 @@ def map_document_metadata(
     return {
         "import_id": f"GCF.document.{approved_ref}_{projects_id}.{doc_id}",
         "family_import_id": f"GCF.family.{approved_ref}.{projects_id}",
-        "metadata": {"type": doc_type},
+        "metadata": {"type": [doc_type]},
         "title": title,
         "source_url": source_url.strip(),
         "variant_name": variant_name,
