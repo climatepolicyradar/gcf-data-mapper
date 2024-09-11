@@ -50,6 +50,9 @@ def mock_family_doc_df():
                 "ApprovalDate": "2016-06-30T00:00:00.000Z",
                 "StartDate": "2024-06-28T00:00:00.000Z",
                 "DateCompletion": None,
+                "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                "StartDate": "2024-06-28T00:00:00.000Z",
+                "DateCompletion": None,
             }
         ]
     )
@@ -100,6 +103,9 @@ def mock_family_row_ds():
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
             "StartDate": "2024-06-28T00:00:00.000Z",
             "DateCompletion": None,
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
         }
     )
 
@@ -143,6 +149,9 @@ def mock_family_row_no_result_areas():
             "ResultAreas": [
                 {"Area": "", "Type": ""},
             ],
+            "ApprovalDate": "2016-06-30T00:00:00.000Z",
+            "StartDate": "2024-06-28T00:00:00.000Z",
+            "DateCompletion": None,
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
             "StartDate": "2024-06-28T00:00:00.000Z",
             "DateCompletion": None,

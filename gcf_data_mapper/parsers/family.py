@@ -1,8 +1,10 @@
+from typing import Any, Iterable, Optional
 from typing import Any, Iterable, Optional, Union
 
 import click
 import pandas as pd
 
+from gcf_data_mapper.enums.event import EventColumnNames, Events
 from gcf_data_mapper.enums.event import EventColumnNames, Events
 from gcf_data_mapper.enums.family import (
     FamilyColumnsNames,
@@ -16,6 +18,48 @@ from gcf_data_mapper.parsers.helpers import (
 )
 
 
+def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool:
+    """Check if any of the values in the list of dates are NaT (Not a Time).
+
+    :param Iterable[pd.Timestamp] list_of_dates: A list of pd.TimeStamps, may also include NoneTypes
+    :return bool: True if any of the values are not a valid timestamp. This helps distinguish between NaT and NaN/None Type values which are valid date entries.
+    """
+    return any(date is pd.NaT for date in list_of_dates)
+
+
+def calculate_status(row: pd.Series) -> Optional[str]:
+    """Calculate status of project based on the event types and dates
+        The status is calculated per the below:
+            Completed : (NOW is passed date-completion)
+            Under implementation : (NOW is passed start-date)
+            Approved : (NOW is passed approved-date)
+
+    :param pd.Series row: The row containing the event information
+    :return Optional[str]: The status of the project, if there are no valid values return None
+    """
+    completed_date = pd.to_datetime(row.at[Events.COMPLETED.column_name])
+    start_date = pd.to_datetime(row.at[Events.UNDER_IMPLEMENTATION.column_name])
+    approved_date = pd.to_datetime(row.at[Events.APPROVED.column_name])
+
+    if contains_invalid_date_entries([completed_date, start_date, approved_date]):
+        click.echo("🛑 Row contains invalid date entries")
+        return None
+
+    now = pd.Timestamp.now(tz="UTC")
+
+    # This block is arranged to reflect the project lifecycle in reverse order, from the final stage to the initial stage.
+    if pd.notna(completed_date) and now >= completed_date:
+        return Events.COMPLETED.type
+    if pd.notna(start_date) and now >= start_date:
+        return Events.UNDER_IMPLEMENTATION.type
+    if pd.notna(approved_date) and now >= approved_date:
+        return Events.APPROVED.type
+
+    click.echo("🛑 Row missing event date information to calculate status")
+    return None
+
+
+def get_budgets(funding_list: list[dict], source: str) -> Optional[list[int]]:
 def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool:
     """Check if any of the values in the list of dates are NaT (Not a Time).
 
@@ -100,6 +144,11 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     if status is None:
         return None
 
+    status = calculate_status(row)
+
+    if status is None:
+        return None
+
     countries = row.at[FamilyColumnsNames.COUNTRIES.value]
     entities = row.at[FamilyColumnsNames.ENTITIES.value]
     funding_sources = row.at[FamilyColumnsNames.FUNDING.value]
@@ -149,6 +198,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         "result_areas": list(set(areas)),
         "result_types": list(set(types)),
         "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
+        "status": status,
         "status": status,
         "theme": [row.at[FamilyColumnsNames.THEME.value]],
     }
@@ -250,8 +300,16 @@ def family(
 
     family_columns = set(str(e.value) for e in FamilyColumnsNames)
     required_fields = family_columns.union(set(str(e.value) for e in EventColumnNames))
+    family_columns = set(str(e.value) for e in FamilyColumnsNames)
+    required_fields = family_columns.union(set(str(e.value) for e in EventColumnNames))
 
     verify_required_fields_present(gcf_projects_data, required_fields)
+    # Whilst we expect the event columns to be present, some of the events in the data may have empty values.
+    # We therefore want to exclude these from the `row_contains_columns_with_empty_values` function,
+    # and handle any empty event values in the `calculate_status` function.
+    required_fields -= set(
+        str(e.value) for e in EventColumnNames if str(e.value) not in family_columns
+    )
     # Whilst we expect the event columns to be present, some of the events in the data may have empty values.
     # We therefore want to exclude these from the `row_contains_columns_with_empty_values` function,
     # and handle any empty event values in the `calculate_status` function.
