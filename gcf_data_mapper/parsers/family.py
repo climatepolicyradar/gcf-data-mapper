@@ -140,14 +140,14 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
 
     metadata = {
         "approved_ref": [row.at[FamilyColumnsNames.APPROVED_REF.value]],
-        "implementing_agencies": list(set(implementing_agencies)),
+        "implementing_agency": list(set(implementing_agencies)),
         "project_id": [row.at[FamilyColumnsNames.PROJECTS_ID.value]],
         "project_url": [row.at[FamilyColumnsNames.PROJECT_URL.value]],
         "project_value_fund_spend": gcf_budgets,
         "project_value_co_financing": co_financing_budgets,
-        "regions": list(set(regions)),
-        "result_areas": list(set(areas)),
-        "result_types": list(set(types)),
+        "region": list(set(regions)),
+        "result_area": list(set(areas)),
+        "result_type": list(set(types)),
         "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
         "status": [status],
         "theme": [row.at[FamilyColumnsNames.THEME.value]],

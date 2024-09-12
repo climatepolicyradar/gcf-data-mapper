@@ -16,14 +16,14 @@ from gcf_data_mapper.parsers.family import (
 def parsed_family_metadata():
     return {
         "approved_ref": ["FP004"],
-        "implementing_agencies": ["Climate Action Innovations"],
+        "implementing_agency": ["Climate Action Innovations"],
         "project_id": [1],
         "project_url": ["https://www.climateaction.fund/project/FP004"],
         "project_value_co_financing": [620000],
         "project_value_fund_spend": [82000],
-        "regions": ["Latin America and the Caribbean"],
-        "result_areas": ["The Area for the Result Area"],
-        "result_types": ["The Type for the Result Area"],
+        "region": ["Latin America and the Caribbean"],
+        "result_area": ["The Area for the Result Area"],
+        "result_type": ["The Type for the Result Area"],
         "sector": ["Private"],
         "status": ["Under Implementation"],
         "theme": ["Adaptation"],
