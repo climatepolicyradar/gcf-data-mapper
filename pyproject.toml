@@ -10,7 +10,7 @@ packages = [{ include = "gcf_data_mapper" }]
 [tool.poetry.dependencies]
 python = ">=3.10"
 click = "^8.1.7"
-pandas = "^2.2.2"
+pandas = "^2.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
