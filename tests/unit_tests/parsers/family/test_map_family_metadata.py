@@ -92,7 +92,7 @@ def test_get_budgets_returns_list_of_budgets_for_funding_source(
     assert budgets == ["2000"]
 
 
-def test_get_budgets_returns_multiple_budgets_where_there_are_more_than_one_entries_to_a_funding_source(
+def test_get_budgets_returns_multiple_budgets_where_there_is_more_than_one_entry_to_a_funding_source(
     budget_input_data: list,
 ):
     gcf_source = "Co-Financing"
