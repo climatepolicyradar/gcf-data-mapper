@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Optional, Union
+from typing import Any, Iterable, Optional
 
 import click
 import pandas as pd
@@ -57,35 +57,30 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     return None
 
 
-def get_budgets(
-    funding_list: list[dict], source: str
-) -> Optional[list[Union[int, float]]]:
+def get_budgets(funding_list: list[dict], source: str) -> Optional[list[str]]:
     """Get the budget amount from the row based on the funding source.
 
     :param list[dict] row: A list of all the funding information, represented in dictionaries
     :param str source: The funding source to retrieve the budget from.
 
-    :return Optional[list[Union[int, float]]: A list of budget amounts corresponding to the source,
-        or [0] if the source is not found.
+    :return Optional[list[str]: A list of budget amounts corresponding to the source,
+        or ["0"] if the source is not found.
     """
 
     budget_key = FamilyNestedColumnNames.BUDGET.value
     source_key = FamilyNestedColumnNames.SOURCE.value
 
     budgets = [
-        funding[budget_key] for funding in funding_list if funding[source_key] == source
+        str(funding[budget_key])
+        for funding in funding_list
+        if funding[source_key] == source
     ]
-
-    # Check for any invalid values
-    if any(not isinstance(budget, (int, float)) for budget in budgets):
-        click.echo("🛑 Funding entries does not have valid int budget values")
-        return None
 
     # Where we have projects which have been solely funded by the fund (GCF), or solely co-financed
     # - so in instances where there will be no funding that match either the GCF or co-financing
     # source value, we will map the `project_value_fund spend` or the `project_value_co_financing`
-    # as an array with 0 i.e [0]
-    return budgets if budgets else [0]
+    # as an array with 0 i.e ["0"]
+    return budgets if budgets else ["0"]
 
 
 def map_family_metadata(row: pd.Series) -> Optional[dict]:
@@ -118,10 +113,10 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     if gcf_budgets is None or co_financing_budgets is None:
         return None
 
-    implementing_agencies = [entity[name_key] for entity in entities]
-    regions = [country[region_key] for country in countries]
-    areas = [result[area_key] for result in result_areas]
-    types = [result[type_key] for result in result_areas]
+    implementing_agencies = [str(entity[name_key]) for entity in entities]
+    regions = [str(country[region_key]) for country in countries]
+    areas = [str(result[area_key]) for result in result_areas]
+    types = [str(result[type_key]) for result in result_areas]
 
     # As we are filtering the budget information by source for gcf and co financing, we
     # know there will be instances where only one type of funding exists so checking
@@ -139,18 +134,18 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         return None
 
     metadata = {
-        "approved_ref": [row.at[FamilyColumnsNames.APPROVED_REF.value]],
+        "approved_ref": [str(row.at[FamilyColumnsNames.APPROVED_REF.value])],
         "implementing_agency": list(set(implementing_agencies)),
-        "project_id": [row.at[FamilyColumnsNames.PROJECTS_ID.value]],
-        "project_url": [row.at[FamilyColumnsNames.PROJECT_URL.value]],
+        "project_id": [str(row.at[FamilyColumnsNames.PROJECTS_ID.value])],
+        "project_url": [str(row.at[FamilyColumnsNames.PROJECT_URL.value])],
         "project_value_fund_spend": gcf_budgets,
         "project_value_co_financing": co_financing_budgets,
         "region": list(set(regions)),
         "result_area": list(set(areas)),
         "result_type": list(set(types)),
-        "sector": [row.at[FamilyColumnsNames.SECTOR.value]],
+        "sector": [str(row.at[FamilyColumnsNames.SECTOR.value])],
         "status": [status],
-        "theme": [row.at[FamilyColumnsNames.THEME.value]],
+        "theme": [str(row.at[FamilyColumnsNames.THEME.value])],
     }
 
     return metadata

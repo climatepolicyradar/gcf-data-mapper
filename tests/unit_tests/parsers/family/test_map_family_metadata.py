@@ -17,10 +17,10 @@ def parsed_family_metadata():
     return {
         "approved_ref": ["FP004"],
         "implementing_agency": ["Climate Action Innovations"],
-        "project_id": [1],
+        "project_id": ["1"],
         "project_url": ["https://www.climateaction.fund/project/FP004"],
-        "project_value_co_financing": [620000],
-        "project_value_fund_spend": [82000],
+        "project_value_co_financing": ["620000"],
+        "project_value_fund_spend": ["82000"],
         "region": ["Latin America and the Caribbean"],
         "result_area": ["The Area for the Result Area"],
         "result_type": ["The Type for the Result Area"],
@@ -63,69 +63,59 @@ def test_returns_none_if_nested_values_in_family_metadata_row_contains_empty_val
     assert output_message == captured.out.strip()
 
 
-@pytest.mark.parametrize(
-    ("funding_list, source, expected_value"),
-    [
-        (
-            [
-                {
-                    "Source": "GCF",
-                    "Budget": 1000,
-                    "BudgetUSDeq": 2000,
-                },
-                {
-                    "Source": "Co-Financing",
-                    "Budget": 1000,
-                    "BudgetUSDeq": 2000,
-                },
-            ],
-            "GCF",
-            [2000],
-        ),
-        (
-            [
-                {
-                    "Source": "GCF",
-                    "Budget": 1000,
-                    "BudgetUSDeq": 2000,
-                },
-                {
-                    "Source": "Co-Financing",
-                    "Budget": 1000,
-                    "BudgetUSDeq": 2000,
-                },
-                {
-                    "Source": "Co-Financing",
-                    "Budget": 2000,
-                    "BudgetUSDeq": 4000,
-                },
-            ],
-            "Co-Financing",
-            [2000, 4000],
-        ),
-        (
-            [
-                {
-                    "Source": "Co-Financing",
-                    "Budget": 1000,
-                    "BudgetUSDeq": 2000,
-                },
-                {
-                    "Source": "Co-Financing",
-                    "Budget": 2000,
-                    "BudgetUSDeq": 4000,
-                },
-            ],
-            "GCF",
-            [0],
-        ),
-    ],
-)
-def test_returns_expected_value_when_parsing_budget_data(
-    funding_list: list[dict], source: str, expected_value: list[int]
+@pytest.fixture()
+def budget_input_data():
+    return [
+        {
+            "Source": "GCF",
+            "Budget": 1000,
+            "BudgetUSDeq": 2000,
+        },
+        {
+            "Source": "Co-Financing",
+            "Budget": 1500,
+            "BudgetUSDeq": 2700,
+        },
+        {
+            "Source": "Co-Financing",
+            "Budget": 2300,
+            "BudgetUSDeq": 4100,
+        },
+    ]
+
+
+def test_get_budgets_returns_list_of_budgets_for_funding_source(
+    budget_input_data: list,
 ):
-    budgets = get_budgets(funding_list, source)
-    assert budgets == expected_value
+    gcf_source = "GCF"
+    budgets = get_budgets(budget_input_data, gcf_source)
+    assert budgets == ["2000"]
+
+
+def test_get_budgets_returns_multiple_budgets_where_there_is_more_than_one_entry_to_a_funding_source(
+    budget_input_data: list,
+):
+    gcf_source = "Co-Financing"
+    budgets = get_budgets(budget_input_data, gcf_source)
+    assert budgets is not None
+    assert budgets == ["2700", "4100"]
+    assert len(budgets) == 2
+
+
+def test_get_budget_returns_list_of_strings(budget_input_data: list):
+    gcf_source = "GCF"
+    budgets = get_budgets(budget_input_data, gcf_source)
+    assert budgets is not None
+    assert all(isinstance(item, str) for item in budgets)
+
+
+def test_get_budget_returns_list_with_zero_where_there_are_no_matching_sources(
+    budget_input_data: list,
+):
+    source = "fake_budget_source"
+    budgets = get_budgets(budget_input_data, source)
+    assert budgets is not None
+    assert budgets == ["0"]
 
 
 def test_map_family_metadata_returns_none_if_budget_does_not_contain_valid_int_types(
@@ -277,3 +267,12 @@ def test_skips_processing_row_if_calculate_status_returns_none(
     assert return_value is None
     captured = capsys.readouterr()
     assert output_message == captured.out.strip()
+
+
+def test_all_metadata_values_are_list_of_strings(mock_family_row_ds: pd.Series):
+    family_metadata = map_family_metadata(mock_family_row_ds)
+    assert family_metadata is not None
+
+    for value in family_metadata.values():
+        assert isinstance(value, list)
+        assert all(isinstance(item, str) for item in value)
