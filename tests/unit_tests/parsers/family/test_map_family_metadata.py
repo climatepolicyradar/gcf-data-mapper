@@ -17,10 +17,10 @@ def parsed_family_metadata():
     return {
         "approved_ref": ["FP004"],
         "implementing_agency": ["Climate Action Innovations"],
-        "project_id": [1],
+        "project_id": ["1"],
         "project_url": ["https://www.climateaction.fund/project/FP004"],
-        "project_value_co_financing": [620000],
-        "project_value_fund_spend": [82000],
+        "project_value_co_financing": ["620000"],
+        "project_value_fund_spend": ["82000"],
         "region": ["Latin America and the Caribbean"],
         "result_area": ["The Area for the Result Area"],
         "result_type": ["The Type for the Result Area"],
@@ -80,7 +80,7 @@ def test_returns_none_if_nested_values_in_family_metadata_row_contains_empty_val
                 },
             ],
             "GCF",
-            [2000],
+            ["2000"],
         ),
         (
             [
@@ -101,7 +101,7 @@ def test_returns_none_if_nested_values_in_family_metadata_row_contains_empty_val
                 },
             ],
             "Co-Financing",
-            [2000, 4000],
+            ["2000", "4000"],
         ),
         (
             [
@@ -117,7 +117,7 @@ def test_returns_none_if_nested_values_in_family_metadata_row_contains_empty_val
                 },
             ],
             "GCF",
-            [0],
+            ["0"],
         ),
     ],
 )
@@ -277,3 +277,12 @@ def test_skips_processing_row_if_calculate_status_returns_none(
     assert return_value is None
     captured = capsys.readouterr()
     assert output_message == captured.out.strip()
+
+
+def test_all_metadata_values_are_list_of_strings(mock_family_row_ds: pd.Series):
+    family_metadata = map_family_metadata(mock_family_row_ds)
+    assert family_metadata is not None
+
+    for value in family_metadata.values():
+        assert isinstance(value, list)
+        assert all(isinstance(item, str) for item in value)

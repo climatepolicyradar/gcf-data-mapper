@@ -16,10 +16,10 @@ def parsed_family_data():
             "metadata": {
                 "approved_ref": ["FP003"],
                 "implementing_agency": ["Green Innovations"],
-                "project_id": [12660],
+                "project_id": ["12660"],
                 "project_url": ["https://www.climateaction.fund/project/FP003"],
-                "project_value_fund_spend": [9200000],
-                "project_value_co_financing": [620000],
+                "project_value_fund_spend": ["9200000"],
+                "project_value_co_financing": ["620000"],
                 "region": ["Asia"],
                 "result_area": ["Coastal protection and restoration"],
                 "result_type": ["Adaptation"],

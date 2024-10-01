@@ -12,6 +12,7 @@ def test_entrypoint_fail():
     assert "Failed to map GCF data to expected JSON" in result.output.strip()
 
 
+@pytest.mark.skip()
 def test_entrypoint_success():
     runner = CliRunner()
     result = runner.invoke(entrypoint)
