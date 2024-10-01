@@ -17,9 +17,9 @@ class EventColumnNames(Enum):
 class EventTypeNames(Enum):
     """The GCF event type names (should map to the GCF taxonomy)."""
 
-    APPROVED = "Approved"
+    APPROVED = "Project Approved"
     UNDER_IMPLEMENTATION = "Under Implementation"
-    COMPLETED = "Completed"
+    COMPLETED = "Project Completed"
 
 
 class Events:
