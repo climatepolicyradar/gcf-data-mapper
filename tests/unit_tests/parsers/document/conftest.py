@@ -10,6 +10,7 @@ import pytest
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123",
             "Translated files": "http://example.com",
             "Translated titles": None,
@@ -20,6 +21,7 @@ import pytest
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123",
             "Translated titles": None,
         },
@@ -38,6 +40,7 @@ def mock_valid_doc_row_with_one_translation():
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123",
             "Translated files": "http://example.com",
             "Translated titles": "title123",
@@ -54,6 +57,7 @@ def mock_valid_doc_row_with_many_translations():
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123,link456,link789",
             "Translated files": "http://example.com|http://example.org|http://example.co.uk",
             "Translated titles": "title123|title456|title789",
@@ -70,6 +74,7 @@ def mock_valid_doc_row_with_two_translations():
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123,link456",
             "Translated files": "http://example.com|http://example.org",
             "Translated titles": "title123|title456",
@@ -86,6 +91,7 @@ def mock_valid_row():
             "ID (Unique ID from our CMS for the document)": "doc123",
             "Type": "type123",
             "Title": "title123",
+            "Main file (English)": "link123.pdf",
             "Document page permalink": "link123",
         }
     )
@@ -101,6 +107,7 @@ def mock_gcf_docs():
             "Title": ["title123", "title124"],
             "Translated titles": ["title123_fr", "title124_fr"],
             "Document page permalink": ["link123", "link124"],
+            "Main file (English)": ["link123.pdf", "link124.pdf"],
             "Translated files": ["file123_fr", "file124_fr"],
         }
     )

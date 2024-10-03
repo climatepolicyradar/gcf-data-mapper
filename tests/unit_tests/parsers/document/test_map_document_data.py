@@ -14,5 +14,5 @@ def test_map_document_metadata_without_source_url(mock_valid_row):
     result = map_document_metadata(mock_valid_row, DocumentVariantNames.ORIGINAL.value)
     assert (
         "source_url" in result
-        and result["source_url"] == mock_valid_row["Document page permalink"]
+        and result["source_url"] == mock_valid_row["Main file (English)"]
     )
