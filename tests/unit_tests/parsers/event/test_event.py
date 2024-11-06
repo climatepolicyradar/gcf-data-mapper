@@ -61,3 +61,41 @@ def test_event_handles_partial_valid_dates():
     )
     result = event(projects_data, debug=False)
     assert len(result) == 3
+
+
+def test_handles_data_with_leading_and_trailing_whitespace():
+    mock_projects_data = pd.DataFrame(
+        {
+            "ApprovalDate": [" 2023-01-01 ", None],
+            "StartDate": [None, "  2023-06-01"],
+            "DateCompletion": ["2023-12-31  ", None],
+            "ApprovedRef": ["  FP123  ", " FP124 "],
+            "ProjectsID": [" PID456 ", "  PID457  "],
+        }
+    )
+
+    expected_mapped_events = [
+        {
+            "date": "2023-01-01",
+            "event_title": "Project Approved",
+            "event_type_value": "Project Approved",
+            "import_id": "GCF.event.FP123_PID456.n0000",
+            "family_import_id": "GCF.family.FP123.PID456",
+        },
+        {
+            "date": "2023-12-31",
+            "event_title": "Project Completed",
+            "event_type_value": "Project Completed",
+            "family_import_id": "GCF.family.FP123.PID456",
+            "import_id": "GCF.event.FP123_PID456.n0001",
+        },
+        {
+            "date": "2023-06-01",
+            "event_title": "Under Implementation",
+            "event_type_value": "Under Implementation",
+            "family_import_id": "GCF.family.FP124.PID457",
+            "import_id": "GCF.event.FP124_PID457.n0000",
+        },
+    ]
+
+    assert expected_mapped_events == event(mock_projects_data, False)
