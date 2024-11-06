@@ -165,3 +165,35 @@ def test_skips_processing_row_if_family_metadata_has_missing_data(
         f"🛑 Skipping row as family metadata has missing information, ProjectsID : {projects_id}"
         == map_family_data_output[1]
     )
+
+
+def test_handles_data_with_leading_and_trailing_whitespace(
+    mock_family_doc_with_whitespace,
+):
+
+    expected_mapped_family = {
+        "category": "MCF",
+        "collections": [],
+        "summary": "The Summary of the Project",
+        "geographies": ["BGD"],
+        "import_id": "GCF.family.FP003.AAABBB",
+        "metadata": {
+            "approved_ref": ["FP003"],
+            "implementing_agency": ["Green Innovations"],
+            "project_id": ["AAABBB"],
+            "project_url": ["https://www.climateaction.fund/project/FP003"],
+            "project_value_fund_spend": ["9200000"],
+            "project_value_co_financing": ["620000"],
+            "region": ["Asia"],
+            "result_area": ["Coastal protection and restoration"],
+            "result_type": ["Adaptation"],
+            "sector": ["Environment"],
+            "status": ["Under Implementation"],
+            "theme": ["Adaptation"],
+        },
+        "title": "Enhancing resilience of coastal ecosystems and communities",
+    }
+
+    assert expected_mapped_family == process_row(
+        mock_family_doc_with_whitespace, "  AAABBB  ", []
+    )

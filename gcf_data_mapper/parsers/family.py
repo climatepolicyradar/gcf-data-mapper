@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, cast
 
 import click
 import pandas as pd
@@ -14,6 +14,17 @@ from gcf_data_mapper.parsers.helpers import (
     row_contains_columns_with_empty_values,
     verify_required_fields_present,
 )
+
+
+def strip_nested(value: Any) -> Any:
+    """Recursively strip strings in nested structures."""
+    if isinstance(value, str):
+        return value.strip()
+    elif isinstance(value, list):
+        return [strip_nested(item) for item in value]
+    elif isinstance(value, dict):
+        return {key: strip_nested(val) for key, val in value.items()}
+    return value
 
 
 def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool:
@@ -222,6 +233,7 @@ def process_row(
         )
         return None
 
+    row = cast(pd.Series, row.apply(strip_nested))
     return map_family_data(row)
 
 
@@ -255,7 +267,7 @@ def family(
     )
 
     for _, row in gcf_projects_data.iterrows():
-        projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
+        projects_id = str(row.at[FamilyColumnsNames.PROJECTS_ID.value]).strip()
         mapped_families.append(process_row(row, projects_id, list(required_fields)))
 
     return mapped_families

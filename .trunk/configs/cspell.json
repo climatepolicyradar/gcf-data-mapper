@@ -41,7 +41,8 @@
     "isin",
     "pydantic",
     "getfixturevalue",
-    "isna"
+    "isna",
+    "AAABBB"
   ],
   "flagWords": ["hte"],
   "suggestionsTimeout": 5000
