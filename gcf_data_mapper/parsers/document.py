@@ -13,6 +13,7 @@ from gcf_data_mapper.enums.document import (
 )
 from gcf_data_mapper.parsers.helpers import (
     check_required_column_value_not_na,
+    strip_nested,
     verify_required_fields_present,
 )
 
@@ -177,6 +178,8 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
         the 'destination' format described in the GCF Data Mapper Google
         Sheet.
     """
+    row = cast(pd.Series, row.apply(strip_nested))
+
     doc_id = (
         row.at[RequiredDocumentColumns.ID.value]
         if RequiredDocumentColumns.ID.value in row.index

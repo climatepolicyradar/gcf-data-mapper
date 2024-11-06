@@ -1,3 +1,5 @@
+from typing import Any
+
 import click
 import pandas as pd
 
@@ -69,3 +71,14 @@ def arrays_contain_empty_values(list_values: list[tuple], id: str) -> bool:
         return True
 
     return False
+
+
+def strip_nested(value: Any) -> Any:
+    """Recursively strip strings in nested structures."""
+    if isinstance(value, str):
+        return value.strip()
+    elif isinstance(value, list):
+        return [strip_nested(item) for item in value]
+    elif isinstance(value, dict):
+        return {key: strip_nested(val) for key, val in value.items()}
+    return value

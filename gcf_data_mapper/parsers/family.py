@@ -12,19 +12,9 @@ from gcf_data_mapper.enums.family import (
 from gcf_data_mapper.parsers.helpers import (
     arrays_contain_empty_values,
     row_contains_columns_with_empty_values,
+    strip_nested,
     verify_required_fields_present,
 )
-
-
-def strip_nested(value: Any) -> Any:
-    """Recursively strip strings in nested structures."""
-    if isinstance(value, str):
-        return value.strip()
-    elif isinstance(value, list):
-        return [strip_nested(item) for item in value]
-    elif isinstance(value, dict):
-        return {key: strip_nested(val) for key, val in value.items()}
-    return value
 
 
 def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool:
