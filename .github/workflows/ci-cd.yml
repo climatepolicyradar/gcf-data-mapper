@@ -16,7 +16,7 @@ permissions: read-all
 
 jobs:
   code-quality:
-    uses: climatepolicyradar/reusable-workflows/.github/workflows/python-precommit-validator-without-version.yml@v13
+    uses: climatepolicyradar/reusable-workflows/.github/workflows/python-precommit-validator-without-version.yml@v17
     with:
       python-version: "3.10"
 
