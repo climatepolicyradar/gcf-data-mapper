@@ -89,3 +89,144 @@ def test_handles_data_with_leading_and_trailing_whitespace(
     ]
 
     assert expected_mapped_doc == process_row(mock_valid_row_with_whitespace, False)
+
+
+@pytest.mark.parametrize(
+    ("test_ds,expected_return,error_message"),
+    [
+        (
+            pd.Series(
+                {
+                    "ApprovedRef": "ref123",
+                    "ProjectsID": "proj123",
+                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "Type": "Test type",
+                    "Title": "Test title",
+                    "Main file (English)": "link123.pdf",
+                    "Document page permalink": "link123",
+                    "Translated files": pd.NA,
+                    "Translated titles": pd.NA,
+                }
+            ),
+            [
+                {
+                    "import_id": "GCF.document.ref123_proj123.doc123",
+                    "family_import_id": "GCF.family.ref123.proj123",
+                    "metadata": {"type": ["Test type"]},
+                    "title": "Test title",
+                    "source_url": "link123.pdf",
+                    "variant_name": "Original Language",
+                }
+            ],
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovedRef": "ref123",
+                    "ProjectsID": "proj123",
+                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "Type": "Test type",
+                    "Title": "Test title",
+                    "Main file (English)": "link123.PDF",
+                    "Document page permalink": "link123",
+                    "Translated files": pd.NA,
+                    "Translated titles": pd.NA,
+                }
+            ),
+            [
+                {
+                    "import_id": "GCF.document.ref123_proj123.doc123",
+                    "family_import_id": "GCF.family.ref123.proj123",
+                    "metadata": {"type": ["Test type"]},
+                    "title": "Test title",
+                    "source_url": "link123.PDF",
+                    "variant_name": "Original Language",
+                }
+            ],
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovedRef": "ref123",
+                    "ProjectsID": "proj123",
+                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "Type": "Test type",
+                    "Title": "Test title",
+                    "Main file (English)": "link123.html",
+                    "Document page permalink": "link123",
+                    "Translated files": pd.NA,
+                    "Translated titles": pd.NA,
+                }
+            ),
+            [
+                {
+                    "import_id": "GCF.document.ref123_proj123.doc123",
+                    "family_import_id": "GCF.family.ref123.proj123",
+                    "metadata": {"type": ["Test type"]},
+                    "title": "Test title",
+                    "source_url": "link123.html",
+                    "variant_name": "Original Language",
+                }
+            ],
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovedRef": "ref123",
+                    "ProjectsID": "proj123",
+                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "Type": "Test type",
+                    "Title": "Test title",
+                    "Main file (English)": "link123.HTML",
+                    "Document page permalink": "link123",
+                    "Translated files": pd.NA,
+                    "Translated titles": pd.NA,
+                }
+            ),
+            [
+                {
+                    "import_id": "GCF.document.ref123_proj123.doc123",
+                    "family_import_id": "GCF.family.ref123.proj123",
+                    "metadata": {"type": ["Test type"]},
+                    "title": "Test title",
+                    "source_url": "link123.HTML",
+                    "variant_name": "Original Language",
+                }
+            ],
+            None,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovedRef": "ref123",
+                    "ProjectsID": "proj123",
+                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "Type": "Test type",
+                    "Title": "Test title",
+                    "Main file (English)": "link123.xlsx",
+                    "Document page permalink": "link123",
+                    "Translated files": pd.NA,
+                    "Translated titles": pd.NA,
+                }
+            ),
+            None,
+            "🛑 Skipping row as [.xlsx] is not a valid file ext. Project ID: doc123",
+        ),
+    ],
+)
+def test_validates_url_has_a_supported_extension(
+    test_ds: pd.Series,
+    expected_return,
+    error_message: str,
+    capsys,
+):
+    document_data = process_row(test_ds, debug=False)
+
+    assert expected_return == document_data
+
+    if error_message:
+        captured = capsys.readouterr()
+        assert error_message == captured.out.strip()
