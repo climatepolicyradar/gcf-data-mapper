@@ -1,3 +1,4 @@
+import os
 from typing import Any, Optional, cast
 from urllib.parse import urlparse
 
@@ -16,6 +17,8 @@ from gcf_data_mapper.parsers.helpers import (
     strip_nested,
     verify_required_fields_present,
 )
+
+SUPPORTED_FILE_EXTENSIONS = [".pdf", ".html"]
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -193,6 +196,14 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
 
     if not check_required_column_value_not_na(row, RequiredDocumentColumns):
         click.echo(f"🛑 Skipping row with missing required document columns: {doc_id}")
+        return None
+
+    source_url = row.at[RequiredDocumentColumns.SOURCE_URL.value]
+    _, ext = os.path.splitext(source_url)
+    if ext.lower() not in SUPPORTED_FILE_EXTENSIONS:
+        click.echo(
+            f"🛑 Skipping row as [{ext}] is not a valid file ext. Project ID: {doc_id}"
+        )
         return None
 
     mapped_docs = [map_document_metadata(row, DocumentVariantNames.ORIGINAL.value)]
