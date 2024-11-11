@@ -98,6 +98,22 @@ def mock_valid_row():
 
 
 @pytest.fixture
+def mock_valid_row_with_whitespace():
+    return pd.Series(
+        {
+            "ApprovedRef": "  ref123  ",
+            "ProjectsID": "  proj123  ",
+            "ID (Unique ID from our CMS for the document)": "  doc123 ",
+            "Type": " type123 ",
+            "Title": "  title123 ",
+            "Main file (English)": " link123.pdf ",
+            "Document page permalink": " link123 ",
+            "Translated titles": None,
+        }
+    )
+
+
+@pytest.fixture
 def mock_gcf_docs():
     return pd.DataFrame(
         {

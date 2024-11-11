@@ -71,3 +71,21 @@ def test_process_row_returns_none_with_na_in_required_columns(
     assert process_row(row, debug=False) is None
     captured = capsys.readouterr()
     assert expected_error_msg in captured.out
+
+
+def test_handles_data_with_leading_and_trailing_whitespace(
+    mock_valid_row_with_whitespace,
+):
+
+    expected_mapped_doc = [
+        {
+            "import_id": "GCF.document.ref123_proj123.doc123",
+            "family_import_id": "GCF.family.ref123.proj123",
+            "metadata": {"type": ["type123"]},
+            "title": "title123",
+            "source_url": "link123.pdf",
+            "variant_name": "Original Language",
+        }
+    ]
+
+    assert expected_mapped_doc == process_row(mock_valid_row_with_whitespace, False)

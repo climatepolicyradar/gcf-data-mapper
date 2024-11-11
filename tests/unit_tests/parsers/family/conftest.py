@@ -232,6 +232,55 @@ def mock_family_row_with_non_int_non_float_budget_values():
 
 
 @pytest.fixture()
+def mock_family_doc_with_whitespace():
+    yield pd.Series(
+        {
+            "ProjectsID": "  AAABBB  ",
+            "ApprovedRef": " FP003 ",
+            "ProjectName": "  Enhancing resilience of coastal ecosystems and communities",
+            "Theme": " Adaptation ",
+            "Sector": " Environment ",
+            "ProjectURL": " https://www.climateaction.fund/project/FP003   ",
+            "Summary": " The Summary of the Project ",
+            "Countries": [
+                {
+                    "CountryName": " Bangladesh ",
+                    "ISO3": " BGD ",
+                    "Region": " Asia   ",
+                },
+            ],
+            "Entities": [
+                {
+                    "Name": " Green Innovations  ",
+                }
+            ],
+            "Funding": [
+                {
+                    "Source": " GCF ",
+                    "Budget": 9200000,
+                    "BudgetUSDeq": 9200000,
+                },
+                {
+                    "ProjectBudgetID": 412,
+                    "Source": " Co-Financing  ",
+                    "Budget": 620000,
+                    "BudgetUSDeq": 620000,
+                },
+            ],
+            "ResultAreas": [
+                {
+                    "Area": " Coastal protection and restoration ",
+                    "Type": " Adaptation  ",
+                },
+            ],
+            "ApprovalDate": " 2016-06-30T00:00:00.000Z ",
+            "StartDate": " 2024-06-28T00:00:00.000Z  ",
+            "DateCompletion": None,
+        }
+    )
+
+
+@pytest.fixture()
 def required_family_columns():
     required_columns = [column.value for column in FamilyColumnsNames]
     required_nested_family_columns = [

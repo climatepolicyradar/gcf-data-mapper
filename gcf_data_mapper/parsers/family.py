@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, cast
 
 import click
 import pandas as pd
@@ -12,6 +12,7 @@ from gcf_data_mapper.enums.family import (
 from gcf_data_mapper.parsers.helpers import (
     arrays_contain_empty_values,
     row_contains_columns_with_empty_values,
+    strip_nested,
     verify_required_fields_present,
 )
 
@@ -222,6 +223,7 @@ def process_row(
         )
         return None
 
+    row = cast(pd.Series, row.apply(strip_nested))
     return map_family_data(row)
 
 
@@ -255,7 +257,7 @@ def family(
     )
 
     for _, row in gcf_projects_data.iterrows():
-        projects_id = row.at[FamilyColumnsNames.PROJECTS_ID.value]
+        projects_id = str(row.at[FamilyColumnsNames.PROJECTS_ID.value]).strip()
         mapped_families.append(process_row(row, projects_id, list(required_fields)))
 
     return mapped_families

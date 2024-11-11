@@ -1,10 +1,10 @@
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import click
 import pandas as pd
 
 from gcf_data_mapper.enums.event import Event, EventColumnNames, Events
-from gcf_data_mapper.parsers.helpers import verify_required_fields_present
+from gcf_data_mapper.parsers.helpers import strip_nested, verify_required_fields_present
 
 
 def append_event(
@@ -134,6 +134,7 @@ def event(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, A
     event_counter = {}
 
     for _, row in projects_data.iterrows():
+        row = cast(pd.Series, row.apply(strip_nested))
         approved_ref = row.at[EventColumnNames.APPROVED_REF.value]
         projects_id = row.at[EventColumnNames.PROJECTS_ID.value]
         process_event(row, gcf_events, event_counter, approved_ref, projects_id)
