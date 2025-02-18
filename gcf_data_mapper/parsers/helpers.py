@@ -61,7 +61,9 @@ def arrays_contain_empty_values(list_values: list[tuple], id: str) -> bool:
     :return bool: True if any list contains empty values, False otherwise.
     """
     arrays_with_empty_values = [
-        name for name, array in list_values if any(not value for value in array)
+        name
+        for name, array in list_values
+        if not array or any(not value for value in array)
     ]
 
     if arrays_with_empty_values:

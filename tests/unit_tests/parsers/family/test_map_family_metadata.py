@@ -276,3 +276,31 @@ def test_all_metadata_values_are_list_of_strings(mock_family_row_ds: pd.Series):
     for value in family_metadata.values():
         assert isinstance(value, list)
         assert all(isinstance(item, str) for item in value)
+
+
+def test_maps_result_areas_with_value_greater_than_zero(mock_family_row_ds: pd.Series):
+    mock_family_row_ds["ResultAreas"] = [
+        {
+            "Area": "The Area for the Result Area 1",
+            "Type": "The Type for the Result Area 1",
+            "Value": "50.00%",
+        },
+        {
+            "Area": "The Area for the Result Area 2",
+            "Type": "The Type for the Result Area 2",
+            "Value": "50.00%",
+        },
+        {
+            "Area": "The Area for the Result Area 3",
+            "Type": "The Type for the Result Area 3",
+            "Value": "0.00%",
+        },
+    ]
+
+    family_metadata = map_family_metadata(mock_family_row_ds)
+    assert family_metadata is not None
+    assert family_metadata["result_area"] == [
+        "The Area for the Result Area 1",
+        "The Area for the Result Area 2",
+    ]
+    assert len(family_metadata["result_area"]) == 2

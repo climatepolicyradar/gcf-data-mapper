@@ -27,6 +27,7 @@ class FamilyNestedColumnNames(Enum):
     REGION = "Region"
     SOURCE = "Source"
     TYPE = "Type"
+    VALUE = "Value"
 
 
 class GCFProjectBudgetSource(Enum):

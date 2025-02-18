@@ -84,6 +84,23 @@ def get_budgets(funding_list: list[dict], source: str) -> Optional[list[str]]:
     return budgets if budgets else ["0"]
 
 
+def get_related_result_areas(result_areas: list[dict]) -> list[str]:
+    """Get the related result areas from the row.
+
+    :param list[dict] result_areas: A list of all the result areas information, represented in dictionaries.
+    :return list[str]: A list of result areas where the 'Value' is greater than or equal to 0%.
+    """
+
+    area_key = FamilyNestedColumnNames.AREA.value
+    value_key = FamilyNestedColumnNames.VALUE.value
+
+    return [
+        str(result[area_key])
+        for result in result_areas
+        if result[value_key] and float(result[value_key].replace("%", "")) > 0
+    ]
+
+
 def map_family_metadata(row: pd.Series) -> Optional[dict]:
     """Map the metadata of a family based on the provided row.
 
@@ -101,7 +118,6 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
     funding_sources = row.at[FamilyColumnsNames.FUNDING.value]
     result_areas = row.at[FamilyColumnsNames.RESULT_AREAS.value]
 
-    area_key = FamilyNestedColumnNames.AREA.value
     name_key = FamilyNestedColumnNames.NAME.value
     region_key = FamilyNestedColumnNames.REGION.value
     type_key = FamilyNestedColumnNames.TYPE.value
@@ -116,7 +132,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
 
     implementing_agencies = [str(entity[name_key]) for entity in entities]
     regions = [str(country[region_key]) for country in countries]
-    areas = [str(result[area_key]) for result in result_areas]
+    areas = get_related_result_areas(result_areas)
     types = [str(result[type_key]) for result in result_areas]
 
     # As we are filtering the budget information by source for gcf and co financing, we
