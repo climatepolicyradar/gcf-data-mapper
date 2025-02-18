@@ -45,6 +45,7 @@ def mock_family_doc_df():
                     {
                         "Area": "Coastal protection and restoration",
                         "Type": "Adaptation",
+                        "Value": "100%",
                     },
                 ],
                 "ApprovalDate": "2016-06-30T00:00:00.000Z",
@@ -95,6 +96,7 @@ def mock_family_row_ds():
                 {
                     "Area": "The Area for the Result Area",
                     "Type": "The Type for the Result Area",
+                    "Value": "100%",
                 },
             ],
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
@@ -141,7 +143,7 @@ def mock_family_row_no_result_areas():
                 },
             ],
             "ResultAreas": [
-                {"Area": "", "Type": ""},
+                {"Area": "", "Type": "", "Value": ""},
             ],
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
             "StartDate": "2024-06-28T00:00:00.000Z",
@@ -182,6 +184,7 @@ def mock_family_row_no_entities_no_regions():
                 {
                     "Area": "The Area for the Result Area",
                     "Type": "The Type for the Result Area",
+                    "Value": "100%",
                 },
             ],
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
@@ -222,6 +225,7 @@ def mock_family_row_with_non_int_non_float_budget_values():
                 {
                     "Area": "The Area for the Result Area",
                     "Type": "The Type for the Result Area",
+                    "Value": "100%",
                 },
             ],
             "ApprovalDate": "2016-06-30T00:00:00.000Z",
@@ -271,6 +275,7 @@ def mock_family_doc_with_whitespace():
                 {
                     "Area": " Coastal protection and restoration ",
                     "Type": " Adaptation  ",
+                    "Value": "100%",
                 },
             ],
             "ApprovalDate": " 2016-06-30T00:00:00.000Z ",
