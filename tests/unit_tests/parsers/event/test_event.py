@@ -13,6 +13,7 @@ def mock_projects_data():
             "DateCompletion": ["2023-12-31", None],
             "ApprovedRef": ["FP123", "FP124"],
             "ProjectsID": ["PID456", "PID457"],
+            "DateImplementationStart": [None, "2023-06-01"],
         }
     )
 
@@ -43,6 +44,7 @@ def test_event_returns_empty_list_for_no_valid_dates():
             "DateCompletion": [None, None],
             "ApprovedRef": ["FP123", "FP124"],
             "ProjectsID": ["PID456", "PID457"],
+            "DateImplementationStart": [None, None],
         }
     )
     result = event(projects_data, debug=False)
@@ -57,6 +59,7 @@ def test_event_handles_partial_valid_dates():
             "DateCompletion": [None, "2023-12-31"],
             "ApprovedRef": ["FP123", "FP124"],
             "ProjectsID": ["PID456", "PID457"],
+            "DateImplementationStart": [None, "  2023-06-01"],
         }
     )
     result = event(projects_data, debug=False)
@@ -71,6 +74,7 @@ def test_handles_data_with_leading_and_trailing_whitespace():
             "DateCompletion": ["2023-12-31  ", None],
             "ApprovedRef": ["  FP123  ", " FP124 "],
             "ProjectsID": [" PID456 ", "  PID457  "],
+            "DateImplementationStart": [None, "  2023-06-01"],
         }
     )
 

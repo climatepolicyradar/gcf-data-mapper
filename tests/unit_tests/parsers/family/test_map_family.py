@@ -71,7 +71,7 @@ def test_raises_error_on_validating_row_for_missing_columns():
         ]
     )
 
-    expected_error_message = "Required fields ['Countries', 'Sector', 'Theme'] not present in df columns ['ApprovalDate', 'ApprovedRef', 'DateCompletion', 'Entities', 'Funding', 'ProjectName', 'ProjectURL', 'ProjectsID', 'ResultAreas', 'StartDate', 'Summary']"
+    expected_error_message = "Required fields ['Countries', 'DateImplementationStart', 'Sector', 'Status', 'Theme'] not present in df columns ['ApprovalDate', 'ApprovedRef', 'DateCompletion', 'Entities', 'Funding', 'ProjectName', 'ProjectURL', 'ProjectsID', 'ResultAreas', 'StartDate', 'Summary']"
     with pytest.raises(AttributeError) as e:
         family(test_data_frame, debug=True)
     assert expected_error_message == str(e.value)
@@ -94,6 +94,7 @@ def test_raises_error_on_validating_row_for_missing_columns():
                     "Sector": "TestSector",
                     "Summary": "Fake Summary",
                     "Theme": "TestTheme",
+                    "Status": pd.NA,
                 }
             ),
             None,
@@ -111,6 +112,7 @@ def test_raises_error_on_validating_row_for_missing_columns():
                     "ResultAreas": [{"Area": "Coastal"}],
                     "Sector": "TestSector",
                     "Theme": "TestTheme",
+                    "Status": pd.NA,
                 }
             ),
             None,
@@ -128,6 +130,7 @@ def test_raises_error_on_validating_row_for_missing_columns():
                     "ResultAreas": [{"Area": "Coastal"}],
                     "Sector": "TestSector",
                     "Theme": "TestTheme",
+                    "Status": pd.NA,
                 }
             ),
             None,

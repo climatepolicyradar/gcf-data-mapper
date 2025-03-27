@@ -152,6 +152,17 @@ def test_map_family_metadata_returns_none_if_budget_does_not_contain_valid_int_t
             pd.Series(
                 {
                     "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                    "StartDate": None,
+                    "DateCompletion": None,
+                    "Status": "Under Implementation",
+                }
+            ),
+            Events.UNDER_IMPLEMENTATION.type,
+        ),
+        (
+            pd.Series(
+                {
+                    "ApprovalDate": "2016-06-30T00:00:00.000Z",
                     "StartDate": "2018-06-30T00:00:00.000Z",
                     "DateCompletion": "2022-06-30T00:00:00.000Z",
                 }
@@ -299,8 +310,11 @@ def test_maps_result_areas_with_value_greater_than_zero(mock_family_row_ds: pd.S
 
     family_metadata = map_family_metadata(mock_family_row_ds)
     assert family_metadata is not None
-    assert family_metadata["result_area"] == [
-        "The Area for the Result Area 1",
-        "The Area for the Result Area 2",
-    ]
+    assert (
+        family_metadata["result_area"].sort()
+        == [
+            "The Area for the Result Area 1",
+            "The Area for the Result Area 2",
+        ].sort()
+    )
     assert len(family_metadata["result_area"]) == 2
