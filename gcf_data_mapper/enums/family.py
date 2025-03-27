@@ -15,6 +15,7 @@ class FamilyColumnsNames(Enum):
     THEME = "Theme"
     TITLE = "ProjectName"
     SUMMARY = "Summary"
+    STATUS = "Status"
 
 
 class FamilyNestedColumnNames(Enum):

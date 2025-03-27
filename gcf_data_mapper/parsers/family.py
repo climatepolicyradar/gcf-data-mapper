@@ -36,6 +36,12 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     :param pd.Series row: The row containing the event information
     :return Optional[str]: The status of the project, if there are no valid values return None
     """
+
+    if FamilyColumnsNames.STATUS.value in row and pd.notna(
+        row.at[FamilyColumnsNames.STATUS.value]
+    ):
+        return row.at[FamilyColumnsNames.STATUS.value]
+
     completed_date = pd.to_datetime(row.at[Events.COMPLETED.column_name])
     start_date = pd.to_datetime(row.at[Events.UNDER_IMPLEMENTATION.column_name])
     approved_date = pd.to_datetime(row.at[Events.APPROVED.column_name])
