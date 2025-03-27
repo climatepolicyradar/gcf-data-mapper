@@ -53,6 +53,10 @@ def check_event_dates(row: pd.Series) -> dict[str, bool]:
             row.at[Events.UNDER_IMPLEMENTATION.column_name]
         ),
         Events.COMPLETED.name: pd.notna(row.at[Events.COMPLETED.column_name]),
+        Events.UNDER_IMPLEMENTATION_SECONDARY.name: pd.isna(
+            row.at[Events.UNDER_IMPLEMENTATION.column_name]
+        )
+        and pd.notna(row.at[Events.UNDER_IMPLEMENTATION_SECONDARY.column_name]),
     }
 
 

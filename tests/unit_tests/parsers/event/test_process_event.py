@@ -14,6 +14,7 @@ def mock_row():
             Events.COMPLETED.column_name: "2023-12-31",
             "ApprovedRef": "FP123",
             "ProjectsID": "PID456",
+            Events.UNDER_IMPLEMENTATION_SECONDARY.column_name: None,
         }
     )
 
@@ -32,6 +33,7 @@ def test_process_event_handles_no_dates():
             Events.APPROVED.column_name: None,
             Events.UNDER_IMPLEMENTATION.column_name: None,
             Events.COMPLETED.column_name: None,
+            Events.UNDER_IMPLEMENTATION_SECONDARY.column_name: None,
             "ApprovedRef": "FP123",
             "ProjectsID": "PID456",
         }

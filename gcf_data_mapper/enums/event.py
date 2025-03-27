@@ -12,6 +12,7 @@ class EventColumnNames(Enum):
     COMPLETED = "DateCompletion"
     APPROVED_REF = "ApprovedRef"
     PROJECTS_ID = "ProjectsID"
+    UNDER_IMPLEMENTATION_SECONDARY = "DateImplementationStart"
 
 
 class EventTypeNames(Enum):
@@ -37,4 +38,10 @@ class Events:
         "completed",
         EventTypeNames.COMPLETED.value,
         EventColumnNames.COMPLETED.value,
+    )
+
+    UNDER_IMPLEMENTATION_SECONDARY = Event(
+        "under_implementation_secondary",
+        EventTypeNames.UNDER_IMPLEMENTATION.value,
+        EventColumnNames.UNDER_IMPLEMENTATION_SECONDARY.value,
     )

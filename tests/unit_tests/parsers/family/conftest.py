@@ -51,6 +51,8 @@ def mock_family_doc_df():
                 "ApprovalDate": "2016-06-30T00:00:00.000Z",
                 "StartDate": "2024-06-28T00:00:00.000Z",
                 "DateCompletion": None,
+                "Status": "Under Implementation",
+                "DateImplementationStart": None,
             }
         ]
     )
