@@ -280,6 +280,9 @@ def family(
 
     for _, row in gcf_projects_data.iterrows():
         projects_id = str(row.at[FamilyColumnsNames.PROJECTS_ID.value]).strip()
-        mapped_families.append(process_row(row, projects_id, list(required_fields)))
+
+        result = process_row(row, projects_id, list(required_fields))
+        if result:
+            mapped_families.append(result)
 
     return mapped_families
