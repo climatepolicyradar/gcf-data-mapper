@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/climatepolicyradar/data-mapper-template.git",
+  "commit": "b0e04611e33dd2348cfb13448e356f799dd9c13d",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "corpus_acronym": "GCF",
+      "project_name": "GCF Data Mapper",
+      "repo_name": "gcf-data-mapper",
+      "package_name": "gcf-data-mapper",
+      "project_slug": "gcf_data_mapper",
+      "_copy_without_render": [".github/workflows/ci-cd.yml"],
+      "_template": "https://github.com/climatepolicyradar/data-mapper-template.git",
+      "_commit": "6b5534c5bcfdd20bda64943c4efa3a28c0f16220"
+    }
+  },
+  "directory": null
+}
