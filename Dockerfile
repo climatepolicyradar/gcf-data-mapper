@@ -1,4 +1,3 @@
-# checkov:skip=CKV_DOCKER_2
 FROM python:3.10-slim
 
 # Create a non-root user
@@ -26,3 +25,4 @@ USER gcf_data_mapper_user
 # We are skipping the healthcheck because it is not needed for the Prefect agent
 # since this is a CLI tool and not a service that needs to be monitored
 # we also don't have a health endpoint to ping to provide a meaningful healthcheck
+HEALTHCHECK NONE
