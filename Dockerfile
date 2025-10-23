@@ -11,7 +11,7 @@ ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copy dependency files
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml README.md uv.lock ./
 
 # Copy your source code
 COPY gcf_data_mapper gcf_data_mapper
