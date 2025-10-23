@@ -27,4 +27,6 @@ build-backend = "hatchling.build"
 [tool.pyright]
 exclude = ["**/__pycache__"]
 pythonVersion = "3.10"
+venvPath = "."
 venv = ".venv"
+pythonPath = ".venv/bin/python"

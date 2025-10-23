@@ -85,6 +85,10 @@ lint:
         - .trunk/configs/_typos.toml
         - .gitignore
 
+    - linters: [ALL]
+      paths:
+        - tests/unit_tests/fixtures/malformed_data.json
+
   enabled:
     - actionlint@1.7.8
     - bandit@1.8.6
