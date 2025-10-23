@@ -6,7 +6,13 @@ authors = [{ name = "CPR-dev-team", email = "tech@climatepolicyradar.org" }]
 license = { text = "Apache 2.0" }
 readme = "README.md"
 requires-python = "<3.11,>=3.10"
-dependencies = ["click<9.0.0,>=8.1.7", "pandas>=2.3.3", "uv>=0.7.6"]
+dependencies = [
+  "click<9.0.0,>=8.1.7",
+  "pandas>=2.3.3",
+  "pulumi>=3.204.0",
+  "pulumi-aws>=7.9.1",
+  "uv>=0.7.6",
+]
 
 [project.scripts]
 gcf_data_mapper = "gcf_data_mapper.cli:entrypoint"
@@ -18,10 +24,9 @@ dev = ["pytest<9.0.0,>=8.3.2", "cookiecutter<3.0.0,>=2.6.0"]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["gcf_data_mapper"]
-
 [tool.pyright]
 exclude = ["**/__pycache__"]
 pythonVersion = "3.10"
+venvPath = "."
 venv = ".venv"
+pythonPath = ".venv/bin/python"
