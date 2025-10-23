@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/climatepolicyradar/data-mapper-template.git",
-  "commit": "b0e04611e33dd2348cfb13448e356f799dd9c13d",
+  "commit": "6b5534c5bcfdd20bda64943c4efa3a28c0f16220",
   "checkout": null,
   "context": {
     "cookiecutter": {
