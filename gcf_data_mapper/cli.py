@@ -21,13 +21,11 @@ from gcf_data_mapper.read import read
 )
 @click.option(
     "--mcf_projects_file",
-    # trunk-ignore(cspell/error)
     default=os.path.join(os.getcwd(), "data", "MCFprojects.csv"),
     type=click.Path(exists=True),
 )
 @click.option(
     "--mcf_docs_file",
-    # trunk-ignore(cspell/error)
     default=os.path.join(os.getcwd(), "data", "MCFdocuments-v2.csv"),
     type=click.Path(exists=True),
 )
