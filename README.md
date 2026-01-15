@@ -34,3 +34,18 @@ directory called `data` with the following files in it:
 ```bash
 gcf_data_mapper --gcf_projects_file FILENAME --mcf_projects_file FILENAME --mcf_docs_file FILENAME --output_file FILENAME
 ```
+
+## Semi Regular Updates
+
+If GCF updates are required, the following files need to be updated in
+the `data/` folder:
+
+- `gcf_projects.json`
+<!-- trunk-ignore(cspell/error) -->
+- `MCFdocuments.csv`
+<!-- trunk-ignore(cspell/error) -->
+- `MCFprojects.csv`
+
+These csv files need to be requested from the GCF team.
+The `gcf_projects.json` file can be downloaded from `https://www.greenclimate.fund/export/MCFprojects.csv`.
+As it concerns the other two files, please contact the GCF team directly.
