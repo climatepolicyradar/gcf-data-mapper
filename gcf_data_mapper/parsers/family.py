@@ -40,6 +40,12 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     if FamilyColumnsNames.STATUS.value in row and pd.notna(
         row.at[FamilyColumnsNames.STATUS.value]
     ):
+        if row.at[FamilyColumnsNames.STATUS.value] == "Approved":
+            return Events.APPROVED.type
+        if row.at[FamilyColumnsNames.STATUS.value] == "Under implementation":
+            return Events.UNDER_IMPLEMENTATION.type
+        if row.at[FamilyColumnsNames.STATUS.value] == "Completed":
+            return Events.COMPLETED.type
         return row.at[FamilyColumnsNames.STATUS.value]
 
     completed_date = pd.to_datetime(row.at[Events.COMPLETED.column_name])
@@ -169,6 +175,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         "sector": [str(row.at[FamilyColumnsNames.SECTOR.value])],
         "status": [status],
         "theme": [str(row.at[FamilyColumnsNames.THEME.value])],
+        "external_id": [],
     }
 
     return metadata
