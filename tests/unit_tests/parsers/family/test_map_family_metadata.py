@@ -27,6 +27,7 @@ def parsed_family_metadata():
         "sector": ["Private"],
         "status": ["Under Implementation"],
         "theme": ["Adaptation"],
+        "external_id": [],
     }
 
 

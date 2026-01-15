@@ -18,7 +18,7 @@ from gcf_data_mapper.parsers.helpers import (
     verify_required_fields_present,
 )
 
-SUPPORTED_FILE_EXTENSIONS = [".pdf", ".html"]
+SUPPORTED_FILE_EXTENSIONS = [".pdf", ".html", ".docx", ".doc"]
 
 
 def contains_duplicate_urls(urls: list[str]) -> bool:
@@ -282,6 +282,7 @@ def document(
     # TODO: Might be nice to output dodgy rows to a separate output file that can be
     # used to send back to the fund for them to amend.
     mapped_docs = []
+
     for _, row in combo.iterrows():
         result = process_row(row, debug)
         if result:

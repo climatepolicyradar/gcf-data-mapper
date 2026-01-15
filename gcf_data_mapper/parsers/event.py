@@ -36,6 +36,10 @@ def append_event(
             "event_title": event.type,
             "date": row[event.column_name],
             "event_type_value": event.type,
+            "metadata": {
+                "event_type": [event.type],
+                "datetime_event_name": ["Project Approved"],
+            },
         }
     )
 

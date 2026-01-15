@@ -85,6 +85,14 @@ def test_handles_data_with_leading_and_trailing_whitespace():
             "event_type_value": "Project Approved",
             "import_id": "GCF.event.FP123_PID456.n0000",
             "family_import_id": "GCF.family.FP123.PID456",
+            "metadata": {
+                "datetime_event_name": [
+                    "Project Approved",
+                ],
+                "event_type": [
+                    "Project Approved",
+                ],
+            },
         },
         {
             "date": "2023-12-31",
@@ -92,6 +100,14 @@ def test_handles_data_with_leading_and_trailing_whitespace():
             "event_type_value": "Project Completed",
             "family_import_id": "GCF.family.FP123.PID456",
             "import_id": "GCF.event.FP123_PID456.n0001",
+            "metadata": {
+                "datetime_event_name": [
+                    "Project Approved",
+                ],
+                "event_type": [
+                    "Project Completed",
+                ],
+            },
         },
         {
             "date": "2023-06-01",
@@ -99,6 +115,14 @@ def test_handles_data_with_leading_and_trailing_whitespace():
             "event_type_value": "Under Implementation",
             "family_import_id": "GCF.family.FP124.PID457",
             "import_id": "GCF.event.FP124_PID457.n0000",
+            "metadata": {
+                "datetime_event_name": [
+                    "Project Approved",
+                ],
+                "event_type": [
+                    "Under Implementation",
+                ],
+            },
         },
     ]
 
