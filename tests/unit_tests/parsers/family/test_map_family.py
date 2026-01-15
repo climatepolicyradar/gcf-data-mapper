@@ -26,6 +26,7 @@ def parsed_family_data():
                 "sector": ["Environment"],
                 "status": ["Under Implementation"],
                 "theme": ["Adaptation"],
+                "external_id": [],
             },
             "title": "Enhancing resilience of coastal ecosystems and communities",
         }
@@ -173,7 +174,6 @@ def test_skips_processing_row_if_family_metadata_has_missing_data(
 def test_handles_data_with_leading_and_trailing_whitespace(
     mock_family_doc_with_whitespace,
 ):
-
     expected_mapped_family = {
         "category": "MCF",
         "collections": [],
@@ -193,6 +193,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
             "sector": ["Environment"],
             "status": ["Under Implementation"],
             "theme": ["Adaptation"],
+            "external_id": [],
         },
         "title": "Enhancing resilience of coastal ecosystems and communities",
     }
