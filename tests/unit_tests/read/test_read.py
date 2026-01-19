@@ -1,57 +1,63 @@
 import os
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
 
-from gcf_data_mapper.read import read
+from gcf_data_mapper.read import has_reference_mismatches, read
 from tests.unit_tests.read.conftest import FIXTURES_FOLDER
 
 
 def test_valid_files_return_expected_output():
-    fam_data, doc_data = read(
-        os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
-        os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
-        os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data_2_records.csv"),
-    )
-
-    assert fam_data is not None
-    assert (
-        pd.testing.assert_frame_equal(
-            fam_data,
-            pd.DataFrame(
-                {
-                    "country": ["Brazil", "Canada", "Egypt"],
-                    "capital": ["Brasilia", "Ottawa", "Cairo"],
-                    "climate_info.avg_temp_celsius": [21.5, 6.3, 22.1],
-                    "climate_info.annual_rainfall_mm": [1500, 940, 25],
-                    "climate_info.climate_zone": ["Tropical", "Continental", "Desert"],
-                    "rivers.names": [
-                        [{"egypt": "Nile"}, {"london": "Thames"}],
-                        [{"egypt": "Nile"}, {"london": "Thames"}],
-                        [{"egypt": "Nile"}, {"london": "Thames"}],
-                    ],
-                    "natural_disasters": [
-                        ["Floods", "Landslides"],
-                        ["Blizzards", "Wildfires"],
-                        ["Droughts"],
-                    ],
-                }
-            ),
-            check_like=True,  # Ignore the order of columns and records.
+    with patch("gcf_data_mapper.read.has_reference_mismatches", return_value=False):
+        fam_data, doc_data = read(
+            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
+            os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
+            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data_2_records.csv"),
         )
-        is None
-    )
 
-    assert doc_data is not None
-    assert (
-        pd.testing.assert_frame_equal(
-            doc_data,
-            pd.DataFrame(
-                {"country": ["Brazil", "Canada"], "capital": ["Brasilia", "Ottawa"]}
-            ),
+        assert fam_data is not None
+        assert (
+            pd.testing.assert_frame_equal(
+                fam_data,
+                pd.DataFrame(
+                    {
+                        "country": ["Brazil", "Canada", "Egypt"],
+                        "capital": ["Brasilia", "Ottawa", "Cairo"],
+                        "climate_info.avg_temp_celsius": [21.5, 6.3, 22.1],
+                        "climate_info.annual_rainfall_mm": [1500, 940, 25],
+                        "climate_info.climate_zone": [
+                            "Tropical",
+                            "Continental",
+                            "Desert",
+                        ],
+                        "rivers.names": [
+                            [{"egypt": "Nile"}, {"london": "Thames"}],
+                            [{"egypt": "Nile"}, {"london": "Thames"}],
+                            [{"egypt": "Nile"}, {"london": "Thames"}],
+                        ],
+                        "natural_disasters": [
+                            ["Floods", "Landslides"],
+                            ["Blizzards", "Wildfires"],
+                            ["Droughts"],
+                        ],
+                    }
+                ),
+                check_like=True,  # Ignore the order of columns and records.
+            )
+            is None
         )
-        is None
-    )
+
+        assert doc_data is not None
+        assert (
+            pd.testing.assert_frame_equal(
+                doc_data,
+                pd.DataFrame(
+                    {"country": ["Brazil", "Canada"], "capital": ["Brasilia", "Ottawa"]}
+                ),
+            )
+            is None
+        )
 
 
 @pytest.mark.parametrize(
@@ -90,10 +96,57 @@ def test_valid_files_return_expected_output():
     ],
 )
 def test_raises(filepath, error, error_msg):
-    with pytest.raises(error) as e:
-        read(
-            os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
-            filepath,
-            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
-        )
-    assert error_msg in str(e.value)
+    with patch("gcf_data_mapper.read.has_reference_mismatches", return_value=False):
+        with pytest.raises(error) as e:
+            read(
+                os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
+                filepath,
+                os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
+            )
+        assert error_msg in str(e.value)
+
+
+def test_no_mismatches():
+    """Test when all references match between GCF and MCF."""
+    gcf_df = pd.DataFrame({"ApprovedRef": ["FP001", "FP002", "FP003"]})
+    mcf_df = pd.DataFrame({"FP number": ["FP001", "FP002", "FP003"]})
+
+    with patch("click.echo") as mock_echo:
+        result = has_reference_mismatches(gcf_df, mcf_df)
+
+    assert result is False
+    mock_echo.assert_called_once_with("✅ All references match between GCF and MCF.")
+
+
+def test_references_only_in_mcf():
+    """Test when MCF has references that GCF doesn't have."""
+    gcf_df = pd.DataFrame({"ApprovedRef": ["FP001", "FP002"]})
+    mcf_df = pd.DataFrame({"FP number": ["FP001", "FP002", "FP003", "FP004"]})
+
+    with patch("click.echo") as mock_echo:
+        result = has_reference_mismatches(gcf_df, mcf_df)
+
+    assert result is True
+    calls = [str(call) for call in mock_echo.call_args_list]
+    assert any(
+        "2 reference(s) in MCF but MISSING in GCF" in str(call) for call in calls
+    )
+    assert any("FP003" in str(call) for call in calls)
+    assert any("FP004" in str(call) for call in calls)
+
+
+def test_references_only_in_gcf():
+    """Test when GCF has references that MCF doesn't have."""
+    gcf_df = pd.DataFrame({"ApprovedRef": ["FP001", "FP002", "FP003", "FP004"]})
+    mcf_df = pd.DataFrame({"FP number": ["FP001", "FP002"]})
+
+    with patch("click.echo") as mock_echo:
+        result = has_reference_mismatches(gcf_df, mcf_df)
+
+    assert result is True
+    calls = [str(call) for call in mock_echo.call_args_list]
+    assert any(
+        "2 reference(s) in GCF but MISSING in MCF" in str(call) for call in calls
+    )
+    assert any("FP003" in str(call) for call in calls)
+    assert any("FP004" in str(call) for call in calls)

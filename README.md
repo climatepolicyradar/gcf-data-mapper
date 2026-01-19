@@ -46,8 +46,9 @@ If GCF updates are required, the following files need to be updated in the
 - `MCFdocuments.csv`
 - `MCFprojects.csv`
 
-These csv files need to be requested from the GCF team. The `gcf_projects.json`
-file can be downloaded from
-`https://www.greenclimate.fund/export/MCFprojects.csv`. The `MCFprojects.csv`
-can be downloaded from `https://www.greenclimate.fund/export/MCFprojects.csv`.
-As it concerns the other two files, please contact the GCF team directly.
+These csv files may need to be requested from the GCF team. The
+`gcf_projects.json` file can be downloaded from
+`http://api.gcfund.org/v1/projects`. The `MCFprojects.csv` can be downloaded
+from `https://www.greenclimate.fund/export/MCFprojects.csv`. The
+`MCFdocuments.csv` can be downloaded from
+`https://www.greenclimate.fund/export/MCFdocuments.csv`.
