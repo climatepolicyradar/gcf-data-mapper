@@ -111,6 +111,31 @@ def read_into_pandas(file_path: str, debug: bool = False) -> pd.DataFrame:
     return df
 
 
+def has_reference_mismatches(gcf_df: pd.DataFrame, mcf_df: pd.DataFrame) -> bool:
+    gcf_refs = set(gcf_df["ApprovedRef"].astype(str).str.strip())
+    mcf_refs = set(mcf_df["FP number"].astype(str).str.strip())
+
+    only_in_gcf = gcf_refs - mcf_refs  # GCF has it, MCF doesn't
+    only_in_mcf = mcf_refs - gcf_refs  # MCF has it, GCF doesn't
+
+    if only_in_mcf:
+        click.echo(f"⚠️  {len(only_in_mcf)} reference(s) in MCF but MISSING in GCF:")
+        for ref in sorted(only_in_mcf):
+            click.echo(f"  → {ref}")
+
+    if only_in_gcf:
+        click.echo(f"ℹ️  {len(only_in_gcf)} reference(s) in GCF but MISSING in MCF:")
+        for ref in sorted(only_in_gcf):
+            click.echo(f"  → {ref}")
+
+    if only_in_mcf or only_in_gcf:
+        return True
+
+    click.echo("✅ All references match between GCF and MCF.")
+
+    return False
+
+
 def read(
     gcf_projects_file: str,
     mcf_projects_file: str,
@@ -138,6 +163,9 @@ def read(
         data is None or data.empty for data in [gcf_projects, mcf_projects, mcf_docs]
     ):
         raise ValueError("One or more of the expected dataframes are empty")
+
+    if has_reference_mismatches(gcf_projects, mcf_projects):
+        raise ValueError("Reference mismatches detected between GCF and MCF data")
 
     # Join the MCF and GCF project data by the 'FP number' a.k.a ApprovedRef.
     if gcf_projects.shape[0] != mcf_projects.shape[0]:
