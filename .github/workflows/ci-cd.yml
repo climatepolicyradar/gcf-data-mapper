@@ -88,6 +88,14 @@ jobs:
       - name: Run Integration Tests
         run: uv run pytest -vvv tests/integration_tests
 
+  dependabot:
+    name: Dependabot Auto-pilot
+    needs: [code-quality, test]
+    permissions:
+      pull-requests: write
+      contents: write
+    uses: climatepolicyradar/reusable-workflows/.github/workflows/dependabot-autopilot.yml@v22
+
   build:
     if: |
       ! cancelled() && always() && github.ref == 'refs/heads/main' &&

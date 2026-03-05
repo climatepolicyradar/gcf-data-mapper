@@ -118,7 +118,7 @@ lint:
     - shfmt@3.6.0
     - taplo@0.10.0
     - terrascan@1.19.1
-    - trivy@0.67.2
+    - trivy@0.69.2
     - trufflehog@3.90.11
     - typos@1.38.1
     - yamllint@1.37.1
