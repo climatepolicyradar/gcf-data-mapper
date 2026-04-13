@@ -18,7 +18,7 @@ dependencies = [
 gcf_data_mapper = "gcf_data_mapper.cli:entrypoint"
 
 [dependency-groups]
-dev = ["pytest>=8.3.2,<10.0.0", "cookiecutter<3.0.0,>=2.6.0"]
+dev = ["pytest>=9.0.3,<10.0.0", "cookiecutter<3.0.0,>=2.6.0"]
 
 [build-system]
 requires = ["hatchling"]
