@@ -16,6 +16,15 @@ from gcf_data_mapper.parsers.helpers import (
     verify_required_fields_present,
 )
 
+UNIQUE_REGIONS: set[str] = set()
+UNIQUE_IMPLEMENTING_AGENCIES: set[str] = set()
+REGIONS_MAPPING = {
+    "Africa": "Africa",
+    "Asia and the Pacific": "Asia-Pacific",
+    "Eastern Europe, Central Asia, and the Middle East": "Eastern Europe",
+    "Latin America and the Caribbean": "Latin America and the Caribbean",
+}
+
 
 def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool:
     """Check if any of the values in the list of dates are NaT (Not a Time).
@@ -176,6 +185,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
         "status": [status],
         "theme": [str(row.at[FamilyColumnsNames.THEME.value])],
         "external_id": [],
+        "domain": ["Climate"],
     }
 
     return metadata
@@ -292,4 +302,5 @@ def family(
         if result:
             mapped_families.append(result)
 
+    # For debugging purposes, to inspect the mapped families before returning
     return mapped_families
