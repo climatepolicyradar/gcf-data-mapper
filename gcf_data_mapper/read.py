@@ -165,15 +165,18 @@ def read(
         raise ValueError("One or more of the expected dataframes are empty")
 
     if has_reference_mismatches(gcf_projects, mcf_projects):
-        raise ValueError("Reference mismatches detected between GCF and MCF data")
+        click.echo(
+            "⚠️  Skipping the mismatched reference(s) above - only projects present "
+            "in both GCF and MCF data will be mapped."
+        )
 
-    # Join the MCF and GCF project data by the 'FP number' a.k.a ApprovedRef.
     if gcf_projects.shape[0] != mcf_projects.shape[0]:
         click.echo(
-            f"❌ GCF project data {gcf_projects.shape[0]}, MCF project data {mcf_projects.shape[0]}"
+            f"⚠️  GCF project data {gcf_projects.shape[0]}, MCF project data {mcf_projects.shape[0]}"
         )
-        raise ValueError("Record number mismatch")
 
+    # Join the MCF and GCF project data by the 'FP number' a.k.a ApprovedRef.
+    # This is an inner join, so any projects not present in both are dropped.
     if debug:
         click.echo("📝 Merging GCF and MCF project data")
     mcf_projects.rename(columns={"FP number": "ApprovedRef"}, inplace=True)
@@ -182,8 +185,9 @@ def read(
         right=mcf_projects,
     )
 
-    if debug:
-        click.echo(project_info)
-        click.echo(mcf_docs)
+    if project_info.empty:
+        raise ValueError("No matching projects found between GCF and MCF data")
+
+    click.echo(f"ℹ️  {project_info.shape[0]} project(s) will be mapped.")
 
     return project_info, mcf_docs

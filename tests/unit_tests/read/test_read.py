@@ -88,11 +88,6 @@ def test_valid_files_return_expected_output():
             FileNotFoundError,
             "No such file or directory",
         ),
-        (
-            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data_2_records.csv"),
-            ValueError,
-            "Record number mismatch",
-        ),
     ],
 )
 def test_raises(filepath, error, error_msg):
