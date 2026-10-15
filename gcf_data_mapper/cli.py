@@ -92,7 +92,7 @@ def wrangle_to_json(
         "collections": collection(debug),
         "families": mapped_families,
         "documents": document(project_info, doc_info, skipped_rows, debug),
-        "events": event(project_info, debug),
+        "events": event(project_info, skipped_rows, debug),
     }
 
 

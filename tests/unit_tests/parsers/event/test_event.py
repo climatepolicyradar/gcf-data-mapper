@@ -18,19 +18,42 @@ def mock_projects_data():
     )
 
 
-def test_event_returns_correct_number_of_events(mock_projects_data):
-    result = event(mock_projects_data, debug=False)
+def test_event_returns_correct_number_of_valid_events(mock_projects_data):
+    result = event(mock_projects_data, [], debug=False)
     assert len(result) == 3
+
+
+def test_event_parser_skips_events_if_approved_ref_in_skipped_rows(mock_projects_data):
+    mock_skipped_rows = ["FP123"]
+    result = event(mock_projects_data, mock_skipped_rows, debug=False)
+
+    assert result == [
+        {
+            "date": "2023-06-01",
+            "event_title": "Under Implementation",
+            "event_type_value": "Under Implementation",
+            "family_import_id": "GCF.family.FP124.PID457",
+            "import_id": "GCF.event.FP124_PID457.n0000",
+            "metadata": {
+                "datetime_event_name": [
+                    "Project Approved",
+                ],
+                "event_type": [
+                    "Under Implementation",
+                ],
+            },
+        }
+    ]
 
 
 def test_event_raises_attribute_error_for_missing_fields():
     projects_data = pd.DataFrame({})
     with pytest.raises(AttributeError):
-        event(projects_data, debug=False)
+        event(projects_data, [], debug=False)
 
 
 def test_event_logs_debug_message(mock_projects_data, capsys):
-    result = event(mock_projects_data, debug=True)
+    result = event(mock_projects_data, [], debug=True)
     captured = capsys.readouterr()
     assert "📝 Wrangling GCF event data." in captured.out
     assert len(result) == 3
@@ -47,7 +70,7 @@ def test_event_returns_empty_list_for_no_valid_dates():
             "DateImplementationStart": [None, None],
         }
     )
-    result = event(projects_data, debug=False)
+    result = event(projects_data, [], debug=False)
     assert len(result) == 0
 
 
@@ -62,7 +85,7 @@ def test_event_handles_partial_valid_dates():
             "DateImplementationStart": [None, "  2023-06-01"],
         }
     )
-    result = event(projects_data, debug=False)
+    result = event(projects_data, [], debug=False)
     assert len(result) == 3
 
 
@@ -126,4 +149,4 @@ def test_handles_data_with_leading_and_trailing_whitespace():
         },
     ]
 
-    assert expected_mapped_events == event(mock_projects_data, False)
+    assert expected_mapped_events == event(mock_projects_data, [], False)
