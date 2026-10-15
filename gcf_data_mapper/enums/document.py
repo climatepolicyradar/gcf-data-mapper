@@ -4,7 +4,7 @@ from enum import Enum
 class RequiredDocumentColumns(Enum):
     TITLE = "Title"
     TYPE = "Subtype"
-    ID = "ID (Unique ID from our CMS for the document)"
+    ID = "ID (New)"
     SOURCE_URL = "Main file (English)"
 
 

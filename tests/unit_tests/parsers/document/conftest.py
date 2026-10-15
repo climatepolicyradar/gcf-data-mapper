@@ -7,7 +7,7 @@ import pytest
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -18,7 +18,7 @@ import pytest
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -37,7 +37,7 @@ def mock_valid_doc_row_with_one_translation():
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -54,7 +54,7 @@ def mock_valid_doc_row_with_many_translations():
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -71,7 +71,7 @@ def mock_valid_doc_row_with_two_translations():
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -88,7 +88,7 @@ def mock_valid_row():
         {
             "ApprovedRef": "ref123",
             "ProjectsID": "proj123",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
             "Subtype": "type123",
             "Title": "title123",
             "Main file (English)": "link123.pdf",
@@ -103,7 +103,7 @@ def mock_valid_row_with_whitespace():
         {
             "ApprovedRef": "  ref123  ",
             "ProjectsID": "  proj123  ",
-            "ID (Unique ID from our CMS for the document)": "  doc123 ",
+            "ID (New)": "  doc123 ",
             "Subtype": " type123 ",
             "Title": "  title123 ",
             "Main file (English)": " link123.pdf ",
@@ -118,7 +118,7 @@ def mock_gcf_docs():
     return pd.DataFrame(
         {
             "FP number": ["FP123", "FP124"],
-            "ID (Unique ID from our CMS for the document)": ["doc123", "doc124"],
+            "ID (New)": ["doc123", "doc124"],
             "Subtype": ["type123", "type124"],
             "Title": ["title123", "title124"],
             "Translated titles": ["title123_fr", "title124_fr"],

@@ -44,7 +44,7 @@ def test_process_row_with_no_translations_success(
             {
                 "ApprovedRef": "ref123",
                 "ProjectsID": "proj123",
-                "ID (Unique ID from our CMS for the document)": None,
+                "ID (New)": None,
                 "Title": None,
                 "Subtype": None,
                 "Document page permalink": None,
@@ -55,7 +55,7 @@ def test_process_row_with_no_translations_success(
             {
                 "ApprovedRef": "ref123",
                 "ProjectsID": "proj123",
-                "ID (Unique ID from our CMS for the document)": "123",
+                "ID (New)": "123",
                 "Title": "title123",
                 "Subtype": None,
                 "Document page permalink": None,
@@ -99,7 +99,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
                 {
                     "ApprovedRef": "ref123",
                     "ProjectsID": "proj123",
-                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "ID (New)": "doc123",
                     "Subtype": "Test type",
                     "Title": "Test title",
                     "Main file (English)": "link123.pdf",
@@ -125,7 +125,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
                 {
                     "ApprovedRef": "ref123",
                     "ProjectsID": "proj123",
-                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "ID (New)": "doc123",
                     "Subtype": "Test type",
                     "Title": "Test title",
                     "Main file (English)": "link123.PDF",
@@ -151,7 +151,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
                 {
                     "ApprovedRef": "ref123",
                     "ProjectsID": "proj123",
-                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "ID (New)": "doc123",
                     "Subtype": "Test type",
                     "Title": "Test title",
                     "Main file (English)": "link123.html",
@@ -177,7 +177,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
                 {
                     "ApprovedRef": "ref123",
                     "ProjectsID": "proj123",
-                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "ID (New)": "doc123",
                     "Subtype": "Test type",
                     "Title": "Test title",
                     "Main file (English)": "link123.HTML",
@@ -203,7 +203,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
                 {
                     "ApprovedRef": "ref123",
                     "ProjectsID": "proj123",
-                    "ID (Unique ID from our CMS for the document)": "doc123",
+                    "ID (New)": "doc123",
                     "Subtype": "Test type",
                     "Title": "Test title",
                     "Main file (English)": "link123.xlsx",

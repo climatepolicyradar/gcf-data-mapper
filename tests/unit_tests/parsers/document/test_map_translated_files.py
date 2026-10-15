@@ -22,7 +22,7 @@ def test_translated_files_not_mapped_with_invalid_urls():
     row = pd.Series(
         {
             "Translated files": "http://example.com|",
-            "ID (Unique ID from our CMS for the document)": "doc123",
+            "ID (New)": "doc123",
         }
     )
     assert map_translated_files(row) is None
