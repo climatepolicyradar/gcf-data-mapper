@@ -177,6 +177,7 @@ def map_family_metadata(row: pd.Series) -> dict | None:
         "status": [status],
         "theme": [str(row.at[FamilyColumnsNames.THEME.value])],
         "external_id": [],
+        "domain": ["Climate"],
     }
 
     return metadata

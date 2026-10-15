@@ -27,6 +27,7 @@ def parsed_family_data():
                 "status": ["Under Implementation"],
                 "theme": ["Adaptation"],
                 "external_id": [],
+                "domain": ["Climate"],
             },
             "title": "Enhancing resilience of coastal ecosystems and communities",
         }
@@ -226,6 +227,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
             "status": ["Under Implementation"],
             "theme": ["Adaptation"],
             "external_id": [],
+            "domain": ["Climate"],
         },
         "title": "Enhancing resilience of coastal ecosystems and communities",
     }
