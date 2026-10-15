@@ -3,9 +3,13 @@ from enum import Enum
 
 class RequiredDocumentColumns(Enum):
     TITLE = "Title"
-    TYPE = "Type"
-    ID = "ID (Unique ID from our CMS for the document)"
+    TYPE = "Subtype"
+    ID = "ID (New)"
     SOURCE_URL = "Main file (English)"
+
+
+class OptionalDocumentColumns(Enum):
+    ID_OLD = "ID (Old)"
 
 
 class TranslatedDocumentColumns(Enum):

@@ -27,6 +27,7 @@ def parsed_family_data():
                 "status": ["Under Implementation"],
                 "theme": ["Adaptation"],
                 "external_id": [],
+                "domain": ["Climate"],
             },
             "title": "Enhancing resilience of coastal ecosystems and communities",
         }
@@ -36,10 +37,42 @@ def parsed_family_data():
 def test_returns_expected_family_data_structure(
     mock_family_doc_df: pd.DataFrame, parsed_family_data: list[dict]
 ):
-    family_data = family(mock_family_doc_df, debug=True)
+    family_data, _ = family(mock_family_doc_df, debug=True)
     assert family_data != []
     assert len(family_data) == len(parsed_family_data)
     assert family_data == parsed_family_data
+
+
+def test_family_parser_returns_a_list_of_skipped_row_ids():
+    mock_family_doc_df_with_missing_data = pd.DataFrame(
+        [
+            {
+                "ProjectsID": 12660,
+                "ApprovedRef": "FP003",
+                "ProjectName": "test project",
+                "Theme": "Test",
+                "Sector": "Test",
+                "ProjectURL": "https://www.climateaction.fund/project/FP003",
+                "Summary": "The Summary of the Project",
+                "Countries": [],
+                "Entities": [],
+                "Funding": [],
+                "ResultAreas": [],
+                "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                "StartDate": "2024-06-28T00:00:00.000Z",
+                "DateCompletion": None,
+                "Status": "Under Implementation",
+                "DateImplementationStart": None,
+            }
+        ]
+    )
+
+    family_data, skipped_families = family(
+        mock_family_doc_df_with_missing_data, debug=True
+    )
+
+    assert not family_data
+    assert skipped_families == ["FP003"]
 
 
 def test_returns_expected_import_id_for_family_data(
@@ -194,6 +227,7 @@ def test_handles_data_with_leading_and_trailing_whitespace(
             "status": ["Under Implementation"],
             "theme": ["Adaptation"],
             "external_id": [],
+            "domain": ["Climate"],
         },
         "title": "Enhancing resilience of coastal ecosystems and communities",
     }
