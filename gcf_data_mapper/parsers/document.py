@@ -230,13 +230,18 @@ def process_row(row: pd.Series, debug: bool) -> list[dict[str, Any]] | None:
 
 
 def document(
-    projects_data: pd.DataFrame, gcf_docs: pd.DataFrame, debug: bool
+    projects_data: pd.DataFrame,
+    gcf_docs: pd.DataFrame,
+    skipped_rows: list[str],
+    debug: bool,
 ) -> list[dict[str, Any] | None]:
-    """Map the GCF document info to new structure.
+    """Map the GCF document info to new structure. Skips mapping document if
+    related family could not be mapped (i.e. approved REF appears in skipped_rows)
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
         joined on FP num.
     :param pd.DataFrame gcf_docs: The GCF document data in a df.
+    :param list[str] skipped_rows: Rows that were skipped when mapping families.
     :param bool debug: Whether debug mode is on.
     :return list[Optional[dict[str, Any]]]: A list of GCF documents in
         the 'destination' format described in the GCF Data Mapper Google
@@ -298,8 +303,10 @@ def document(
     mapped_docs = []
 
     for _, row in combo.iterrows():
-        result = process_row(row, debug)
-        if result:
-            mapped_docs.extend(result)
+        skip_document = row.at["FP number"] in skipped_rows
+        if not skip_document:
+            result = process_row(row, debug)
+            if result:
+                mapped_docs.extend(result)
 
     return mapped_docs

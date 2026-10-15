@@ -265,9 +265,9 @@ def family(
     :param pd.DataFrame projects_data: The MCF and GCF project data,
         joined on FP num.
     :param bool debug: Whether debug mode is on.
-    :return list[Optional[dict[str, Any]]]: A list of GCF families in
-        the 'destination' format described in the GCF Data Mapper Google
-        Sheet.
+    :return tuple[list[dict[str, Any] | None], list[str]]: A list of GCF
+        families in the 'destination' format described in the GCF Data Mapper
+        Google Sheet and a list of any rows that were skipped.
     """
 
     if debug:

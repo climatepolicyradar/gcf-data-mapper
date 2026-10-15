@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from typing import Any, Optional
+from typing import Any
 
 import click
 import pandas as pd
@@ -73,7 +73,7 @@ def entrypoint(
 
 def wrangle_to_json(
     project_info: pd.DataFrame, doc_info: pd.DataFrame, debug: bool
-) -> dict[str, list[Optional[dict[str, Any]]]]:
+) -> dict[str, list[dict[str, Any] | None]]:
     """Put the mapped GCF data into a dictionary ready for dumping.
 
     The output of this function will get dumped as JSON to the output
@@ -87,16 +87,17 @@ def wrangle_to_json(
         mapped to the Document-Family-Collection-Event entity it
         corresponds to.
     """
+    mapped_families, skipped_rows = family(project_info, debug)
     return {
         "collections": collection(debug),
-        "families": family(project_info, debug),
-        "documents": document(project_info, doc_info, debug),
+        "families": mapped_families,
+        "documents": document(project_info, doc_info, skipped_rows, debug),
         "events": event(project_info, debug),
     }
 
 
 def dump_output(
-    mapped_data: dict[str, list[Optional[dict[str, Any]]]],
+    mapped_data: dict[str, list[dict[str, Any] | None]],
     output_file: str,
     debug: bool,
 ):
