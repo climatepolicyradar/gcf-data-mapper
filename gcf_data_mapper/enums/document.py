@@ -8,6 +8,10 @@ class RequiredDocumentColumns(Enum):
     SOURCE_URL = "Main file (English)"
 
 
+class OptionalDocumentColumns(Enum):
+    ID_OLD = "ID (Old)"
+
+
 class TranslatedDocumentColumns(Enum):
     TRANSLATED_FILES = "Translated files"
     TRANSLATED_TITLES = "Translated titles"

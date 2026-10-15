@@ -110,7 +110,7 @@ def mock_valid_row_with_whitespace():
             "ApprovedRef": "  ref123  ",
             "ProjectsID": "  proj123  ",
             "ID (New)": "  doc123 ",
-            "ID (Old)": "doc000",
+            "ID (Old)": None,
             "Subtype": " type123 ",
             "Title": "  title123 ",
             "Main file (English)": " link123.pdf ",

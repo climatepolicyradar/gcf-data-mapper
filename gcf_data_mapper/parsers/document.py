@@ -1,5 +1,5 @@
 import os
-from typing import Any, Optional, cast
+from typing import Any, cast
 from urllib.parse import urlparse
 
 import click
@@ -8,6 +8,7 @@ import pandas as pd
 from gcf_data_mapper.enums.document import (
     DocumentVariantNames,
     IgnoreDocumentTypes,
+    OptionalDocumentColumns,
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
     TranslatedDocumentColumns,
@@ -109,7 +110,7 @@ def has_translated_files(row: pd.Series) -> bool:
 def map_document_metadata(
     row: pd.Series,
     variant_name: str,
-    source_url: Optional[str] = None,
+    source_url: str | None = None,
 ) -> dict[str, Any]:
     """Create a document dictionary with common fields.
 
@@ -121,7 +122,16 @@ def map_document_metadata(
     approved_ref = row.at[RequiredFamilyDocumentColumns.APPROVED_REF.value]
     projects_id = row.at[RequiredFamilyDocumentColumns.PROJECTS_ID.value]
 
-    doc_id = row[RequiredDocumentColumns.ID.value]
+    # GCF have migrated to a new CMS so previously imported documents will have
+    # an old ID value which was used to generate the import ID - we need to
+    # keep using the old ID values for those docs to avoid duplication
+    old_id = row.get(OptionalDocumentColumns.ID_OLD.value)
+    doc_id = (
+        old_id
+        if isinstance(old_id, (int, str)) and str(old_id).strip()
+        else row[RequiredDocumentColumns.ID.value]
+    )
+
     doc_type = row[RequiredDocumentColumns.TYPE.value]
     title = row[RequiredDocumentColumns.TITLE.value]
 
@@ -140,7 +150,7 @@ def map_document_metadata(
 
 def map_translated_files(
     translated_files_row: pd.Series,
-) -> Optional[list[dict[str, Any]]]:
+) -> list[dict[str, Any]] | None:
     """Map the GCF document with translated versions into JSON.
 
     :param pd.Series translated_files_row: A row from the DataFrame
@@ -171,7 +181,7 @@ def map_translated_files(
     return mapped_documents
 
 
-def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
+def process_row(row: pd.Series, debug: bool) -> list[dict[str, Any]] | None:
     """Process a single row of document data.
 
     :param pd.Series row: The row of data to process (corresponds to a
@@ -217,7 +227,7 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
 
 def document(
     projects_data: pd.DataFrame, gcf_docs: pd.DataFrame, debug: bool
-) -> list[Optional[dict[str, Any]]]:
+) -> list[dict[str, Any] | None]:
     """Map the GCF document info to new structure.
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
