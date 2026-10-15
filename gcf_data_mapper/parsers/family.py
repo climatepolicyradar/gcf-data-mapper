@@ -1,4 +1,5 @@
-from typing import Any, Iterable, Optional, cast
+from collections.abc import Iterable
+from typing import Any, cast
 
 import click
 import pandas as pd
@@ -26,7 +27,7 @@ def contains_invalid_date_entries(list_of_dates: Iterable[pd.Timestamp]) -> bool
     return any(date is pd.NaT for date in list_of_dates)
 
 
-def calculate_status(row: pd.Series) -> Optional[str]:
+def calculate_status(row: pd.Series) -> str | None:
     """Calculate status of project based on the event types and dates
         The status is calculated per the below:
             Completed : (NOW is passed date-completion)
@@ -70,7 +71,7 @@ def calculate_status(row: pd.Series) -> Optional[str]:
     return None
 
 
-def get_budgets(funding_list: list[dict], source: str) -> Optional[list[str]]:
+def get_budgets(funding_list: list[dict], source: str) -> list[str] | None:
     """Get the budget amount from the row based on the funding source.
 
     :param list[dict] row: A list of all the funding information, represented in dictionaries
@@ -113,7 +114,7 @@ def get_related_result_areas(result_areas: list[dict]) -> list[str]:
     ]
 
 
-def map_family_metadata(row: pd.Series) -> Optional[dict]:
+def map_family_metadata(row: pd.Series) -> dict | None:
     """Map the metadata of a family based on the provided row.
 
     :param pd.Series row: The row containing family information.
@@ -183,7 +184,7 @@ def map_family_metadata(row: pd.Series) -> Optional[dict]:
 
 def map_family_data(
     row: pd.Series,
-) -> Optional[dict]:
+) -> dict | None:
     """Map the data of a family based on the provided row.
 
     :param pd.Series row: The containing family and family metadata information.
@@ -231,7 +232,7 @@ def process_row(
     row: pd.Series,
     projects_id: str,
     required_columns: list[str],
-) -> Optional[dict]:
+) -> dict | None:
     """Map the family data based on the provided row.
 
     :param pd.Series row: The row containing family information.
@@ -258,7 +259,7 @@ def process_row(
 
 def family(
     gcf_projects_data: pd.DataFrame, debug: bool
-) -> list[Optional[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any] | None], list[str]]:
     """Map the GCF family info to new structure.
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
@@ -285,11 +286,15 @@ def family(
         str(e.value) for e in EventColumnNames if str(e.value) not in family_columns
     )
 
+    skipped_rows = []
     for _, row in gcf_projects_data.iterrows():
         projects_id = str(row.at[FamilyColumnsNames.PROJECTS_ID.value]).strip()
 
         result = process_row(row, projects_id, list(required_fields))
         if result:
             mapped_families.append(result)
+        else:
+            approved_ref = str(row.at[FamilyColumnsNames.APPROVED_REF.value]).strip()
+            skipped_rows.append(approved_ref)
 
-    return mapped_families
+    return mapped_families, skipped_rows

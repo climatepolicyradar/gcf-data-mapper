@@ -7,8 +7,7 @@ import pandas as pd
 def verify_required_fields_present(
     data: pd.DataFrame, required_fields: set[str]
 ) -> bool:
-    """Map the GCF event info to new structure.
-
+    """
     :param pd.DataFrame data: The DataFrame to check.
     :param set[str] required_fields: The required DataFrame columns.
     :raise AttributeError if any of the required fields are missing.
