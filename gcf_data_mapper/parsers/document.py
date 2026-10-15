@@ -14,7 +14,7 @@ from gcf_data_mapper.enums.document import (
     TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.helpers import (
-    check_required_column_value_not_na,
+    get_na_required_columns,
     strip_nested,
     verify_required_fields_present,
 )
@@ -200,12 +200,16 @@ def process_row(row: pd.Series, debug: bool) -> list[dict[str, Any]] | None:
         else None
     )
 
-    if not check_required_column_value_not_na(row, RequiredFamilyDocumentColumns):
-        click.echo(f"🛑 Skipping row with missing required family columns: {doc_id}")
+    if missing := get_na_required_columns(row, RequiredFamilyDocumentColumns):
+        click.echo(
+            f"🛑 Skipping row with missing required columns. Doc ID: {doc_id}. Missing: {', '.join(missing)}"
+        )
         return None
 
-    if not check_required_column_value_not_na(row, RequiredDocumentColumns):
-        click.echo(f"🛑 Skipping row with missing required document columns: {doc_id}")
+    if missing := get_na_required_columns(row, RequiredDocumentColumns):
+        click.echo(
+            f"🛑 Skipping row with missing required document columns: {doc_id}. Missing: {', '.join(missing)}"
+        )
         return None
 
     source_url = row.at[RequiredDocumentColumns.SOURCE_URL.value]

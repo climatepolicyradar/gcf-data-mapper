@@ -28,9 +28,16 @@ def verify_required_fields_present(
     )
 
 
-def check_required_column_value_not_na(row: pd.Series, column_enum) -> bool:
-    """Check if the row contains valid document column values (not NA)."""
-    return all(pd.notna(row[column.value]) for column in column_enum)
+def get_na_required_columns(row: pd.Series, column_enum) -> list[str]:
+    """Get the names of the required columns whose values are NA in the row.
+
+    :param pd.Series row: The row to check.
+    :param column_enum: The enum of required column names.
+    :return list[str]: The required columns that are missing or NA.
+    """
+    return [
+        column.value for column in column_enum if bool(pd.isna(row.get(column.value)))
+    ]
 
 
 def row_contains_columns_with_empty_values(

@@ -31,14 +31,14 @@ def test_process_row_with_no_translations_success(
             {
                 "ApprovedRef": None,
             },
-            "Skipping row with missing required family columns: None",
+            "Skipping row with missing required columns. Doc ID: None. Missing: ApprovedRef, ProjectsID",
         ),
         (
             {
                 "ApprovedRef": None,
                 "ProjectsID": None,
             },
-            "Skipping row with missing required family columns: None",
+            "Skipping row with missing required columns. Doc ID: None. Missing: ApprovedRef, ProjectsID",
         ),
         (
             {
