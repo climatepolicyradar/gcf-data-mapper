@@ -303,7 +303,9 @@ def document(
     mapped_docs = []
 
     for _, row in combo.iterrows():
-        skip_document = row.at["FP number"] in skipped_rows
+        fp_number = row.at["FP number"]
+        skip_document = pd.notna(fp_number) and fp_number in skipped_rows
+
         if not skip_document:
             result = process_row(row, debug)
             if result:
