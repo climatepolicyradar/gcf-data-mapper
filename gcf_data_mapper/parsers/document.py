@@ -1,5 +1,5 @@
 import os
-from typing import Any, Optional, cast
+from typing import Any, cast
 from urllib.parse import urlparse
 
 import click
@@ -8,12 +8,13 @@ import pandas as pd
 from gcf_data_mapper.enums.document import (
     DocumentVariantNames,
     IgnoreDocumentTypes,
+    OptionalDocumentColumns,
     RequiredDocumentColumns,
     RequiredFamilyDocumentColumns,
     TranslatedDocumentColumns,
 )
 from gcf_data_mapper.parsers.helpers import (
-    check_required_column_value_not_na,
+    get_na_required_columns,
     strip_nested,
     verify_required_fields_present,
 )
@@ -109,7 +110,7 @@ def has_translated_files(row: pd.Series) -> bool:
 def map_document_metadata(
     row: pd.Series,
     variant_name: str,
-    source_url: Optional[str] = None,
+    source_url: str | None = None,
 ) -> dict[str, Any]:
     """Create a document dictionary with common fields.
 
@@ -121,7 +122,16 @@ def map_document_metadata(
     approved_ref = row.at[RequiredFamilyDocumentColumns.APPROVED_REF.value]
     projects_id = row.at[RequiredFamilyDocumentColumns.PROJECTS_ID.value]
 
-    doc_id = row[RequiredDocumentColumns.ID.value]
+    # GCF have migrated to a new CMS so previously imported documents will have
+    # an old ID value which was used to generate the import ID - we need to
+    # keep using the old ID values for those docs to avoid duplication
+    old_id = row.get(OptionalDocumentColumns.ID_OLD.value)
+    doc_id = (
+        old_id
+        if isinstance(old_id, (int, str)) and str(old_id).strip()
+        else row[RequiredDocumentColumns.ID.value]
+    )
+
     doc_type = row[RequiredDocumentColumns.TYPE.value]
     title = row[RequiredDocumentColumns.TITLE.value]
 
@@ -140,7 +150,7 @@ def map_document_metadata(
 
 def map_translated_files(
     translated_files_row: pd.Series,
-) -> Optional[list[dict[str, Any]]]:
+) -> list[dict[str, Any]] | None:
     """Map the GCF document with translated versions into JSON.
 
     :param pd.Series translated_files_row: A row from the DataFrame
@@ -171,7 +181,7 @@ def map_translated_files(
     return mapped_documents
 
 
-def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
+def process_row(row: pd.Series, debug: bool) -> list[dict[str, Any]] | None:
     """Process a single row of document data.
 
     :param pd.Series row: The row of data to process (corresponds to a
@@ -190,12 +200,16 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
         else None
     )
 
-    if not check_required_column_value_not_na(row, RequiredFamilyDocumentColumns):
-        click.echo(f"🛑 Skipping row with missing required family columns: {doc_id}")
+    if missing := get_na_required_columns(row, RequiredFamilyDocumentColumns):
+        click.echo(
+            f"🛑 Skipping row with missing required columns. Doc ID: {doc_id}. Missing: {', '.join(missing)}"
+        )
         return None
 
-    if not check_required_column_value_not_na(row, RequiredDocumentColumns):
-        click.echo(f"🛑 Skipping row with missing required document columns: {doc_id}")
+    if missing := get_na_required_columns(row, RequiredDocumentColumns):
+        click.echo(
+            f"🛑 Skipping row with missing required document columns: {doc_id}. Missing: {', '.join(missing)}"
+        )
         return None
 
     source_url = row.at[RequiredDocumentColumns.SOURCE_URL.value]
@@ -216,13 +230,18 @@ def process_row(row: pd.Series, debug: bool) -> Optional[list[dict[str, Any]]]:
 
 
 def document(
-    projects_data: pd.DataFrame, gcf_docs: pd.DataFrame, debug: bool
-) -> list[Optional[dict[str, Any]]]:
-    """Map the GCF document info to new structure.
+    projects_data: pd.DataFrame,
+    gcf_docs: pd.DataFrame,
+    skipped_rows: list[str],
+    debug: bool,
+) -> list[dict[str, Any] | None]:
+    """Map the GCF document info to new structure. Skips mapping document if
+    related family could not be mapped (i.e. approved REF appears in skipped_rows)
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
         joined on FP num.
     :param pd.DataFrame gcf_docs: The GCF document data in a df.
+    :param list[str] skipped_rows: Rows that were skipped when mapping families.
     :param bool debug: Whether debug mode is on.
     :return list[Optional[dict[str, Any]]]: A list of GCF documents in
         the 'destination' format described in the GCF Data Mapper Google
@@ -284,8 +303,12 @@ def document(
     mapped_docs = []
 
     for _, row in combo.iterrows():
-        result = process_row(row, debug)
-        if result:
-            mapped_docs.extend(result)
+        fp_number = row.at["FP number"]
+        skip_document = pd.notna(fp_number) and fp_number in skipped_rows
+
+        if not skip_document:
+            result = process_row(row, debug)
+            if result:
+                mapped_docs.extend(result)
 
     return mapped_docs

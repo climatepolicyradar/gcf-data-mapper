@@ -1,4 +1,4 @@
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import click
 import pandas as pd
@@ -122,11 +122,15 @@ def process_event(
             event_counter[family_import_id] += 1
 
 
-def event(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, Any]]]:
-    """Map the GCF event info to new structure.
+def event(
+    projects_data: pd.DataFrame, skipped_rows: list[str], debug: bool
+) -> list[dict[str, Any] | None]:
+    """Map the GCF event info to new structure. Skips mapping events if
+    related family could not be mapped (i.e. approved REF appears in skipped_rows)
 
     :param pd.DataFrame projects_data: The MCF and GCF project data,
         joined on FP num.
+    :param list[str] skipped_rows: Rows that were skipped when mapping families.
     :param bool debug: Whether debug mode is on.
     :return list[Optional[dict[str, Any]]]: A list of GCF families in
         the 'destination' format described in the GCF Data Mapper Google
@@ -145,6 +149,9 @@ def event(projects_data: pd.DataFrame, debug: bool) -> list[Optional[dict[str, A
         row = cast(pd.Series, row.apply(strip_nested))
         approved_ref = row.at[EventColumnNames.APPROVED_REF.value]
         projects_id = row.at[EventColumnNames.PROJECTS_ID.value]
-        process_event(row, gcf_events, event_counter, approved_ref, projects_id)
+
+        skip_event = pd.notna(approved_ref) and approved_ref in skipped_rows
+        if not skip_event:
+            process_event(row, gcf_events, event_counter, approved_ref, projects_id)
 
     return gcf_events

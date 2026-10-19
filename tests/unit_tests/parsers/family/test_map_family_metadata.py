@@ -28,6 +28,7 @@ def parsed_family_metadata():
         "status": ["Under Implementation"],
         "theme": ["Adaptation"],
         "external_id": [],
+        "domain": ["Climate"],
     }
 
 
