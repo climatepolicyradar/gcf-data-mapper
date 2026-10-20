@@ -11,8 +11,8 @@ from tests.unit_tests.read.conftest import FIXTURES_FOLDER
 def test_valid_files_return_expected_output():
     with patch("gcf_data_mapper.read.has_reference_mismatches", return_value=False):
         fam_data, doc_data = read(
-            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
             os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
+            os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"),
             os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data_2_records.csv"),
         )
 
@@ -41,6 +41,7 @@ def test_valid_files_return_expected_output():
                             ["Blizzards", "Wildfires"],
                             ["Droughts"],
                         ],
+                        "Status": ["Approved", "Approved", "Approved"],
                     }
                 ),
                 check_like=True,  # Ignore the order of columns and records.

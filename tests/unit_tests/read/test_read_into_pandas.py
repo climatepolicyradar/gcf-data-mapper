@@ -12,7 +12,7 @@ from tests.unit_tests.read.conftest import FIXTURES_FOLDER
         (os.path.join(FIXTURES_FOLDER, "valid_climate_csv_data.csv"), 2, 3),
         (
             os.path.join(FIXTURES_FOLDER, "valid_climate_json_data.json"),
-            7,
+            8,
             3,
         ),
     ),

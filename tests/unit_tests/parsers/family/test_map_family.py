@@ -235,3 +235,64 @@ def test_handles_data_with_leading_and_trailing_whitespace(
     assert expected_mapped_family == process_row(
         mock_family_doc_with_whitespace, "  AAABBB  ", []
     )
+
+
+@pytest.mark.parametrize("status", ["Cancelled", "Lapsed", "Discontinued"])
+def test_family_parser_skips_rows_with_excluded_statuses(status):
+    mock_family_doc_df_with_excluded_statuses = pd.DataFrame(
+        [
+            {
+                "ProjectsID": 12660,
+                "ApprovedRef": "FP003",
+                "ProjectName": "test project",
+                "Theme": "Test",
+                "Sector": "Test",
+                "ProjectURL": "https://www.climateaction.fund/project/FP003",
+                "Summary": "The Summary of the Project",
+                "Countries": [
+                    {
+                        "CountryName": "Bangladesh",
+                        "ISO3": "BGD",
+                        "Region": "Asia",
+                    },
+                ],
+                "Entities": [
+                    {
+                        "Name": "Green Innovations",
+                    }
+                ],
+                "Funding": [
+                    {
+                        "Source": "GCF",
+                        "Budget": 9200000,
+                        "BudgetUSDeq": 9200000,
+                    },
+                    {
+                        "ProjectBudgetID": 412,
+                        "Source": "Co-Financing",
+                        "Budget": 620000,
+                        "BudgetUSDeq": 620000,
+                    },
+                ],
+                "ResultAreas": [
+                    {
+                        "Area": "Coastal protection and restoration",
+                        "Type": "Adaptation",
+                        "Value": "100%",
+                    },
+                ],
+                "ApprovalDate": "2016-06-30T00:00:00.000Z",
+                "StartDate": "2024-06-28T00:00:00.000Z",
+                "DateCompletion": None,
+                "Status": status,
+                "DateImplementationStart": None,
+            }
+        ]
+    )
+
+    family_data, skipped_families = family(
+        mock_family_doc_df_with_excluded_statuses, debug=True
+    )
+
+    assert not family_data
+    assert skipped_families == ["FP003"]

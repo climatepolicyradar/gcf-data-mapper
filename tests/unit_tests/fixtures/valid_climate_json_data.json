@@ -8,9 +8,17 @@
       "climate_zone": "Tropical"
     },
     "rivers": {
-      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
+      "names": [
+        {
+          "egypt": "Nile"
+        },
+        {
+          "london": "Thames"
+        }
+      ]
     },
-    "natural_disasters": ["Floods", "Landslides"]
+    "natural_disasters": ["Floods", "Landslides"],
+    "Status": "Approved"
   },
   {
     "country": "Canada",
@@ -21,9 +29,17 @@
       "climate_zone": "Continental"
     },
     "rivers": {
-      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
+      "names": [
+        {
+          "egypt": "Nile"
+        },
+        {
+          "london": "Thames"
+        }
+      ]
     },
-    "natural_disasters": ["Blizzards", "Wildfires"]
+    "natural_disasters": ["Blizzards", "Wildfires"],
+    "Status": "Approved"
   },
   {
     "country": "Egypt",
@@ -34,8 +50,16 @@
       "climate_zone": "Desert"
     },
     "rivers": {
-      "names": [{ "egypt": "Nile" }, { "london": "Thames" }]
+      "names": [
+        {
+          "egypt": "Nile"
+        },
+        {
+          "london": "Thames"
+        }
+      ]
     },
-    "natural_disasters": ["Droughts"]
+    "natural_disasters": ["Droughts"],
+    "Status": "Approved"
   }
 ]

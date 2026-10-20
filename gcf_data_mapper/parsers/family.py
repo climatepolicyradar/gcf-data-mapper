@@ -6,6 +6,7 @@ import pandas as pd
 
 from gcf_data_mapper.enums.event import EventColumnNames, Events
 from gcf_data_mapper.enums.family import (
+    EXCLUDED_STATUSES,
     FamilyColumnsNames,
     FamilyNestedColumnNames,
     GCFProjectBudgetSource,
@@ -123,7 +124,7 @@ def map_family_metadata(row: pd.Series) -> dict | None:
 
     status = calculate_status(row)
 
-    if status is None:
+    if status is None or status in EXCLUDED_STATUSES:
         return None
 
     countries = row.at[FamilyColumnsNames.COUNTRIES.value]

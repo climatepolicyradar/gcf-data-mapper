@@ -36,3 +36,7 @@ class GCFProjectBudgetSource(Enum):
 
     CO_FINANCING = "Co-Financing"
     GCF = "GCF"
+
+
+# GCF do not want us to import any projects with the following statuses
+EXCLUDED_STATUSES = ["Cancelled", "Lapsed", "Discontinued"]
