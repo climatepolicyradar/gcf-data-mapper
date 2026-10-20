@@ -6,10 +6,26 @@ from typing import Optional, Union
 import click
 import pandas as pd
 
+from gcf_data_mapper.enums.family import EXCLUDED_STATUSES, FamilyColumnsNames
+
 
 class AllowedFileExtensions(Enum):
     JSON = "json"
     CSV = "csv"
+
+
+def report_projects_with_excluded_statuses(gcf_projects: pd.DataFrame):
+    for _, row in gcf_projects.iterrows():
+        status = str(row.at[FamilyColumnsNames.STATUS.value]).strip()
+        if status in EXCLUDED_STATUSES:
+            project_id = str(row.at[FamilyColumnsNames.PROJECTS_ID.value])
+            approved_ref = str(row.at[FamilyColumnsNames.APPROVED_REF.value])
+            click.echo(
+                f"🛑 Skipping row as project status is: [{status}], ProjectsID : {project_id}, Approved Ref: {approved_ref}"
+            )
+            click.echo(
+                "If this project was previously imported, it will need to be manually deleted from RDS"
+            )
 
 
 def read_csv_pd(
@@ -169,6 +185,8 @@ def read(
             "⚠️  Skipping the mismatched reference(s) above - only projects present "
             "in both GCF and MCF data will be mapped."
         )
+
+    report_projects_with_excluded_statuses(gcf_projects)
 
     if gcf_projects.shape[0] != mcf_projects.shape[0]:
         click.echo(
